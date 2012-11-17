@@ -1,7 +1,7 @@
 import simplejson
 import requests
-from ourmy import settings
-from ourmy.settings import SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET, SINGLY_REDIRECT_URI
+from ourmy_project import settings
+from ourmy_project.settings import SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET, SINGLY_REDIRECT_URI
 
 
 class Singly(object):
