@@ -138,6 +138,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'singly',
+    'bootstrap_toolkit',
+    'test_bootstrap',
     'ourmy_app',
     'south',
     'debug_toolbar',
@@ -188,3 +190,10 @@ LOGGING = {
         },
     }
 }
+
+BOOTSTRAP_BASE_URL      = 'http://twitter.github.com/bootstrap/assets/'
+BOOTSTRAP_CSS_BASE_URL  = BOOTSTRAP_BASE_URL + 'css/'
+BOOTSTRAP_CSS_URL       = BOOTSTRAP_CSS_BASE_URL + 'bootstrap.css'
+BOOTSTRAP_JS_BASE_URL   = BOOTSTRAP_BASE_URL + 'js/'
+# Enable for single bootstrap.js file
+#BOOTSTRAP_JS_URL        = BOOTSTRAP_JS_BASE_URL + 'bootstrap.js'
