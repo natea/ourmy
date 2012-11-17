@@ -197,3 +197,11 @@ BOOTSTRAP_CSS_URL       = BOOTSTRAP_CSS_BASE_URL + 'bootstrap.css'
 BOOTSTRAP_JS_BASE_URL   = BOOTSTRAP_BASE_URL + 'js/'
 # Enable for single bootstrap.js file
 #BOOTSTRAP_JS_URL        = BOOTSTRAP_JS_BASE_URL + 'bootstrap.js'
+
+SINGLY_CLIENT_ID="26c38ca03b256c31720cc9cd8ebec776"
+SINGLY_CLIENT_SECRET="b174c23ac692e1d0e920e92798ec34c8"
+# lvh.me is just a domain name for localhost
+#SINGLY_REDIRECT_URI = 'http://lvh.me:8000/authorize/callback'
+SINGLY_REDIRECT_URI = 'http://localhost:8000/authorize/callback'
+
+AUTH_PROFILE_MODULE = "singly.UserProfile"

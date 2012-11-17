@@ -8,6 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'ourmy_app.views.index', name='home'),
+    url(r'^connect$', 'ourmy_app.views.connect', name='connect'),
     url(r'^test_bootstrap/', include('test_bootstrap.urls')),
     # url(r'^ourmy/', include('ourmy.foo.urls')),
 
@@ -19,5 +20,5 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 	# url("^$", direct_to_template, {"template": "index.html"}, name="home"),
-    url(r'^singly/', include('singly.urls')),
+    url(r'', include('singly.urls')),
 )
