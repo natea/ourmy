@@ -12,9 +12,13 @@ import datetime
 def index(request):
 	# TODO: check that these are current campaigns
 	current_campaign_list = Campaign.objects.all()
-	return render_to_response('campaigns.html', 
+	return render_to_response('index.html', 
 		{'campaign_list':current_campaign_list},
 		context_instance=RequestContext(request))
 
 
 def campaign(request, campaign_id):
+	campaign = get_object_or_404(Campaign, pk=campaign_id)
+	return render_to_response('campaign.html',
+		{'campaign':campaign},
+		context_instance=RequestContext(request))
