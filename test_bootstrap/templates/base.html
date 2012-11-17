@@ -3,15 +3,22 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>django-bootstrap-toolkit = Bootstrap support for Django</title>
-    <meta name="description" content="">
-    <meta name="author" content="Dylan Verheul">
+    <title>Ourmy</title>
+    <meta name="description" content="{% block description %}Ourmy - Fun, Rewarding Social Sharing{% endblock %}" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="author" content="Nate, Anna & Chris for AngelHack Boston 2012">
+	<meta name="keywords" content="{% block keywords %}social, marketing, promote, sharing, share, viral, game, social game, awesome, epic, hack{% endblock %}" />
+	<meta name="publisher" content="Ourmy" />
+	<meta name="robots" content="index, follow" />
     {% bootstrap_stylesheet_tag %}
     <style type="text/css">
         body {
             padding-top: 60px;
         }
     </style>
+
+	<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}css/gangnam-style.css"/>
+
     <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -25,7 +32,7 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a class="brand" href="/">django-bootstrap-toolkit</a>
+            <a class="brand" href="/"><img src="{{ STATIC_URL }}img/logo2.png"></img></a>
             <ul class="nav">
                 <li><a href="{% url home %}" class="">Home</a></li>
                 <li><a href="{% url test_bootstrap.views.test_form %}">Form</a></li>
@@ -54,13 +61,11 @@
 
     <footer class="row">
         <div class="span6">
-            <p>This is <a href="https://github.com/dyve/django-bootstrap-toolkit">django-bootstrap-toolkit</a></p>
+            <p>Thanks <a href="https://github.com/dyve/django-bootstrap-toolkit">Django Bootstrap</a></p>
         </div>
         <div class="span6" style="text-align:right">
             <p>
-                &copy; <a href="http://twitter.com/dyve">Dylan Verheul</a> 2012
-                |
-                <a href="https://raw.github.com/dyve/django-bootstrap-toolkit/master/LICENSE">license</a>
+                By <a href="http://twitter.com/Ourmy_">Nate, Anna and Chris</a> 2012
             </p>
         </div>
     </footer>
