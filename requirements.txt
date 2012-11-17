@@ -3,3 +3,4 @@ psycopg2==2.4.5
 django-admin-bootstrapped
 -e git+git://github.com/Singly/django-singly.git#egg=django-singly
 django-bitly
+-e git+git://github.com/dyve/django-bootstrap-toolkit.git#egg=django-bootstrap-toolkit

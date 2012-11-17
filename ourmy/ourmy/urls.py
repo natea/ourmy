@@ -14,7 +14,8 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
+    url(r'^test_bootstrap/', include('test_bootstrap.urls')),
     url(r'^admin/', include(admin.site.urls)),
-	url("^$", direct_to_template, {"template": "index.html"}, name="home"),
+	# url("^$", direct_to_template, {"template": "index.html"}, name="home"),
     url(r'^singly/', include('singly.urls')),
 )
