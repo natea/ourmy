@@ -138,6 +138,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'singly',
     'ourmy_app',
+    'south',
 )
 
 SINGLY_CLIENT_ID = "26c38ca03b256c31720cc9cd8ebec776"
