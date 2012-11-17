@@ -7,6 +7,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
+    url(r'^test_bootstrap/', include('test_bootstrap.urls')),
     url(r'^$', 'ourmy_app.views.index', name='index'),
     url(r'^campaign/(?P<campaign_id>\d{0,6})/$', 'ourmy_app.views.campaign', name='campaign'),
 
@@ -14,7 +15,6 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^test_bootstrap/', include('test_bootstrap.urls')),
     url(r'^admin/', include(admin.site.urls)),
 	# url("^$", direct_to_template, {"template": "index.html"}, name="home"),
     url(r'^singly/', include('singly.urls')),
