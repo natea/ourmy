@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load singly %}
+{% if user.is_authenticated %}
+Welcome, {{user.username}}
+{% else %}
+<a href="{% singly_login_url 'facebook' %}">Login With Facebook</a>
+<a href="{% singly_login_url 'twitter' %}">Login With Twitter</a>
+{% endif %}

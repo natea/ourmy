@@ -1,5 +1,10 @@
 # Django settings for ourmy project.
 
+import os
+
+# Full filesystem path to the project.
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -24,7 +29,7 @@ DATABASES = {
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'America/New_York'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -102,16 +107,23 @@ AUTHENTICATION_BACKENDS = (
     'singly.backends.SinglyBackend',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    "django.core.context_processors.request",
+)
+
 ROOT_URLCONF = 'ourmy.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'ourmy.wsgi.application'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
+TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -127,6 +139,9 @@ INSTALLED_APPS = (
     'singly',
     'ourmy_app',
 )
+
+SINGLY_CLIENT_ID = "26c38ca03b256c31720cc9cd8ebec776"
+SINGLY_CLIENT_SECRET = "b174c23ac692e1d0e920e92798ec34c8"
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
