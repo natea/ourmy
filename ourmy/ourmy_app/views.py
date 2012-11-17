@@ -15,6 +15,3 @@ def index(request):
 	return render_to_response('campaigns.html', 
 		{'campaign_list':current_campaign_list},
 		context_instance=RequestContext(request))
-
-
-def campaign(request, campaign_id):
