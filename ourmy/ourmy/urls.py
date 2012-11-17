@@ -7,8 +7,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^test_bootstrap/', include('test_bootstrap.urls')),
     url(r'^$', 'ourmy_app.views.index', name='index'),
+    url(r'^test_bootstrap/', include('test_bootstrap.urls')),
     # url(r'^ourmy/', include('ourmy.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
