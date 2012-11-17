@@ -2,6 +2,10 @@
 
 {% block content %}
 
-I am the index page, extending base
+{% for campaign in campaign_list %}
+	<p>{{ campaign.title }}</p>
+	<p>{{ campaign.description }}</p>
+	<a href="{% url campaign campaign_id=campaign.id %}" class="btn btn-large">Join this campaign!</a>
+{% endfor %}
 
 {% endblock %}

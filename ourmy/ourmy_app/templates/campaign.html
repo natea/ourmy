@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p>{{ campaign.title }}</p>
+<p>{{ campaign.description }}</p>
+
+{% for action in campaign.actions %}
+	<p>{{ action.social_network }}</p>
+	<p>{{ action.text }}</p>
+	<p>{{ action.points }}</p>
+{% endfor %}
+
+{% endblock content %}
