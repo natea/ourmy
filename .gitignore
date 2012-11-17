@@ -1,4 +1,5 @@
 ourmy/ourmy.db
+.DS_Store
 *.py[cod]
 
 # C extensions
