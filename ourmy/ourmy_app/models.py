@@ -17,9 +17,17 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 class Campaign(models.Model):
 	user = models.ForeignKey(User)
+	title = models.CharField(blank=True, max_length=100)
 	description = models.TextField(blank=True, max_length=250)
 	deadline = models.DateTimeField(blank=True, default=datetime.datetime.now)
 	# logo_image = models.FileField(upload_to=get_logo_path, blank=True, null=True)
+
+	class Admin:
+		list_display = ('',)
+		search_fields = ('',)
+
+	def __unicode__(self):
+		return self.title
 
 
 class Action(models.Model):
@@ -30,7 +38,13 @@ class Action(models.Model):
 	start_on = models.DateTimeField(blank=True, default=datetime.datetime.now)
 	end_on = models.DateTimeField(blank=True, default=datetime.datetime.now)
 
+	def __unicode__(self):
+		return self.campaign.title + ': ' + self.social_network
+
 
 class UserActions(models.Model):
 	user = models.ForeignKey(User)
 	action = models.ForeignKey(Action)
+
+	def __unicode__(self):
+		return self.user.username + ' on ' + action.social_network
