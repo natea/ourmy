@@ -162,6 +162,16 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.logger.LoggingPanel',
 )
 
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,       # this will show a "you are being redirected" page you must click through on redirects
+    # 'SHOW_TOOLBAR_CALLBACK': None,      # you can pass a function that determines whether to show the toolbar
+    # 'EXTRA_SIGNALS': ['myproject.signals.MySignal'],    # An array of custom signals that might be in your project, defined as the python path to the signal.
+    # 'HIDE_DJANGO_SQL': False,           # If True (the default) then code in Django itself won't be shown in SQL stacktraces.
+    # 'SHOW_TEMPLATE_CONTEXT': True       # If True (the default) then a template's context will be included with it in the Template debug panel.
+    # 'TAG': 'div',                       # If set, this will be the tag to which debug_toolbar will attach the debug toolbar. Defaults to 'body'.
+    # 'ENABLE_STACKTRACES' : True,        # If True (default) this will show stacktraces for SQL queries and cache calls.
+}
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
