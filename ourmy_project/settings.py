@@ -145,9 +145,6 @@ INSTALLED_APPS = (
     'debug_toolbar',
 )
 
-SINGLY_CLIENT_ID = "26c38ca03b256c31720cc9cd8ebec776"
-SINGLY_CLIENT_SECRET = "b174c23ac692e1d0e920e92798ec34c8"
-
 INTERNAL_IPS = ('127.0.0.1',)
 
 DEBUG_TOOLBAR_PANELS = (
@@ -214,4 +211,4 @@ SINGLY_CLIENT_SECRET="b174c23ac692e1d0e920e92798ec34c8"
 #SINGLY_REDIRECT_URI = 'http://lvh.me:8000/authorize/callback'
 SINGLY_REDIRECT_URI = 'http://localhost:8000/authorize/callback'
 
-AUTH_PROFILE_MODULE = "singly.UserProfile"
+AUTH_PROFILE_MODULE = "singly.SinglyProfile"

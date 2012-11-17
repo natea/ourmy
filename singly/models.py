@@ -3,7 +3,7 @@ from django.db import models
 from managers import UserProfileManager
 
 
-class UserProfile(models.Model):
+class SinglyProfile(models.Model):
     access_token = models.CharField(max_length=260, null=True, blank=True)
     singly_id = models.CharField(max_length=260, null=True, blank=True)
     profiles = models.TextField(null=True, blank=True)
