@@ -119,10 +119,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
 
-ROOT_URLCONF = 'ourmy.urls'
+ROOT_URLCONF = 'ourmy_project.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'ourmy.wsgi.application'
+WSGI_APPLICATION = 'ourmy_project.wsgi.application'
 
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
