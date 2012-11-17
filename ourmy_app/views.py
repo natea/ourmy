@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.sites.models import get_current_site
 from django.template import loader
 import datetime
+import simplejson
 
 def index(request):
 	# TODO: check that these are current campaigns
@@ -22,3 +23,23 @@ def campaign(request, campaign_id):
 	return render_to_response('campaign.html',
 		{'campaign':campaign},
 		context_instance=RequestContext(request))
+
+def connect(request, template='connect.html'):
+    services = [
+        'Facebook',
+        # 'foursquare',
+        # 'Instagram',
+        # 'Tumblr',
+        'Twitter',
+        'LinkedIn',
+        # 'FitBit',
+        # 'Email'
+    ]
+    if request.user.is_authenticated():
+        user_profile = request.user.get_profile()
+        # We replace single quotes with double quotes b/c of python's strict json requirements
+        profiles = simplejson.loads(user_profile.profiles.replace("'", '"'))
+    response = render_to_response(
+            template, locals(), context_instance=RequestContext(request)
+        )
+    return response
