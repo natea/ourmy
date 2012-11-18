@@ -2,6 +2,15 @@
 
 {% block content %}
 
+<div class="leaderboard">
+	<div class="banner-header"><h1>Scoreboard</h1></div>
+	<ul class="rankings">
+		{% for user in users %}
+		<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic-scoreboard" src="..."></img></li>
+		{% endfor %}
+	</ul>
+</div>
+
 <h2 class="campaign-title">{{ campaign.title }}</h2>
 <p>{{ campaign.description }}</p>
 
@@ -18,16 +27,6 @@
         </li>
     {% endfor %}
     </ul>
-
-
-	<div class="leaderboard">
-		<div class="banner-header"><h1>Scoreboard</h1></div>
-		<ul class="rankings">
-			{% for user in users %}
-			<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic-scoreboard" src="..."></img></li>
-			{% endfor %}
-		</ul>
-	</div>
 
 {% for action in campaign.actions %}
 	<p>{{ action.social_network }}</p>
