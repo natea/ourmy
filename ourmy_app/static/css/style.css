@@ -491,6 +491,9 @@ padding: 0 10px 2px 10px;
 
 /*** CAMPAIGN DASHBOARD ***/
 
+.padding{
+    padding-top: 20px;
+}
 
 .campaign-media{
     padding: 0 auto;

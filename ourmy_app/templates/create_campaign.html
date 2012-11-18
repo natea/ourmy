@@ -2,17 +2,18 @@
 
 {% block content %}
 
-Create your campaign!
+<h2 class="campaign-title">Create your campaign!<h2>
 
+<div class="padding">
 <form action="" method="POST">
       {% csrf_token %}
       <fieldset>
       {{ form }}
       <div class="actions">
-        <input type="submit" class="btn primary" value="Save">
+        <input type="submit" class="btn primary" value="LAUNCH MY CAMPAIGN">
       </div>
       </fieldset>
     </form>
-    end of form
+</div>
 
 {% endblock content %}
