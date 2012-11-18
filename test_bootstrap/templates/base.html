@@ -23,7 +23,6 @@
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-	<script src="{{ STATIC_URL}}js/jquery.zclip.js"></script>
     {% bootstrap_javascript_tag "dropdown" %}
     {% block extra_head %}{% endblock %}
 </head>
@@ -38,7 +37,7 @@
 			 <div class="pull-right">
                 <div class="top-nav-links">
             		<ul class="nav">
-                		<li><a href="{% url home %}" class="creator-call-to-action">Create a Campaign</a></li>
+                		<li><a href="{% url create_campaign %}" class="creator-call-to-action">Create a Campaign</a></li>
 				<!--
                 <li><a href="{% url test_bootstrap.views.test_form %}">Form</a></li>
                 <li class="dropdown">
