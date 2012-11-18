@@ -16,6 +16,7 @@ from django.core import serializers
 from django.conf import settings
 import random
 import bitly_api
+from django import forms
 from ourmy_app.forms import CampaignForm
 from django.utils.functional import LazyObject
 
@@ -29,6 +30,7 @@ def index(request):
 
 
 def create_campaign(request):
+    instance=None
     if request.method == 'POST':
         try:
             campaigns = Campaign.objects.filter(user=request.user)
@@ -40,9 +42,10 @@ def create_campaign(request):
             form = CampaignForm(request.POST)
         else:
             form = CampaignForm(request.POST, instance=instance)
-        if form.is_vaid():
+        if form.is_valid():
             campaign = form.save(commit=False)
             campaign.user = request.user
+            import pdb; pdb.set_trace()
             campaign.save()
             return HttpResponseRedirect("/")
     else:
@@ -55,7 +58,7 @@ def create_campaign(request):
         except Campaign.DoesNotExist:
             form = CampaignForm()
         else:
-            form = CampaignForm()  #instance=campaign)
+            form = CampaignForm(instance=campaign)
     return render_to_response("create_campaign.html", {'form':form},
         context_instance=RequestContext(request))
 
@@ -84,7 +87,8 @@ def campaign(request, campaign_id):
 
     # create a CampaignUser object - this creates the unique bitly for this user for this campaign
     if isinstance(request.user, LazyObject):
-        user = User(first_name="anonymous", username="anonymous%d" % random.randrange(1,1000000))
+        # user = User(first_name="anonymous", username="anonymous%d" % random.randrange(1,1000000))
+        user, created = User.objects.get_or_create(first_name="anonymous")
         user.save()
     else:
         user = request.user
