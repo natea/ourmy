@@ -20,6 +20,7 @@
 	<div class="campaign-text">
 	<h2 class="campaign-title">{{ campaign.title }} <span class="creator small-creator">&nbsp;by {{campaign.user.first_name}}&nbsp;{{campaign.user.last_name}}</span></h2>
 	<p class="campaign-description">{{ campaign.description }}</p>
+	<p>{{ campaign.user.first_name }} {{ campaign.user.last_name }}</p>
 	</div>
 	{{ campaign.prizes }}
 	{% for prize in campaign.prize_set.all %}
