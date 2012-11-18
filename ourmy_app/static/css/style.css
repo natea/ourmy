@@ -80,6 +80,8 @@ ul{
 list-style: none;
 }
 
+/*** NAVBAR ***/
+
 .navbar-inner
 {
 position: relative;
@@ -114,6 +116,32 @@ margin-left: 10px;
 width: 150px;
 height: 55px;
 }
+
+.top-nav-links
+{
+	margin-top: 16px;
+	padding-right: 2px;
+	float: left;
+	display: block;
+}
+
+.navbar .nav > li > a{
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 1px #222;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.navbar .nav > li > a:active, .navbar .nav > li > a:hover{
+    color: #222;
+    opacity: 0.35;
+    filter: alpha(opacity=35);
+    font-weight: 700;
+    text-shadow: 0 1px 1px #FFF;
+}
+
+/*** POSITIONING ***/
 
 .clearfix{
 clear: both;
@@ -220,7 +248,7 @@ box-shadow: 0 4px 4px -2px #404040;
 .post-button
 {
 margin-right: 30px;
-padding: 12px 42px 12px 42px;
+padding: 12px 46px 12px 46px;
 font-size: 22px;
 letter-spacing: 1px;
 border-top: 1px solid #404040;
@@ -463,6 +491,10 @@ padding: 0 10px 2px 10px;
     font-weight: 400;
 }
 
+.small-creator{
+    font-size: 13px;
+}
+
 .sharing-center{
     margin-top: -80px;
 }
@@ -471,10 +503,15 @@ padding: 0 10px 2px 10px;
     margin-top: -15px;
 }
 
+ul.networks{
+    margin: 0 auto;
+    padding: 0;
+}
+
 .social-button{
     float: left;
     display: block;
-    padding: 24px;
+    padding: 16px;
 }
 
 .check{
@@ -482,7 +519,7 @@ padding: 0 10px 2px 10px;
   color: #228B22;
   font-weight: 700; 
   position: absolute;
-  margin-top: 120px;
+  margin-top: 8en0px;
 }
 
 .help-block{

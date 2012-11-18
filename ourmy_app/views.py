@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from ourmy_app.models import Campaign, Action
+from ourmy_app.models import Campaign, Action, CampaignUser
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import get_current_site
@@ -48,6 +48,10 @@ def campaign(request, campaign_id):
     users = User.objects.all()
     for user in users:
         user.points = random.randrange(1,100)
+
+    # create a CampaignUser object - this creates the unique bitly for this user for this campaign
+    campaign_user, created = CampaignUser.objects.get_or_create(user=request.user, campaign=campaign)
+    campaign_user.save()
 
     response = render_to_response('campaign.html',
          locals(),
