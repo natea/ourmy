@@ -60,8 +60,6 @@ class CampaignUser(models.Model):
 
     def save(self, *args, **kwargs):
         if self.bitly_url is None or self.bitly_url == '':
-            import pdb; pdb.set_trace()
-            import bitly_api
             connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
             result = connection.shorten(self.campaign.long_url)
             self.bitly_url = result["url"]
