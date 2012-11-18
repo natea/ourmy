@@ -53,6 +53,26 @@ def campaign(request, campaign_id):
     campaign_user, created = CampaignUser.objects.get_or_create(user=request.user, campaign=campaign)
     campaign_user.save()
 
+    if request.method == 'POST':
+        singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
+        user_profile = request.user.get_profile()
+
+        try:
+            access_token = user_profile.access_token
+        except:
+            return
+
+        body = request.POST['body']
+        url = request.POST['url']
+
+        payload = {'access_token' : access_token, 
+                   'services': 'facebook,twitter', 
+                   'body': body, 
+                   'url': url
+                   }
+
+        success = singly.make_request('/types/news', method='POST', request=payload)
+
     response = render_to_response('campaign.html',
          locals(),
          context_instance=RequestContext(request)
