@@ -45,7 +45,7 @@ def campaign(request, campaign_id):
         except:
             pass
 
-   users = User.objects.all()
+    users = User.objects.all()
     for user in users:
         user.points = random.randrange(1,100)
 
