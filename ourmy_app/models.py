@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from singly.models import SinglyProfile
 import datetime
 import os
     
-class UserProfile(models.Model):
+class UserProfile(SinglyProfile):
     bio = models.TextField()
-    user = models.ForeignKey(User, unique=True)
     
     def __unicode__(self):
         return self.user.username
