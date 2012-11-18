@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     # url(r'^ourmy/', include('ourmy.foo.urls')),
 
     url(r'^campaign/(?P<campaign_id>\d{0,6})/$', 'ourmy_app.views.campaign', name='campaign'),
+    url(r'^create_campaign$', 'ourmy_app.views.create_campaign', name='create_campaign'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

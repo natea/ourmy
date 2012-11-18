@@ -14,12 +14,46 @@ from urllib import urlencode
 from ourmy_project.settings import SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET, SINGLY_REDIRECT_URI
 from django.core import serializers
 import random
+from ourmy_app.forms import CampaignForm
+
 
 def index(request):
     # TODO: check that these are current campaigns
     current_campaign_list = Campaign.objects.all()
     return render_to_response('index.html', 
         {'campaign_list':current_campaign_list},
+        context_instance=RequestContext(request))
+
+
+def create_campaign(request):
+    if request.method == 'POST':
+        try:
+            campaigns = Campaign.objects.filter(user=request.user)
+            if campaigns.count() > 0:
+                instance = campaigns[0]
+            else:
+                form = CampaignForm(request.POST)
+        except:
+            form = CampaignForm(request.POST)
+        else:
+            form = CampaignForm(request.POST, instance=instance)
+        if form.is_vaid():
+            campaign = form.save(commit=False)
+            campaign.user = request.user
+            campaign.save()
+            return HttpResponseRedirect("/")
+    else:
+        try:
+            campaigns = Campaign.objects.filter(user=request.user)
+            if campaigns.count() > 0:
+                campaign = campaigns[0]
+            else:
+                form = CampaignForm()
+        except Campaign.DoesNotExist:
+            form = CampaignForm()
+        else:
+            form = CampaignForm()  #instance=campaign)
+    return render_to_response("create_campaign.html", {'form':form},
         context_instance=RequestContext(request))
 
 
