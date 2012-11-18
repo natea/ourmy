@@ -38,11 +38,11 @@ border-radius: 4px;
 }
 
 h1{
-font: 18px Arial, Helvetica, Sans-serif; 
-	padding: 0 20px 0 40px; 
+font: 20px Arial, Helvetica, Sans-serif; 
+	padding: 2px 20px 2px 40px; 
 	margin: 0 auto;
 	color: #FFF; 
-	text-shadow: 0 1px 0 #999;
+	text-shadow: 0 1px 0 #222;
 	position: relative;
 	overflow: hidden;
 }
@@ -68,7 +68,7 @@ h3
 
 .banner-header
 {
-padding: 6px 20px 6px 20px;
+padding: 10px 20px 10px 20px;
 text-align: center;
 -moz-border-radius: 4px 4px 0 0; -webkit-border-radius: 4px 4px 0 0; border-radius: 4px 4px 0 0; 
 -webkit-box-shadow: 0 1px 0 #FFF inset; -moz-box-shadow: 0 1px 0 #FFF inset; 
@@ -169,9 +169,6 @@ display: inline-block;
 box-shadow: 0 4px 4px -2px #404040;
 }
 
-.btn:hover,
-.btn:active,
-.btn.active,
 .btn.disabled,
 .btn[disabled] {
   	  background: #7f8383;
@@ -222,32 +219,31 @@ box-shadow: 0 4px 4px -2px #404040;
 
 .post-button
 {
-margin-right: 22px;
-padding: 8px 32px 8px 32px;
-font-size: 18px;
-border-top: 1px solid #0a6beb;
-text-shadow: 0 1px 0 #999;
-  background:#0a6beb;
-	background:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #34bff3), color-stop(100%, #0a6beb));
-	background:-webkit-linear-gradient(#34bff3,#0a6beb);
-	background:-moz-linear-gradient(#34bff3,#0a6beb);
-	background:-o-linear-gradient(#34bff3,#0a6beb);
-	background:-ms-linear-gradient(#34bff3,#0a6beb);
-	background:linear-gradient(#34bff3,#0a6beb);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#34bff3', endColorstr='#0a6beb', GradientType=0);
+margin-right: 30px;
+padding: 12px 42px 12px 42px;
+font-size: 22px;
+letter-spacing: 1px;
+border-top: 1px solid #404040;
+text-shadow: 0 1px 0 #222;
+  background:#FF6103;
+	background:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #FF7722), color-stop(100%, #FF6103));
+	background:-webkit-linear-gradient(#FF7722,#FF6103);
+	background:-moz-linear-gradient(#FF7722,#FF6103);
+	background:-o-linear-gradient(#FF7722,#FF6103);
+	background:-ms-linear-gradient(#FF7722,#FF6103);
+	background:linear-gradient(#FF7722,#FF6103);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF7722', endColorstr='#FF6103', GradientType=0);
 }
 
 .post-button:hover, .post-button:active, .friends-button:hover, .friends-button:active
 {
-background: #074aa2;
-text-shadow: 0 1px 0 #999;
-  background: -webkit-gradient(linear, left top, left bottom, from(#34bff3), to(#074aa2));
-  background: -webkit-linear-gradient(top, #34bff3, #074aa2);
-  background: -moz-linear-gradient(top, #34bff3, #074aa2);
-  background: -ms-linear-gradient(top, #34bff3, #074aa2);
-  background: -o-linear-gradient(top, #34bff3, #074aa2);
-  background-image: -ms-linear-gradient(top, #34bff3 0%, #074aa2 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#34bff3', endColorstr='#074aa2', GradientType=0);
+  background: -webkit-gradient(linear, left top, left bottom, from(#FF6103), to(#EE4000));
+  background: -webkit-linear-gradient(top, #FF6103, #EE4000);
+  background: -moz-linear-gradient(top, #FF6103,#EE4000);
+  background: -ms-linear-gradient(top, #FF6103, #EE4000);
+  background: -o-linear-gradient(top, #FF6103, #EE4000);
+  background-image: -ms-linear-gradient(top, #FF6103 0%, #EE4000 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF6103', endColorstr='#EE4000', GradientType=0);
 }
 
 .btn-invite
@@ -352,7 +348,7 @@ float: left;
 }
 
 
-/***  CAMPAIGN DASHBOARD ***/
+/***  SCOREBOARD ***/
 
 .leaderboard
 {
@@ -362,7 +358,7 @@ float: left;
 clear: both;
 height: auto;
 margin-top: 30px;
-width: 250px;
+width: 280px;
 border: solid 1px #DEDEDE;
 background: #e1e1e1; 
 background: -moz-linear-gradient(center top , #f2f2f2, #e1e1e1); 
@@ -406,7 +402,7 @@ border: solid 2px #FFF;
 
 .calloutpoint-score {
     color: #FFF;
-    text-shadow: 0 1px 0 #999;
+    text-shadow: 0 1px 0 #222;
     text-align: center;
     background:#FF6600;
     border: 2px solid #FFF;
@@ -417,10 +413,10 @@ border: solid 2px #FFF;
   background: -o-linear-gradient(top, #FF7722, #FF6600);
   background-image: -ms-linear-gradient(top, #FF7722 0%, #FF6600 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF7722', endColorstr='#FF6600', GradientType=0);
-    padding:2px 4px 4px 4px;
+    padding:0px 4px 4px 4px;
     width: 24px;
     height: 24px;
-    margin-top: -4px;
+    margin-top: -6px;
     border-radius:3px;
     position:relative;
     float: left;
@@ -446,6 +442,64 @@ margin-top: -2px;
 padding: 0 10px 2px 10px;
 }
 
+/*** CAMPAIGN DASHBOARD ***/
+
+
+.campaign-media{
+    padding: 0 auto;
+    position: relative;
+    display: block;
+    float: left;
+    margin-top: 30px;
+}
+
+.campaign-dashboard, .sharing-center{
+    float: right;
+    width: 630px;
+}
+
+.creator{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.sharing-center{
+    margin-top: -80px;
+}
+
+.control-group{
+    margin-top: -15px;
+}
+
+.social-button{
+    float: left;
+    display: block;
+    padding: 24px;
+}
+
+.check{
+  font-size: 24px;   
+  color: #228B22;
+  font-weight: 700; 
+  position: absolute;
+  margin-top: 120px;
+}
+
+.help-block{
+    font-size: 11px;
+}
+
+.input-xlarge{
+    width: 400px;
+}
+
+.form-actions{
+    background: #fff;
+    border: none;
+    padding: 0;
+    float: right;
+    margin-top: -170px;
+}
 
 .badge-board
 {
@@ -532,35 +586,6 @@ padding: 16px;
 .rank
 {
 padding: 16px;
-}
-
-.campaign-primary
-{
-position: relative;
-display: block;
-margin-top: 60px;
-margin-left: auto;
-margin-right: auto;
-padding: 60px 0 20px 0;
-height: 270px;
-}
-
-.dashboard
-{
-width: 720px;
-background: transparent;
-border-right: solid 1px #DEDEDE;
-border-left: solid 1px #DEDEDE;
-border-bottom: solid 1px #DEDEDE;
-filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-  *border: 0;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  *margin-left: .3em;
-  -webkit-box-shadow: 0 4px 4px -2px #bbb;
-  -moz-box-shadow: 0 4px 4px -2px #bbb;
-   box-shadow: 0 4px 4px -2px #bbb;
 }
 
 .prizes

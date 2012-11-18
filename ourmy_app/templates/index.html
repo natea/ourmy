@@ -25,7 +25,7 @@
 	{% for prize in campaign.prize_set.all %}
 	<p><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" /> You could win {{ prize.title }}, worth ${{ prize.value }}!</p>
 	{% endfor %}
-	<div class="promote-button"><a href="{% url campaign campaign_id=campaign.id %}" class="btn btn-large promo-button-layout">SHARE THIS CAMPAIGN</a></div>
+	<div class="promote-button"><a href="{% url campaign campaign_id=campaign.id %}" class="btn btn-large promo-button-layout">SUPPORT THIS PROJECT</a></div>
 	</div>
 
 {% endfor %}
