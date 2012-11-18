@@ -9,6 +9,10 @@ from django.contrib.sites.models import get_current_site
 from django.template import loader
 import datetime
 import simplejson
+from singly.singly import Singly
+from urllib import urlencode
+from ourmy_project.settings import SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET, SINGLY_REDIRECT_URI
+from django.core import serializers
 
 def index(request):
 	# TODO: check that these are current campaigns
@@ -39,6 +43,32 @@ def connect(request, template='connect.html'):
         user_profile = request.user.get_profile()
         # We replace single quotes with double quotes b/c of python's strict json requirements
         profiles = simplejson.loads(user_profile.profiles.replace("'", '"'))
+    response = render_to_response(
+            template, locals(), context_instance=RequestContext(request)
+        )
+    return response
+
+def post(request, template='post.html'):
+    singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
+    user_profile = request.user.get_profile()
+
+    try:
+        access_token = user_profile.access_token
+    except:
+        return
+
+    payload = {'access_token' : access_token, 
+               'services': 'facebook,twitter', 
+               'body': 'hi there', 
+               'url': 'http://singly.com'}
+
+    success = singly.make_request('/types/news', method='POST', request=payload)
+ 
+
+    # response_dict = serializers.deserialize("json", response)
+
+    print success
+
     response = render_to_response(
             template, locals(), context_instance=RequestContext(request)
         )
