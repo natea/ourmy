@@ -1,7 +1,18 @@
 {% extends "base.html" %}
-
 {% block content %}
-hello
+
+
+<div class="header cover">
+    <div class="container">
+        <div class="row">
+			<br></br>
+			<div class="tag-holder">
+			<h1 class="logline">Share Creativity. Get Rewards. Easy.</h1> 
+			</div>
+		</div>
+	</div>
+</div>
+
 {% for campaign in campaign_list %}
 	<img src="{{ MEDIA_URL }}{{ campaign.logo_image }}" />
 	<p>{{ campaign.title }}</p>

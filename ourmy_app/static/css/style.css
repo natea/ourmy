@@ -38,13 +38,21 @@ border-radius: 4px;
 }
 
 h1{
-font: 18px/35px Arial, Helvetica, Sans-serif; 
+font: 18px Arial, Helvetica, Sans-serif; 
 	padding: 0 20px 0 40px; 
 	margin: 0 auto;
 	color: #FFF; 
 	text-shadow: 0 1px 0 #999;
 	position: relative;
 	overflow: hidden;
+}
+
+h1.logline{
+    padding: 0 0 0 50px;
+    font-size: 48px !important;
+    font-weight: 700;
+    text-shadow: 0 1px 1px #222;
+    line-height: 60px;
 }
 
 h2
@@ -282,20 +290,30 @@ border-top: 1px solid #0a6beb;
 
 /***  ***/
 
-.container{
-    border: solid 1px #DEDEDE;
+.cover{
+    background: url('../img/bg.png') bottom;
+	background-color: #222;
+	background-size: 100% auto;
+	height: 360px;
+	-webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      *margin-left: .3em;
+      -webkit-box-shadow: 0 4px 4px -2px #404040;
+    -moz-box-shadow: 0 4px 4px -2px #404040;
+    box-shadow: 0 4px 4px -2px #404040;
+}
+
+.tag-holder{
+    background-color: #FF6103;
+    opacity: 0.90;
+      filter: alpha(opacity=90);
+      margin-left: 20px;
+      padding-right: 0;
     -webkit-border-radius: 4px;
       -moz-border-radius: 4px;
       border-radius: 4px;
-      -webkit-box-shadow: 0 4px 4px -2px #bbb;
-       -moz-box-shadow: 0 4px 4px -2px #bbb;
-        box-shadow: 0 4px 4px -2px #bbb;
-}
-
-.cover{
-    background: url('../img/bg.png');
-	background-color: #222;
-	height: 500px;
+      *margin-left: .3em;
 }
 
 
