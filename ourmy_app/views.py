@@ -32,7 +32,7 @@ def campaign(request, campaign_id):
         # 'Instagram',
         # 'Tumblr',
         'Twitter',
-        'LinkedIn',
+        #'LinkedIn',
         # 'FitBit',
         # 'Email'
     ]
