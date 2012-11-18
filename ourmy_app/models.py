@@ -65,6 +65,20 @@ class CampaignUser(models.Model):
 	def __unicode__(self):
 		return self.title + ' for ' + self.campaign.title
 
+class CampaignUser(models.Model):
+    campaign = models.ForeignKey(Campaign)
+    user = models.ForeignKey(User)
+    bitly_url = models.CharField(max_length=100)
+    last_checked = models.DateTimeField(default=datetime.datetime.now)
+    stats = models.TextField(blank=True, max_length=400)
+
+    def save(self, *args, **kwargs):
+        if self.bitly_url is None or self.bitly_url == '':
+            connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
+            result = connection.shorten(self.campaign.long_url)
+            self.bitly_url = result["url"]
+        super(CampaignUser, self).save(*args, **kwargs)      # Call the "real" save() method.
+
 
 
 class Action(models.Model):
