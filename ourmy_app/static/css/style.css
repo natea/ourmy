@@ -80,6 +80,8 @@ ul{
 list-style: none;
 }
 
+/*** NAVBAR ***/
+
 .navbar-inner
 {
 position: relative;
@@ -114,6 +116,31 @@ margin-left: 10px;
 width: 150px;
 height: 55px;
 }
+
+.top-nav-links
+{
+	margin-top: 16px;
+	padding-right: 2px;
+	float: left;
+	display: block;
+}
+
+.navbar .nav > li > a{
+    color: #fff;
+    text-shadow: 0 1px 0 #222;
+    font-weight: 700 !important;
+    font-size: 20px;
+}
+
+.navbar .nav > li > a:active, .navbar .nav > li > a:hover{
+    color: #222;
+    opacity: 0.35;
+    filter: alpha(opacity=35);
+    font-weight: 700;
+    text-shadow: 0 1px 1px #FFF;
+}
+
+/*** POSITIONING ***/
 
 .clearfix{
 clear: both;
@@ -461,6 +488,10 @@ padding: 0 10px 2px 10px;
 .creator{
     font-size: 16px;
     font-weight: 400;
+}
+
+.small-creator{
+    font-size: 13px;
 }
 
 .sharing-center{
