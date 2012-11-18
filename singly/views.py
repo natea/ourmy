@@ -17,4 +17,4 @@ def authorize_callback(request):
     if not request.user.is_authenticated():
         user = authenticate(username=user_profile.user.username, password='fakepassword')
         auth_login(request, user)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/campaign/1')
