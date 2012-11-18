@@ -102,7 +102,7 @@ width: 92% !important;
 .navbar-container{
     margin-left: auto;
     margin-right: auto;
-    width: 960px;
+    width: 940px;
 }
 
 .brand{
@@ -791,5 +791,90 @@ clear: both;
 width: 128px;
 height: 128px;
 }
+
+}
+
+@media (max-width: 925px) {
+    
+    .navbar-container{
+        width: 860px;
+    }
+    
+    .promote-button{
+        width: 300px;
+    }
+    
+    .promo-button-layout{
+        margin-right: 100px;
+    }
+
+}    
+
+@media (max-width: 860px) {
+
+.tag-holder{
+    padding: 0;
+    margin 0 auto;
+    margin-top: 20px;
+    padding: 14px 26px 14px 0;
+    width: 420px;
+    margin-left: 50px;
+}
+
+.promote-button{
+       width: 400px;
+   }
+   
+   .promo-button-layout{
+       margin-right: 200px;
+   }
+
+} 
+
+@media (max-width: 770px) {
+
+    .cover{
+        background: url('../img/bg.png') bottom right;
+        background-size: 100%;
+    }
+
+
+.promote-button{
+       width: 500px;
+   }
+   
+   .promo-button-layout{
+       margin-right: 300px;
+   }
+
+}
+
+@media (max-width: 660px) {
+
+.promote-button{
+    clear: both;
+    float: left;
+   }
+
+.campaign{
+    padding-bottom: 40px;
+}   
+
+}
+
+@media (max-width: 460px) {
+
+    .cover{
+           background: #FF6103;
+       }
+
+    .tag-holder{
+        padding: 0;
+        margin 0 auto;
+        margin-top: 20px;
+        padding: 28px 20px 28px 0;
+        width: 420px;
+        margin-left: 0;
+    }
 
 }
