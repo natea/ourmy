@@ -3,13 +3,15 @@
 {% block content %}
 
 <div class="campaign-media">
-	<iframe width="280" height="210" src="http://www.youtube.com/embed/aHEBX9LbhF4" frameborder="0" allowfullscreen></iframe>
+	<iframe width="280" height="210" src="http://www.youtube.com/embed/c6rkZSH93kE" frameborder="0" allowfullscreen></iframe>
 </div>	
 
 <div class="campaign-dashboard">
 <h2 class="campaign-title">{{ campaign.title }}<span class="creator">&nbsp; by {{campaign.user.first_name}}&nbsp;{{campaign.user.last_name}}</span></h2> 
 <p>{{ campaign.description }}</p>
-<p>// insert prize</p>
+<br></br>
+<h2 class="campaign-title">Campaign rewards:</h2>
+<p><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" />{{ prize.title }}</p>
 
 </div>	
 
@@ -40,6 +42,7 @@
 	                {% endif %}
 	        </li>
 	    {% endfor %}
+		<p class="helper-text">Click on the social icons to the left to connect your accounts.  The more accounts you connect, the more points you earn!</p>
 	    </ul>
 		
 	<div class="clearfix"></div>
