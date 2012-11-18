@@ -16,7 +16,7 @@
 
 {% for campaign in campaign_list %}
 	<div class="container campaign">
-	<div class="profile-pic"><img src="{{ MEDIA_URL }}{{ campaign.logo_image }}" /></div>
+	<div class="profile-pic"><img src="{{ STATIC_URL }}img/xgate.png" /></div>
 	<div class="campaign-text">
 	<h2 class="campaign-title">{{ campaign.title }} <span class="creator small-creator">&nbsp;by {{campaign.user.first_name}}&nbsp;{{campaign.user.last_name}}</span></h2>
 	<p class="campaign-description">{{ campaign.description }}</p>
