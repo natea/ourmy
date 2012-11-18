@@ -6,3 +6,4 @@ admin.site.register(Action)
 admin.site.register(Prize)
 admin.site.register(CampaignUser)
 admin.site.register(UserActions)
+

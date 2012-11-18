@@ -110,10 +110,13 @@ def post(request, template='post.html'):
     except:
         return
 
+    body = request.POST['body']
+    url = request.POST['url']
+
     payload = {'access_token' : access_token, 
-               'services': 'facebook,twitter', 
-               'body': 'hi there', 
-               'url': 'http://singly.com'}
+               'to': 'facebook,twitter', 
+               'body': body, 
+               'url': url}
 
     success = singly.make_request('/types/news', method='POST', request=payload)
 
