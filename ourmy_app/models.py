@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.conf import settings
+import bitly_api
 
 from singly.models import SinglyProfile
     
@@ -32,6 +33,7 @@ class Campaign(models.Model):
 	description = models.TextField(blank=True, max_length=250)
 	deadline = models.DateTimeField(blank=True, default=datetime.datetime.now)
 	logo_image = models.FileField(upload_to=get_campaign_logo_path, blank=True, null=True)
+    long_url = models.URLField(default="http://zoomtilt.com")
 
 	class Admin:
 		list_display = ('',)

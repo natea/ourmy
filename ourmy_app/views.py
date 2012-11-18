@@ -130,10 +130,10 @@ def post(request, template='post.html'):
     success = singly.make_request('/types/news', method='POST', request=payload)
 
     # if they have posted, we create a UserAction for them and store it in the database
-    if success:
-        action, created = Action.objects.get_or_create(campaign=)
-        user_action = UserActions(user=request.user, action=action)
-        user_action.save()
+    # if success:
+    #     action, created = Action.objects.get_or_create(campaign=)
+    #     user_action = UserActions(user=request.user, action=action)
+    #     user_action.save()
 
     response = render_to_response(
             template, locals(), context_instance=RequestContext(request)
