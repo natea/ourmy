@@ -91,6 +91,12 @@ margin-left: 40px !important;
 width: 92% !important;
 }
 
+.navbar-container{
+    margin-left: auto;
+    margin-right: auto;
+    width: 960px;
+}
+
 .brand{
 margin-left: 10px;
 }
@@ -271,6 +277,25 @@ border-top: 1px solid #0a6beb;
 	background:-ms-linear-gradient(#34bff3,#0a6beb);
 	background:linear-gradient(#34bff3,#0a6beb);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#34bff3', endColorstr='#0a6beb', GradientType=0);
+}
+
+
+/***  ***/
+
+.container{
+    border: solid 1px #DEDEDE;
+    -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      -webkit-box-shadow: 0 4px 4px -2px #bbb;
+       -moz-box-shadow: 0 4px 4px -2px #bbb;
+        box-shadow: 0 4px 4px -2px #bbb;
+}
+
+.cover{
+    background: url('../img/bg.png');
+	background-color: #222;
+	height: 500px;
 }
 
 
