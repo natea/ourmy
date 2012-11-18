@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from ourmy_app.models import Campaign, Action, CampaignUser
+from ourmy_app.models import Campaign, Action, CampaignUser, UserActions
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import get_current_site
@@ -13,8 +13,11 @@ from singly.singly import Singly
 from urllib import urlencode
 from ourmy_project.settings import SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET, SINGLY_REDIRECT_URI
 from django.core import serializers
+from django.conf import settings
 import random
+import bitly_api
 from ourmy_app.forms import CampaignForm
+from django.utils.functional import LazyObject
 
 
 def index(request):
@@ -79,13 +82,32 @@ def campaign(request, campaign_id):
         except:
             pass
 
+    # create a CampaignUser object - this creates the unique bitly for this user for this campaign
+    if isinstance(request.user, LazyObject):
+        user = User(first_name="anonymous", username="anonymous%d" % random.randrange(1,1000000))
+        user.save()
+    else:
+        user = request.user
+    
+    campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
+    campaign_user.save()
+
     users = User.objects.all()
     for user in users:
         user.points = random.randrange(1,100)
+        # get all the actions this user has done
 
-    # create a CampaignUser object - this creates the unique bitly for this user for this campaign
-    campaign_user, created = CampaignUser.objects.get_or_create(user=request.user, campaign=campaign)
-    campaign_user.save()
+        user.points = 0
+        user_actions = UserActions.objects.filter(user=user)
+        # the user gets points for posting
+        for user_action in user_actions:
+            user.points += user_action.action.points_to_post
+        # calculate points for each time their link was clicked
+        # TODO: make this based on which social network it is
+        connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
+        result = connection.clicks(campaign_user.bitly_url)
+        # user.points += result["clicks"]*user_actions[0]
+        user.points += random.randrange(1,100)
 
     response = render_to_response('campaign.html',
          locals(),
