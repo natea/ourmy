@@ -147,6 +147,10 @@ INSTALLED_APPS = (
     'debug_toolbar',
 )
 
+# Bit.ly API credentials go here.
+BITLY_LOGIN = "ourmy"
+BITLY_API_KEY = "R_d0e270b20075dbb971f660c0fad3f5ce"
+
 INTERNAL_IPS = ('127.0.0.1',)
 
 DEBUG_TOOLBAR_PANELS = (

@@ -17,6 +17,9 @@ from django.core import serializers
 import random
 import bitly_api
 from django.utils.functional import LazyObject
+from ourmy_app.forms import CampaignForm
+
+
 
 def index(request):
     # TODO: check that these are current campaigns
@@ -24,6 +27,12 @@ def index(request):
     return render_to_response('index.html', 
         {'campaign_list':current_campaign_list},
         context_instance=RequestContext(request))
+
+
+# def create_campaign(request):
+#     if request.method == 'POST':
+#         try:
+#             instance = Campaign.objects.get(user)
 
 
 def campaign(request, campaign_id):
@@ -72,7 +81,7 @@ def campaign(request, campaign_id):
         # TODO: make this based on which social network it is
         connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
         result = connection.clicks(campaign_user.bitly_url)
-        # user.points += result["clicks"]*user_actions[0]
+        user.points += result["clicks"]*user_actions[0]
 
     response = render_to_response('campaign.html',
          locals(),
@@ -121,9 +130,10 @@ def post(request, template='post.html'):
     success = singly.make_request('/types/news', method='POST', request=payload)
 
     # if they have posted, we create a UserAction for them and store it in the database
-    # if success:
-    #     action, created = Action.objects.get_or_create(campaign=)
-    #     user_action = UserActions(user=request.user, action=)
+    if success:
+        action, created = Action.objects.get_or_create(campaign=)
+        user_action = UserActions(user=request.user, action=action)
+        user_action.save()
 
     response = render_to_response(
             template, locals(), context_instance=RequestContext(request)
