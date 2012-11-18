@@ -1,11 +1,32 @@
 {% extends "base.html" %}
-
 {% block content %}
-hello
+
+
+<div class="header cover">
+    <div class="container">
+        <div class="row">
+			<br></br>
+			<div class="tag-holder">
+			<h1 class="logline">Share Creativity. Get Rewards. Easy.</h1> 
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="clearfix"></div>
+
 {% for campaign in campaign_list %}
-	<p>{{ campaign.title }}</p>
+	<div class="container campaign">
+	<h2 class="campaign-title">{{ campaign.title }}</h2>
 	<p>{{ campaign.description }}</p>
-	<a href="{% url campaign campaign_id=campaign.id %}" class="btn btn-large">Join this campaign!</a>
+	<div class="profile-pic"><img src="{{ MEDIA_URL }}{{ campaign.logo_image }}" /></div>
+	{{ campaign.prizes }}
+	{% for prize in campaign.prize_set.all %}
+	<p><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" /> You could win {{ prize.title }}, worth ${{ prize.value }}!</p>
+	{% endfor %}
+	<div class="promote-button"><a href="{% url campaign campaign_id=campaign.id %}" class="btn btn-large promo-button-layout">SHARE THIS CAMPAIGN</a></div>
+	</div>
+
 {% endfor %}
 
 {% endblock %}

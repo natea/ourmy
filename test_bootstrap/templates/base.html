@@ -31,7 +31,7 @@
 
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
-        <div class="container">
+		<div class="navbar-container">
             <a class="brand" href="/"><img src="{{ STATIC_URL }}img/logo2.png"></img></a>
 			
 			<!--
@@ -52,8 +52,7 @@
                 <li><a href="{% url contact %}">Contact</a></li>
             </ul>
 			-->
-
-        </div>
+			</div>
     </div>
 </div>
 
@@ -61,22 +60,18 @@
 
 <div class="container">
 
-    {% block content %}Empty page{% endblock %}
+    {% block content %}{% endblock %}
+
+</div>
 
     <p><hr></p>
 
     <footer class="row">
         <div class="span6">
-            <p>Thanks <a href="https://github.com/dyve/django-bootstrap-toolkit">Django Bootstrap</a></p>
         </div>
         <div class="span6" style="text-align:right">
-            <p>
-                By <a href="http://twitter.com/Ourmy_">Nate, Anna and Chris</a> 2012
-            </p>
         </div>
     </footer>
-
-</div> <!-- container -->
 
 </body>
 </html>
