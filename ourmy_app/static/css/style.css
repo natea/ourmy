@@ -220,7 +220,7 @@ box-shadow: 0 4px 4px -2px #404040;
 .post-button
 {
 margin-right: 30px;
-padding: 12px 42px 12px 42px;
+padding: 12px 46px 12px 46px;
 font-size: 22px;
 letter-spacing: 1px;
 border-top: 1px solid #404040;
@@ -471,10 +471,15 @@ padding: 0 10px 2px 10px;
     margin-top: -15px;
 }
 
+ul.networks{
+    margin: 0 auto;
+    padding: 0;
+}
+
 .social-button{
     float: left;
     display: block;
-    padding: 24px;
+    padding: 16px;
 }
 
 .check{
@@ -482,7 +487,7 @@ padding: 0 10px 2px 10px;
   color: #228B22;
   font-weight: 700; 
   position: absolute;
-  margin-top: 120px;
+  margin-top: 8en0px;
 }
 
 .help-block{
