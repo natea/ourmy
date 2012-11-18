@@ -9,7 +9,6 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'ourmy_app.views.index', name='home'),
     url(r'^connect$', 'ourmy_app.views.connect', name='connect'),
-    url(r'^post$', 'ourmy_app.views.post', name='post'),
     url(r'^test_bootstrap/', include('test_bootstrap.urls')),
     # url(r'^ourmy/', include('ourmy.foo.urls')),
 

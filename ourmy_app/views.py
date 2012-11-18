@@ -67,16 +67,17 @@ def campaign(request, campaign_id):
     campaign = get_object_or_404(Campaign, pk=campaign_id)
 
     services = [
-        'Facebook',
+        'facebook',
         # 'foursquare',
         # 'Instagram',
         # 'Tumblr',
-        'Twitter',
+        'twitter',
         #'LinkedIn',
         # 'FitBit',
         # 'Email'
     ]
  
+    # import pdb; pdb.set_trace()
     if request.user.is_authenticated():
         try:
             user_profile = request.user.get_profile()
@@ -111,7 +112,7 @@ def campaign(request, campaign_id):
         connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
         result = connection.clicks(campaign_user.bitly_url)
         # user.points += result["clicks"]*user_actions[0]
-        user.points += random.randrange(1,100)
+        # user.points += random.randrange(1,100)
 
     if request.method == 'POST':
         singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
@@ -131,10 +132,22 @@ def campaign(request, campaign_id):
                    'url': url
                    }
 
-        success = singly.make_request('/types/news', method='POST', request=payload)
+        return_data = singly.make_request('/types/news', method='POST', request=payload)
+        import pdb; pdb.set_trace()
+        for service in services:
+            try:
+                success = return_data[service]['id']
+                action, created = Action.objects.get_or_create(campaign=campaign, social_network=service)
+                user_action = UserActions(user=request.user, action=action)
+                user_action.save()
+            except:
+                pass
+
+        # if they have posted, we create a UserAction for them and store it in the database
+        # if success:
 
     response = render_to_response('campaign.html',
-         locals(),
+         { 'campaign':campaign, 'user':request.user, 'services':services, 'users':users, 'campaign_user':campaign_user },
          context_instance=RequestContext(request)
         )
     return response
@@ -155,31 +168,6 @@ def connect(request, template='connect.html'):
         user_profile = request.user.get_profile()
         # We replace single quotes with double quotes b/c of python's strict json requirements
         profiles = simplejson.loads(user_profile.profiles.replace("'", '"'))
-    response = render_to_response(
-            template, locals(), context_instance=RequestContext(request)
-        )
-    return response
-
-def post(request, template='post.html'):
-    singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
-    user_profile = request.user.get_profile()
-
-    try:
-        access_token = user_profile.access_token
-    except:
-        return
-
-    body = request.POST['body']
-    url = request.POST['url']
-
-    payload = {'access_token' : access_token, 
-               'services': 'facebook,twitter', 
-               'body': body, 
-               'url': url
-               }
-
-    success = singly.make_request('/types/news', method='POST', request=payload)
-
     response = render_to_response(
             template, locals(), context_instance=RequestContext(request)
         )
