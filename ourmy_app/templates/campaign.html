@@ -5,6 +5,20 @@
 <p>{{ campaign.title }}</p>
 <p>{{ campaign.description }}</p>
 
+<p>Click on Facebook or Twitter to allow us to post on your behalf.</p>
+    <ul>
+    {% for service in services %}
+        <li>
+            <a href="/authenticate/{{ service.lower }}">
+                {% if service.lower in profiles %}
+                    <span class="check">&#10003;</span>
+                {% endif %}
+                {{ service }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+
 {% for action in campaign.actions %}
 	<p>{{ action.social_network }}</p>
 	<p>{{ action.text }}</p>
