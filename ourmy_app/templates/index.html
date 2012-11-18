@@ -3,6 +3,7 @@
 {% block content %}
 hello
 {% for campaign in campaign_list %}
+	<img src="{{ MEDIA_URL }}{{ campaign.logo_image }}" />
 	<p>{{ campaign.title }}</p>
 	<p>{{ campaign.description }}</p>
 	<a href="{% url campaign campaign_id=campaign.id %}" class="btn btn-large">Join this campaign!</a>
@@ -10,7 +11,7 @@ hello
 {{ campaign.prizes }}
 
 	{% for prize in campaign.prize_set.all %}
-		<p>You could win {{ prize.title }}, worth ${{ prize.value }}!</p>
+		<p><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" /> You could win {{ prize.title }}, worth ${{ prize.value }}!</p>
 	{% endfor %}
 {% endfor %}
 
