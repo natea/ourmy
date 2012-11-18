@@ -2,7 +2,16 @@
 
 {% block content %}
 
-<p>{{ campaign.title }}</p>
+<div class="leaderboard">
+	<div class="banner-header"><h1>Scoreboard</h1></div>
+	<ul class="rankings">
+		{% for user in users %}
+		<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic-scoreboard" src="..."></img></li>
+		{% endfor %}
+	</ul>
+</div>
+
+<h2 class="campaign-title">{{ campaign.title }}</h2>
 <p>{{ campaign.description }}</p>
 
 <p>Click on Facebook or Twitter to allow us to post on your behalf.</p>
