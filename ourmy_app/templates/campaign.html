@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<p>{{ campaign.title }}</p>
+<h2 class="campaign-title">{{ campaign.title }}</h2>
 <p>{{ campaign.description }}</p>
 
 <p>Click on Facebook or Twitter to allow us to post on your behalf.</p>
@@ -19,11 +19,24 @@
     {% endfor %}
     </ul>
 
-<p>This is the leaderboard!</p>
-{% for user in users %}
-	<p>{{ user.first_name }} - {{ user.points }}</p>
-{% endfor %}
 
+	<div class="leaderboard">
+		<div class="banner-header"><h1>Scoreboard</h1></div>
+		<ul class="rankings">
+			{% for user in users %}
+			<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic" src="bootstrap/img/jt.png"></img></li>
+			<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic" src="bootstrap/img/ri.png"></img></li>
+			<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic" src="bootstrap/img/beiber.png"></img></li>
+			<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic" src="bootstrap/img/miley.png"></img></li>
+			<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic" src="bootstrap/img/cn.png"></img></li>
+			<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic" src="bootstrap/img/oldspiceguy.png"></img></li>
+			<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic" src="bootstrap/img/lolcat.png"></img></li>
+			<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic" src="bootstrap/img/don.png"></img></li>
+			<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic" src="bootstrap/img/ye.png"></img></li>
+			<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic" src="bootstrap/img/1.png"></img></li>
+			{% endfor %}
+		</ul>
+	</div>
 
 {% for action in campaign.actions %}
 	<p>{{ action.social_network }}</p>
