@@ -19,6 +19,12 @@
     {% endfor %}
     </ul>
 
+<p>This is the leaderboard!</p>
+{% for user in users %}
+	<p>{{ user.first_name }} - {{ user.points }}</p>
+{% endfor %}
+
+
 {% for action in campaign.actions %}
 	<p>{{ action.social_network }}</p>
 	<p>{{ action.text }}</p>

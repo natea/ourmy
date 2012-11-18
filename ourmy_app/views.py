@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.contrib.auth.models import User
 from ourmy_app.models import Campaign, Action
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
@@ -13,6 +13,7 @@ from singly.singly import Singly
 from urllib import urlencode
 from ourmy_project.settings import SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET, SINGLY_REDIRECT_URI
 from django.core import serializers
+import random
 
 def index(request):
     # TODO: check that these are current campaigns
@@ -44,11 +45,16 @@ def campaign(request, campaign_id):
         except:
             pass
 
+   users = User.objects.all()
+    for user in users:
+        user.points = random.randrange(1,100)
+
     response = render_to_response('campaign.html',
          locals(),
          context_instance=RequestContext(request)
         )
     return response
+
 
 def connect(request, template='connect.html'):
     services = [
