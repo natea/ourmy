@@ -6,6 +6,12 @@ hello
 	<p>{{ campaign.title }}</p>
 	<p>{{ campaign.description }}</p>
 	<a href="{% url campaign campaign_id=campaign.id %}" class="btn btn-large">Join this campaign!</a>
+
+{{ campaign.prizes }}
+
+	{% for prize in campaign.prize_set.all %}
+		<p>You could win {{ prize.title }}, worth ${{ prize.value }}!</p>
+	{% endfor %}
 {% endfor %}
 
 {% endblock %}
