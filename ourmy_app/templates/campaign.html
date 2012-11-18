@@ -33,14 +33,15 @@
 	<p>{{ user.first_name }} - {{ user.points }}</p>
 {% endfor %}
 
-<form class="form-vertical" >
+<form class="form-vertical" action="/post" method="post">
+{% csrf_token %}
   <fieldset>
     <legend>Share this campaign!</legend>
 
     <div class="control-group">
       <label class="control-label" for="textarea">Sharing text</label>
       <div class="controls">
-        <textarea class="input-xlarge" id="message" rows="3">Watch Juan's web TV series Dead Man's Trigger!
+        <textarea class="input-xlarge" name="body" id="body" rows="3">Watch Juan's web TV series Dead Man's Trigger!
         </textarea>
       </div>
     </div>
@@ -48,7 +49,7 @@
     <div class="control-group">
       <label class="control-label" for="input01">URL</label>
       <div class="controls">
-        <input type="text" class="input-xlarge disabled" id="url" value="http://bit.ly/xs8fal3">
+        <input type="text" name="url" class="input-xlarge disabled" id="url" value="http://bit.ly/xs8fal3">
         <p class="help-block">This is an auto-generated bit.ly link that will allow us to track your sharing.</p>
       </div>
     </div>
