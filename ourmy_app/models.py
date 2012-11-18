@@ -58,10 +58,8 @@ class CampaignUser(models.Model):
     stats = models.TextField(blank=True, max_length=400)
 
     def save(self, *args, **kwargs):
-        import pdb; pdb.set_trace()
         if self.bitly_url is None or self.bitly_url == '':
             import bitly_api
-            print settings.BITLY_LOGIN
             connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
             self.bitly_url = connection.shorten(self.campaign.long_url)
         super(CampaignUser, self).save(*args, **kwargs)      # Call the "real" save() method.
