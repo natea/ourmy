@@ -29,37 +29,30 @@ def index(request):
         context_instance=RequestContext(request))
 
 
-def create_campaign(request):
+def create_campaign(request, campaign_id=None):
     instance=None
+    campaigns = []
+    if request.user.is_authenticated():
+        campaigns = Campaign.objects.filter(user=request.user)
     if request.method == 'POST':
-        try:
-            campaigns = Campaign.objects.filter(user=request.user)
-            if campaigns.count() > 0:
-                instance = campaigns[0]
-            else:
-                form = CampaignForm(request.POST)
-        except:
-            form = CampaignForm(request.POST)
-        else:
+        if campaign_id is not None:
+            instance = get_object_or_404(Campaign, pk=campaign_id)
             form = CampaignForm(request.POST, instance=instance)
+        else:
+            form = CampaignForm(request.POST)
+            
         if form.is_valid():
             campaign = form.save(commit=False)
             campaign.user = request.user
-            import pdb; pdb.set_trace()
             campaign.save()
             return HttpResponseRedirect("/")
     else:
-        try:
-            campaigns = Campaign.objects.filter(user=request.user)
-            if campaigns.count() > 0:
-                campaign = campaigns[0]
-            else:
-                form = CampaignForm()
-        except Campaign.DoesNotExist:
-            form = CampaignForm()
-        else:
+        if campaign_id is not None:
+            campaign = get_object_or_404(Campaign, pk=campaign_id)
             form = CampaignForm(instance=campaign)
-    return render_to_response("create_campaign.html", {'form':form},
+        else:
+            form = CampaignForm()
+    return render_to_response("create_campaign.html", {'form':form, 'campaigns':campaigns},
         context_instance=RequestContext(request))
 
 
@@ -77,8 +70,12 @@ def campaign(request, campaign_id):
         # 'Email'
     ]
  
-    # import pdb; pdb.set_trace()
+    campaign_user = None
     if request.user.is_authenticated():
+        user = request.user
+        # create a CampaignUser object - this creates the unique bitly for this user for this campaign      
+        campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
+        campaign_user.save()
         try:
             user_profile = request.user.get_profile()
             # We replace single quotes with double quotes b/c of python's strict json requirements
@@ -86,16 +83,6 @@ def campaign(request, campaign_id):
         except:
             pass
 
-    # create a CampaignUser object - this creates the unique bitly for this user for this campaign
-    if isinstance(request.user, LazyObject):
-        # user = User(first_name="anonymous", username="anonymous%d" % random.randrange(1,1000000))
-        user, created = User.objects.get_or_create(first_name="anonymous")
-        user.save()
-    else:
-        user = request.user
-    
-    campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
-    campaign_user.save()
 
     users = User.objects.all()
     for user in users:
@@ -109,6 +96,7 @@ def campaign(request, campaign_id):
             user.points += user_action.action.points_to_post
         # calculate points for each time their link was clicked
         # TODO: make this based on which social network it is
+        import pdb; pdb.set_trace()
         connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
         result = connection.clicks(campaign_user.bitly_url)
         # user.points += result["clicks"]*user_actions[0]
@@ -133,7 +121,6 @@ def campaign(request, campaign_id):
                    }
 
         return_data = singly.make_request('/types/news', method='POST', request=payload)
-        import pdb; pdb.set_trace()
         for service in services:
             try:
                 success = return_data[service]['id']

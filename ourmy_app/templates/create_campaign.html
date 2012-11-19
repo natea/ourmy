@@ -16,4 +16,13 @@
     </form>
 </div>
 
+<div>
+	<select ONCHANGE="location = this.options[this.selectedIndex].value;">
+		<option>Edit a different campaign</option>
+		{% for campaign in campaigns %}
+			<option value="{% url edit_campaign campaign_id=campaign.id %}">{{ campaign.title }}</option>
+		{% endfor %}
+        <option value="{% url create_campaign %}">Add a new campaign</option>
+	</select>
+
 {% endblock content %}
