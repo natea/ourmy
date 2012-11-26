@@ -9,11 +9,12 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'ourmy_app.views.index', name='home'),
     url(r'^connect$', 'ourmy_app.views.connect', name='connect'),
-    url(r'^post$', 'ourmy_app.views.post', name='post'),
     url(r'^test_bootstrap/', include('test_bootstrap.urls')),
     # url(r'^ourmy/', include('ourmy.foo.urls')),
 
     url(r'^campaign/(?P<campaign_id>\d{0,6})/$', 'ourmy_app.views.campaign', name='campaign'),
+    url(r'^create_campaign$', 'ourmy_app.views.create_campaign', name='create_campaign'),
+    url(r'^edit_campaign/(?P<campaign_id>\d{0,6})/$', 'ourmy_app.views.create_campaign', name='edit_campaign'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

@@ -218,3 +218,7 @@ SINGLY_CLIENT_SECRET="b174c23ac692e1d0e920e92798ec34c8"
 SINGLY_REDIRECT_URI = 'http://localhost:8000/authorize/callback'
 
 AUTH_PROFILE_MODULE = "singly.SinglyProfile"
+
+# Bit.ly API credentials go here.
+BITLY_LOGIN = "ourmy"
+BITLY_API_KEY = "R_d0e270b20075dbb971f660c0fad3f5ce"

@@ -14,11 +14,13 @@ from urllib import urlencode
 from ourmy_project.settings import SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET, SINGLY_REDIRECT_URI
 from django.conf import settings
 from django.core import serializers
+from django.conf import settings
 import random
 import bitly_api
-from django.utils.functional import LazyObject
-from ourmy_app.forms import CampaignForm
 
+from django import forms
+from ourmy_app.forms import CampaignForm
+from django.utils.functional import LazyObject
 
 
 def index(request):
@@ -29,27 +31,53 @@ def index(request):
         context_instance=RequestContext(request))
 
 
-# def create_campaign(request):
-#     if request.method == 'POST':
-#         try:
-#             instance = Campaign.objects.get(user)
+def create_campaign(request, campaign_id=None):
+    instance=None
+    campaigns = []
+    if request.user.is_authenticated():
+        campaigns = Campaign.objects.filter(user=request.user)
+    if request.method == 'POST':
+        if campaign_id is not None:
+            instance = get_object_or_404(Campaign, pk=campaign_id)
+            form = CampaignForm(request.POST, instance=instance)
+        else:
+            form = CampaignForm(request.POST)
+            
+        if form.is_valid():
+            campaign = form.save(commit=False)
+            campaign.user = request.user
+            campaign.save()
+            return HttpResponseRedirect("/")
+    else:
+        if campaign_id is not None:
+            campaign = get_object_or_404(Campaign, pk=campaign_id)
+            form = CampaignForm(instance=campaign)
+        else:
+            form = CampaignForm()
+    return render_to_response("create_campaign.html", {'form':form, 'campaigns':campaigns},
+        context_instance=RequestContext(request))
 
 
 def campaign(request, campaign_id):
     campaign = get_object_or_404(Campaign, pk=campaign_id)
 
     services = [
-        'Facebook',
+        'facebook',
         # 'foursquare',
         # 'Instagram',
         # 'Tumblr',
-        'Twitter',
+        'twitter',
         #'LinkedIn',
         # 'FitBit',
         # 'Email'
     ]
  
+    campaign_user = None
     if request.user.is_authenticated():
+        user = request.user
+        # create a CampaignUser object - this creates the unique bitly for this user for this campaign      
+        campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
+        campaign_user.save()
         try:
             user_profile = request.user.get_profile()
             # We replace single quotes with double quotes b/c of python's strict json requirements
@@ -58,14 +86,14 @@ def campaign(request, campaign_id):
             pass
 
     # create a CampaignUser object - this creates the unique bitly for this user for this campaign
-    if isinstance(request.user, LazyObject):
-        user = User(first_name="anonymous", username="anonymous%d" % random.randrange(1,1000000))
-        user.save()
-    else:
-        user = request.user
+    # if isinstance(request.user, LazyObject):
+    #     user = User(first_name="anonymous", username="anonymous%d" % random.randrange(1,1000000))
+    #     user.save()
+    # else:
+    #     user = request.user
     
-    campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
-    campaign_user.save()
+    # campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
+    # campaign_user.save()
 
     users = User.objects.all()
     for user in users:
@@ -79,12 +107,46 @@ def campaign(request, campaign_id):
             user.points += user_action.action.points_to_post
         # calculate points for each time their link was clicked
         # TODO: make this based on which social network it is
+
+
         connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
         result = connection.clicks(campaign_user.bitly_url)
-        user.points += result["clicks"]*user_actions[0]
+        # user.points += result["clicks"]*user_actions[0]
+        # user.points += random.randrange(1,100)
+
+    if request.method == 'POST':
+        singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
+        user_profile = request.user.get_profile()
+
+        try:
+            access_token = user_profile.access_token
+        except:
+            return
+
+        body = request.POST['body']
+        url = request.POST['url']
+
+        payload = {'access_token' : access_token, 
+                   'services': 'facebook,twitter', 
+                   'body': body, 
+                   'url': url
+                   }
+
+        return_data = singly.make_request('/types/news', method='POST', request=payload)
+        for service in services:
+            try:
+                success = return_data[service]['id']
+                action, created = Action.objects.get_or_create(campaign=campaign, social_network=service)
+                user_action = UserActions(user=request.user, action=action)
+                user_action.save()
+            except:
+                pass
+
+        # if they have posted, we create a UserAction for them and store it in the database
+        # if success:
 
     response = render_to_response('campaign.html',
-         locals(),
+         { 'campaign':campaign, 'user':request.user, 'services':services, 'users':users, 'campaign_user':campaign_user },
          context_instance=RequestContext(request)
         )
     return response
@@ -105,36 +167,6 @@ def connect(request, template='connect.html'):
         user_profile = request.user.get_profile()
         # We replace single quotes with double quotes b/c of python's strict json requirements
         profiles = simplejson.loads(user_profile.profiles.replace("'", '"'))
-    response = render_to_response(
-            template, locals(), context_instance=RequestContext(request)
-        )
-    return response
-
-def post(request, template='post.html'):
-    singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
-    user_profile = request.user.get_profile()
-
-    try:
-        access_token = user_profile.access_token
-    except:
-        return
-
-    body = request.POST['body']
-    url = request.POST['url']
-
-    payload = {'access_token' : access_token, 
-               'to': 'facebook,twitter', 
-               'body': body, 
-               'url': url}
-
-    success = singly.make_request('/types/news', method='POST', request=payload)
-
-    # if they have posted, we create a UserAction for them and store it in the database
-    # if success:
-    #     action, created = Action.objects.get_or_create(campaign=)
-    #     user_action = UserActions(user=request.user, action=action)
-    #     user_action.save()
-
     response = render_to_response(
             template, locals(), context_instance=RequestContext(request)
         )
