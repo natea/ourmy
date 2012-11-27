@@ -15,12 +15,12 @@ from ourmy_project.settings import SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET, SINGL
 from django.conf import settings
 from django.core import serializers
 from django.conf import settings
-import random
 import bitly_api
 
 from django import forms
 from ourmy_app.forms import CampaignForm
 from django.utils.functional import LazyObject
+from social_networking import get_points_for_user
 
 
 def index(request):
@@ -90,7 +90,6 @@ def campaign(request, campaign_id):
 
     users = User.objects.all()
     for user in users:
-        user.points = random.randrange(1,100)
         # get all the actions this user has done
 
         user.points = 0
@@ -103,7 +102,8 @@ def campaign(request, campaign_id):
         # connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
         # result = connection.clicks(campaign_user.bitly_url)
         # user.points += result["clicks"]*user_actions[0]
-        user.points += random.randrange(1,100)
+        user.points += get_points_for_user(user)
+    sorted_users = sorted(users, key=lambda o:o.points, reverse=True)
 
     if request.method == 'POST':
         singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
@@ -139,7 +139,7 @@ def campaign(request, campaign_id):
         # if success:
 
     response = render_to_response('campaign.html',
-         { 'campaign':campaign, 'user':request.user, 'services':services, 'users':users, 'campaign_user':campaign_user },
+         { 'campaign':campaign, 'user':request.user, 'services':services, 'users':sorted_users, 'campaign_user':campaign_user },
          context_instance=RequestContext(request)
         )
     return response
