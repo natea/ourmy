@@ -84,13 +84,6 @@ def campaign(request, campaign_id):
             profiles = simplejson.loads(user_profile.profiles.replace("'", '"'))
         except:
             pass
-
-    # create a CampaignUser object - this creates the unique bitly for this user for this campaign
-    # if isinstance(request.user, LazyObject):
-    #     user = User(first_name="anonymous", username="anonymous%d" % random.randrange(1,1000000))
-    #     user.save()
-    # else:
-    #     user = request.user
     
     # campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
     # campaign_user.save()
@@ -107,40 +100,40 @@ def campaign(request, campaign_id):
             user.points += user_action.action.points_to_post
         # calculate points for each time their link was clicked
         # TODO: make this based on which social network it is
-
-
-        connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
-        result = connection.clicks(campaign_user.bitly_url)
+        # connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
+        # result = connection.clicks(campaign_user.bitly_url)
         # user.points += result["clicks"]*user_actions[0]
-        # user.points += random.randrange(1,100)
+        user.points += random.randrange(1,100)
 
     if request.method == 'POST':
         singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
-        user_profile = request.user.get_profile()
-
         try:
-            access_token = user_profile.access_token
-        except:
-            return
-
-        body = request.POST['body']
-        url = request.POST['url']
-
-        payload = {'access_token' : access_token, 
-                   'services': 'facebook,twitter', 
-                   'body': body, 
-                   'url': url
-                   }
-
-        return_data = singly.make_request('/types/news', method='POST', request=payload)
-        for service in services:
+            user_profile = request.user.get_profile()
             try:
-                success = return_data[service]['id']
-                action, created = Action.objects.get_or_create(campaign=campaign, social_network=service)
-                user_action = UserActions(user=request.user, action=action)
-                user_action.save()
+                access_token = user_profile.access_token
             except:
                 pass
+
+            body = request.POST['body']
+            url = request.POST['url']
+
+            payload = {'access_token' : access_token, 
+                       'services': 'facebook,twitter', 
+                       'body': body, 
+                       'url': url
+                       }
+
+            return_data = singly.make_request('/types/news', method='POST', request=payload)
+            for service in services:
+                try:
+                    success = return_data[service]['id']
+                    action, created = Action.objects.get_or_create(campaign=campaign, social_network=service)
+                    user_action = UserActions(user=request.user, action=action)
+                    user_action.save()
+                except:
+                    pass
+        except:
+            print "drat - no singly profile"
 
         # if they have posted, we create a UserAction for them and store it in the database
         # if success:
