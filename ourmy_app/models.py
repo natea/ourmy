@@ -33,7 +33,7 @@ class Campaign(models.Model):
     description = models.TextField(blank=True, max_length=250)
     deadline = models.DateTimeField(blank=True, default=datetime.datetime.now)
     logo_image = models.FileField(upload_to=get_campaign_logo_path, blank=True, null=True)
-    long_url = models.URLField(default="http://zoomtilt.com")
+    video_url = models.URLField(blank=True)
 
     class Admin:
         list_display = ('',)
@@ -45,9 +45,14 @@ class Campaign(models.Model):
 class Prize(models.Model):
     campaign = models.ForeignKey(Campaign)
     title = models.CharField(max_length=100)
-    logo_image = models.FileField(upload_to=get_prize_logo_path, blank=True, null=True)
     description = models.TextField(blank=True, max_length=250)  
-    value = models.DecimalField(max_digits=6, decimal_places=2)
+    logo_image = models.FileField(upload_to=get_prize_logo_path, blank=True, null=True)
+    video_url = models.URLField(blank=True)
+    dollar_value = models.DecimalField(max_digits=6, decimal_places=2, default=10)
+    points_value = models.IntegerField(default=100)
+    how_many = models.IntegerField(default=1)
+    place = models.IntegerField(default=1)
+    chance = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.title + ' for ' + self.campaign.title
@@ -56,9 +61,10 @@ class Prize(models.Model):
 class CampaignUser(models.Model):
     campaign = models.ForeignKey(Campaign)
     user = models.ForeignKey(User)
-    bitly_url = models.CharField(max_length=100)
+    api_call = models.CharField(max_length=500)
+    # bitly_url = models.CharField(max_length=100)
     last_checked = models.DateTimeField(default=datetime.datetime.now)
-    stats = models.TextField(blank=True, max_length=400)
+    # stats = models.TextField(blank=True, max_length=400)
 
     def save(self, *args, **kwargs):
         connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
@@ -73,12 +79,18 @@ class CampaignUser(models.Model):
 
 class Action(models.Model):
     campaign = models.ForeignKey(Campaign)
-    social_network = models.CharField(max_length=100)
-    text = models.TextField(blank=True)
-    points_to_post = models.IntegerField(default=10)
-    points_per_click = models.IntegerField(default=1)
-    start_on = models.DateTimeField(blank=True, default=datetime.datetime.now)
-    end_on = models.DateTimeField(blank=True, default=datetime.datetime.now)
+    # social_network = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    logo_image = models.FileField(upload_to=get_prize_logo_path, blank=True, null=True)
+    video_url = models.URLField(blank=True)
+    points = models.IntegerField(default=1)
+    # points_to_post = models.IntegerField(default=10)
+    # points_per_click = models.IntegerField(default=1)
+    start_at = models.DateTimeField(blank=True, default=datetime.datetime.now)
+    end_at = models.DateTimeField(blank=True, default=datetime.datetime.now)
+    api_call = models.CharField(max_length=500)
+    last_checked = models.DateTimeField(default=datetime.datetime.now)
 
     def __unicode__(self):
         return self.campaign.title + ': ' + self.social_network
