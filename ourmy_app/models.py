@@ -4,12 +4,12 @@ import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from django.conf import settings
 
 from singly.models import SinglyProfile
-import bitly_api
+
     
 class UserProfile(SinglyProfile):
+    singly_profile = models.ForeignKey(SinglyProfile, unique=True, related_name='OurmyUserProfile')
     bio = models.TextField()
     
     def __unicode__(self):
@@ -66,14 +66,14 @@ class CampaignUser(models.Model):
     last_checked = models.DateTimeField(default=datetime.datetime.now)
     # stats = models.TextField(blank=True, max_length=400)
 
-    def save(self, *args, **kwargs):
-        connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
-        result = connection.shorten(self.campaign.long_url)
-        self.bitly_url = result["url"]
-        super(CampaignUser, self).save(*args, **kwargs)      # Call the "real" save() method.
+    # def save(self, *args, **kwargs):
+    #     connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
+    #     result = connection.shorten(self.campaign.long_url)
+    #     self.bitly_url = result["url"]
+    #     super(CampaignUser, self).save(*args, **kwargs)      # Call the "real" save() method.
 
-	def __unicode__(self):
-		return self.title + ' for ' + self.campaign.title
+    def __unicode__(self):
+        return self.campaign.title + ', ' + self.user.last_name
 
 
 
@@ -96,7 +96,7 @@ class Action(models.Model):
         return self.campaign.title + ': ' + self.social_network
 
 
-class UserActions(models.Model):
+class UserAction(models.Model):
     user = models.ForeignKey(User)
     action = models.ForeignKey(Action)
 

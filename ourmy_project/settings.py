@@ -51,6 +51,9 @@ USE_L10N = True
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
 
+# When the @login_required decorator is used, this is where django will send unregistered users
+LOGIN_URL = '/login/'
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = (os.path.join(PROJECT_ROOT, "media"))
@@ -142,9 +145,10 @@ INSTALLED_APPS = (
     'singly',
     'bootstrap_toolkit',
     'test_bootstrap',
-    'ourmy_app',
     'south',
     'debug_toolbar',
+    'ourmy_app',
+    'sharing',
 )
 
 # Bit.ly API credentials go here.
@@ -218,7 +222,3 @@ SINGLY_CLIENT_SECRET="b174c23ac692e1d0e920e92798ec34c8"
 SINGLY_REDIRECT_URI = 'http://localhost:8000/authorize/callback'
 
 AUTH_PROFILE_MODULE = "singly.SinglyProfile"
-
-# Bit.ly API credentials go here.
-BITLY_LOGIN = "ourmy"
-BITLY_API_KEY = "R_d0e270b20075dbb971f660c0fad3f5ce"
