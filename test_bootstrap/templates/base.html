@@ -43,10 +43,6 @@
             		<ul class="nav">
                         {% if user.is_authenticated %}
                     		<li><a href="{%  url create_campaign  %}" class="creator-call-to-action">Create a Campaign</a></li>
-                            {% else %}
-                            <li>
-                                <a href="/authenticate/facebook">Log in to create a campaign</a>
-                            </li>
                             {% endif %}
 				<!--
                 <li><a href="{% url test_bootstrap.views.test_form %}">Form</a></li>

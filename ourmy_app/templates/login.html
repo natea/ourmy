@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+      <ul class="networks">
+      {% for service in services %}
+          <li>
+                {% if service.lower in profiles %}
+                    <span class="check">&#10003;</span><a class="social-button" href="/authenticate/{{ service.lower }}"><img src="{{ STATIC_URL }}img/{{service.lower}}-on.png" title="{{ service }}" width="80"/></a>
+        {% else %}  
+          <a class="social-button" href="/authenticate/{{ service.lower }}"><img src="{{ STATIC_URL }}img/{{service.lower}}-off.png" title="{{ service }}" width="80"/></a>
+                {% endif %}
+          </li>
+      {% endfor %}
+    <p class="helper-text">Click on the social icons to the left to connect your accounts.  The more accounts you connect, the more points you earn!</p>
+      </ul>
+
+{% endblock content %}
