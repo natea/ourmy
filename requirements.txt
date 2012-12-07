@@ -8,6 +8,7 @@ South==0.7.5
 requests
 simplejson
 https://github.com/bitly/bitly-api-python/archive/master.zip
+django-annoying==0.7.6
 
 # unused
 #-e git+git://github.com/Singly/django-singly.git#egg=django-singly
