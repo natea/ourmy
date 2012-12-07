@@ -104,7 +104,7 @@ def campaign(request, campaign_id):
             words = points_call.split(".")
             module = __import__(words[0])
             funct = getattr(module, words[1])
-            user.points += user_action.action.points * funct(user)
+            user.points += user_action.action.points * funct(user, campaign)
 
 
         # calculate points for each time their link was clicked
