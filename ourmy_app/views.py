@@ -40,20 +40,24 @@ def create_campaign(request, campaign_id=None):
     campaigns = Campaign.objects.filter(user=request.user)
     if request.method == 'POST':
         if campaign_id is not None:
-            instance = get_object_or_404(Campaign, pk=campaign_id)
-            form = CampaignForm(request.POST, instance=instance)
+            campaign = get_object_or_404(Campaign, pk=campaign_id)
+            sharing_campaign = SharingCampaign.objects.get(campaign=campaign)
+            form = CampaignForm(initial={'title':campaign.title, 'long_url':sharing_campaign.long_url})
         else:
             form = CampaignForm(request.POST)
             
         if form.is_valid():
-            campaign = form.save(commit=False)
-            campaign.user = request.user
+            campaign = Campaign(user=request.user, title=request.POST['title'], api_call="get_actions_for_user")
             campaign.save()
+            sharing_campaign = SharingCampaign(campaign=campaign, long_url=request.POST['long_url'])
+            sharing_campaign.save()
+            print "should have saved a campaign and sharing_campaign"
             return HttpResponseRedirect("/")
     else:
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
-            form = CampaignForm(instance=campaign)
+            sharing_campaign = SharingCampaign.objects.get(campaign=campaign)
+            form = CampaignForm(initial={'title':campaign.title, 'long_url':sharing_campaign.long_url})
         else:
             form = CampaignForm()
     return render_to_response("create_campaign.html", {'form':form, 'campaigns':campaigns},
