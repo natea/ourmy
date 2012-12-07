@@ -34,6 +34,7 @@ class Campaign(models.Model):
     deadline = models.DateTimeField(blank=True, default=datetime.datetime.now)
     logo_image = models.FileField(upload_to=get_campaign_logo_path, blank=True, null=True)
     video_url = models.URLField(blank=True)
+    api_call = models.CharField(max_length=500)
 
     class Admin:
         list_display = ('',)
@@ -61,7 +62,6 @@ class Prize(models.Model):
 class CampaignUser(models.Model):
     campaign = models.ForeignKey(Campaign)
     user = models.ForeignKey(User)
-    api_call = models.CharField(max_length=500)
     # bitly_url = models.CharField(max_length=100)
     last_checked = models.DateTimeField(default=datetime.datetime.now)
     # stats = models.TextField(blank=True, max_length=400)
@@ -93,7 +93,7 @@ class Action(models.Model):
     last_checked = models.DateTimeField(default=datetime.datetime.now)
 
     def __unicode__(self):
-        return self.campaign.title + ': ' + self.social_network
+        return self.campaign.title + ': ' + self.title
 
 
 class UserAction(models.Model):
