@@ -8,6 +8,7 @@ from ourmy_app.models import Campaign, CampaignUser, UserAction
 
 class SharingCampaign(models.Model):
     campaign = models.ForeignKey(Campaign, unique=True)
+    post_text = models.CharField(max_length=120, help_text='The text you want to appear in social media posts before the link.', default="Check this out and spread the word!")
     long_url = models.URLField(default="http://zoomtilt.com")
 
     def __unicode__(self):

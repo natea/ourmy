@@ -38,26 +38,31 @@ def create_campaign(request, campaign_id=None):
     instance=None
     campaigns = []
     campaigns = Campaign.objects.filter(user=request.user)
+    import pdb; pdb.set_trace()
     if request.method == 'POST':
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
             sharing_campaign = SharingCampaign.objects.get(campaign=campaign)
-            form = CampaignForm(initial={'title':campaign.title, 'long_url':sharing_campaign.long_url})
+            form = CampaignForm({'title':request.POST['title'], 
+                                 'long_url':request.POST['long_url'], 
+                                 'post_text':request.POST['post_text']})
         else:
-            form = CampaignForm(request.POST)
+            form = CampaignForm()
             
         if form.is_valid():
-            campaign = Campaign(user=request.user, title=request.POST['title'], api_call="get_actions_for_user")
+            campaign = Campaign(user=request.user, title=request.POST['title'], api_call="sharing.get_actions_for_user")
             campaign.save()
-            sharing_campaign = SharingCampaign(campaign=campaign, long_url=request.POST['long_url'])
+            sharing_campaign = SharingCampaign(campaign=campaign, long_url=request.POST['long_url'], post_text=request.POST['post_text'])
             sharing_campaign.save()
             print "should have saved a campaign and sharing_campaign"
             return HttpResponseRedirect("/")
+        else:
+            print form.errors
     else:
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
             sharing_campaign = SharingCampaign.objects.get(campaign=campaign)
-            form = CampaignForm(initial={'title':campaign.title, 'long_url':sharing_campaign.long_url})
+            form = CampaignForm(initial={'title':campaign.title, 'long_url':sharing_campaign.long_url, 'post_text':sharing_campaign.post_text})
         else:
             form = CampaignForm()
     return render_to_response("create_campaign.html", {'form':form, 'campaigns':campaigns},
