@@ -99,6 +99,7 @@ class Action(models.Model):
 class UserAction(models.Model):
     user = models.ForeignKey(User)
     action = models.ForeignKey(Action)
+    # last_checked = models.DateTimeField(auto_now_add=True)  # TODO check that auto now add does what I want...
 
     def __unicode__(self):
         return self.user.username + ' on ' + action.social_network

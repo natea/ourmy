@@ -22,7 +22,7 @@ from ourmy_app.forms import CampaignForm
 from django.utils.functional import LazyObject
 import sharing
 from sharing import get_points_for_user
-from sharing.models import SharingCampaign, SharingCampaignUser
+from sharing.models import SharingCampaign, SharingCampaignUser, SharingAction
 from annoying.functions import get_object_or_None
 
 
@@ -87,6 +87,7 @@ def campaign(request, campaign_id):
         # 'FitBit',
         # 'Email'
     ]
+    services = [x[1] for x in SharingAction.SOCIAL_NETWORK_CHOICES]
 
     # Leaderboard
     users = User.objects.all()
@@ -110,6 +111,12 @@ def campaign(request, campaign_id):
 
         user_actions = UserAction.objects.filter(user=user)
 
+        # print "testing json response"
+        # url = reverse('sharing:facebook_post')
+        # response = HttpResponseRedirect(url)
+        # print response
+        # print response['points']
+
         for user_action in user_actions:
             # call the api for this action.  This returns how many of these actions this user did.
             points_call = user_action.action.api_call
@@ -127,12 +134,6 @@ def campaign(request, campaign_id):
         # user.points += get_points_for_user(user)
         # points_calls = ["sharing.get_facebook_post_points_for_user", "sharing.get_facebook_click_points_for_user", "sharing.get_twitter_post_points_for_user", "sharing.get_twitter_click_points_for_user"]
 
-        # points_calls = Action.objects.filter(campaign=campaign).values_list('api_call', flat=True)
-        # for element in points_calls:
-        #     words = element.split(".")
-        #     module = __import__(words[0])
-        #     funct = getattr(module, words[1])
-        #     user.points += funct(user)
     sorted_users = sorted(users, key=lambda o:o.points, reverse=True)
 
  
@@ -156,9 +157,6 @@ def campaign(request, campaign_id):
             profiles = simplejson.loads(user_profile.profiles.replace("'", '"'))
         except:
             pass
-    
-    # campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
-    # campaign_user.save()
 
     if request.method == 'POST':
         singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
@@ -179,11 +177,19 @@ def campaign(request, campaign_id):
                        }
 
             return_data = singly.make_request('/types/news', method='POST', request=payload)
+
             for service in services:
                 try:
                     success = return_data[service]['id']
-                    action, created = Action.objects.get_or_create(campaign=campaign, social_network=service)
-                    user_action = UserAction(user=request.user, action=action)
+                    print success
+                    # TODO: HERE create sharing_user_actions here.
+                    # ideally, this would be in sharing.  
+                    # for each service, get the sharing_actions for that service.
+                    # add a sharing user action to post to that service 
+
+                    # action, created = Action.objects.get_or_create(campaign=campaign, social_network=service)
+                    sharing_action = SharingAction.get(social_network=service, post_or_click=False)
+                    sharing_user_action = UserAction(user=request.user, sharing_action=sharing_action)
                     user_action.save()
                 except:
                     pass
