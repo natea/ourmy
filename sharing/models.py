@@ -47,11 +47,12 @@ class SharingAction(models.Model):
     post_or_click = models.BooleanField()
 
     def __unicode__(self):
-        return self.action.title + ' ' + self.social_network
+        return self.action.campaign.title + ' ' + self.action.title + ' ' + self.social_network[1]
 
 
 class SharingUserAction(models.Model):
-    """ We keep track of these SharingUserActions here to know how many times the user has posted. """
+    """ We create one of the 'post' SharingUserActions every time the user posts to a social network. 
+        We create a 'click' SharingUserAction when there is a new bitly url."""
     user = models.ForeignKey(User)
     sharing_action = models.ForeignKey(SharingAction)
 

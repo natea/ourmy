@@ -21,11 +21,12 @@ def get_points_for_user(user, *args, **kwargs):
 def get_actions_for_user(user):
 	return ["get_facebook_post_points_for_user", "get_facebook_click_points_for_user", "get_twitter_post_points_for_user", "get_twitter_click_points_for_user"]
 
-def get_facebook_post_points_for_user(user, *args, **kwargs):
-	print "called get_facebook_post_points_for_user"
-	return random.randrange(1,100)
+def get_facebook_post_actions_for_user(user, *args, **kwargs):
+	n = random.randrange(1,100)
+	print "called get_facebook_post_points_for_user, returning " + n
+	return n
 
-def get_facebook_click_points_for_user(user, campaign, *args, **kwargs):
+def get_click_actions_for_user(user, campaign, *args, **kwargs):
 	sharing_campaign = get_object_or_None(SharingCampaign, campaign=campaign)
 	clicks = 0
 	if sharing_campaign:
@@ -41,12 +42,10 @@ def get_facebook_click_points_for_user(user, campaign, *args, **kwargs):
 				# TODO: add the Facebook referrers
 				# https://github.com/bitly/bitly-api-python/blob/master/bitly_api/bitly_api.py#L107
 
+	# add the number of posts
 	return clicks
 
 def get_twitter_post_points_for_user(user, *args, **kwargs):
-	print "called get_twitter_post_points_for_user"
-	return random.randrange(1,100)
-
-def get_twitter_click_points_for_user(user, *args, **kwargs):
-	print "called get_twitter_click_points_for_user"
-	return random.randrange(1,100)
+	n = random.randrange(1,100)
+	print "called get_twitter_post_points_for_user, returning " + n
+	return n
