@@ -43,11 +43,9 @@ def create_campaign(request, campaign_id=None):
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
             sharing_campaign = SharingCampaign.objects.get(campaign=campaign)
-            form = CampaignForm({'title':request.POST['title'], 
-                                 'long_url':request.POST['long_url'], 
-                                 'post_text':request.POST['post_text']})
-        else:
-            form = CampaignForm()
+        form = CampaignForm({'title':request.POST['title'], 
+                             'long_url':request.POST['long_url'], 
+                             'post_text':request.POST['post_text']})
             
         if form.is_valid():
             campaign, created = Campaign.objects.get_or_create(user=request.user, title=request.POST['title'])
