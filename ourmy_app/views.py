@@ -35,27 +35,44 @@ def index(request):
 
 @login_required
 def create_campaign(request, campaign_id=None):
-    instance=None
+    campaign=None
     campaigns = []
     campaigns = Campaign.objects.filter(user=request.user)
     # import pdb; pdb.set_trace()
     if request.method == 'POST':
+        form = CampaignForm({'title':request.POST['title'], 
+                             'video_embed':request.POST['video_embed'],
+                             'long_url':request.POST['long_url'], 
+                             'post_text':request.POST['post_text']})
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
             sharing_campaign = SharingCampaign.objects.get(campaign=campaign)
-        form = CampaignForm({'title':request.POST['title'], 
-                             'long_url':request.POST['long_url'], 
-                             'post_text':request.POST['post_text']})
+        else:
+            campaign, created = Campaign.objects.get_or_create(user=request.user, title=request.POST['title'])
+            sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=campaign)
             
         if form.is_valid():
-            campaign, created = Campaign.objects.get_or_create(user=request.user, title=request.POST['title'])
+            campaign.title = request.POST['title']
             campaign.api_call = "sharing.get_actions_for_user"
             campaign.save()
-            sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=campaign)
             sharing_campaign.long_url = request.POST['long_url']
             sharing_campaign.post_text = request.POST['post_text']
             sharing_campaign.save()
             print "should have saved a campaign and sharing_campaign"
+            # now we create the actions and sharing actions.  One post for each service, one click.
+            services = SharingAction.SOCIAL_NETWORK_CHOICES
+            for service in services:
+                post_action = Action(campaign=campaign, title=service[1], points=10,
+                                    api_call="get_%s_post_actions_for_user" % service[1])
+                print post_action.api_call +  post_action.campaign.title + post_action.title
+                post_action.save()
+                sharing_post_action = SharingAction(action=post_action, social_network=service, post_or_click=False)
+                sharing_post_action.save()
+            click_action = Action(campaign=campaign, title="click", points=1,
+                                  api_call="get_click_actions_for_user")
+            click_action.save()
+            sharing_click_action = SharingAction(action=click_action, social_network=service, post_or_click=True)
+            sharing_click_action.save()
             return HttpResponseRedirect("/")
         else:
             print form.errors
@@ -156,6 +173,10 @@ def campaign(request, campaign_id):
         except:
             pass
 
+    ######
+    ## if they post to social networks:
+    #####
+    # TODO: clean up the Sharing module and this stuff -- sharing should not keep accessing ourmy_app models
     if request.method == 'POST':
         singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
         try:
@@ -179,23 +200,19 @@ def campaign(request, campaign_id):
             for service in services:
                 try:
                     success = return_data[service]['id']
-                    print success
-                    # TODO: HERE create sharing_user_actions here.
-                    # ideally, this would be in sharing.  
-                    # for each service, get the sharing_actions for that service.
-                    # add a sharing user action to post to that service 
-
-                    # action, created = Action.objects.get_or_create(campaign=campaign, social_network=service)
-                    sharing_action = SharingAction.get(social_network=service, post_or_click=False)
-                    sharing_user_action = UserAction(user=request.user, sharing_action=sharing_action)
-                    user_action.save()
+                    print "printing success: " + success
+                    # if they have successfully posted, we create a SharingUserAction for them and store it in the database
+                    sharing_action = SharingAction.get(action__campaign=campaign, social_network=service, post_or_click=False)
+                    sharing_user_action = SharingUserAction(user=request.user, sharing_action=sharing_action)
+                    sharing_user_action.save()
+                    # we only need one click action per url, so check to see if there is one, if not create
+                    sharing_click_action = SharingAction.objects.get(action__campaign=campaign, social_network=service, post_or_click=True)
+                    SharingUserAction.objects.get_or_create(user=request.user, sharing_action=sharing_click_action)
                 except:
                     pass
         except:
             print "drat - no singly profile"
 
-        # if they have posted, we create a UserAction for them and store it in the database
-        # if success:
 
     response = render_to_response('campaign.html',
          { 'campaign':campaign, 'user':request.user, 'services':services, 
