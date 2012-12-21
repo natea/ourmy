@@ -54,6 +54,11 @@ def create_campaign(request, campaign_id=None):
         if form.is_valid():
             campaign.title = request.POST['title']
             campaign.api_call = "sharing.get_actions_for_user"
+            embed_pieces = request.POST['video_embed'].split("http://www.youtube.com/embed/")
+            if embed_pieces.count > 1:
+                id_only = embed_pieces[1].split("\"")
+                print id_only
+                campaign.video_url = "http://www.youtube.com/embed/%s" % id_only[0]
             campaign.save()
             sharing_campaign.long_url = request.POST['long_url']
             sharing_campaign.post_text = request.POST['post_text']
@@ -80,7 +85,7 @@ def create_campaign(request, campaign_id=None):
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
             sharing_campaign = SharingCampaign.objects.get(campaign=campaign)
-            form = CampaignForm(initial={'title':campaign.title, 'long_url':sharing_campaign.long_url, 'post_text':sharing_campaign.post_text})
+            form = CampaignForm(initial={'title':campaign.title, 'video_embed':campaign.video_url, 'long_url':sharing_campaign.long_url, 'post_text':sharing_campaign.post_text})
         else:
             form = CampaignForm()
     return render_to_response("create_campaign.html", {'form':form, 'campaigns':campaigns},
@@ -92,16 +97,6 @@ def campaign(request, campaign_id):
     sharing_campaign_user = None
     profiles = None
 
-    services = [
-        'facebook',
-        # 'foursquare',
-        # 'Instagram',
-        # 'Tumblr',
-        'twitter',
-        #'LinkedIn',
-        # 'FitBit',
-        # 'Email'
-    ]
     services = [x[1] for x in SharingAction.SOCIAL_NETWORK_CHOICES]
 
     # Leaderboard
@@ -113,6 +108,7 @@ def campaign(request, campaign_id):
         campaign_user = get_object_or_None(CampaignUser, pk=user.id)
         if campaign_user:
             words = campaign_user.campaign.api_call.split(".")
+            print "about to call " + campaign_user.campaign.api_call
             module = __import__(words[0])
             funct = getattr(module, words[1])
             list_of_actions_ids = funct(user)
@@ -197,6 +193,7 @@ def campaign(request, campaign_id):
 
             return_data = singly.make_request('/types/news', method='POST', request=payload)
 
+            # import pdb; pdb.set_trace()
             for service in services:
                 try:
                     success = return_data[service]['id']
