@@ -4,6 +4,7 @@ import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.utils.timezone import utc
 
 from singly.models import SinglyProfile
 
@@ -31,7 +32,7 @@ class Campaign(models.Model):
     user = models.ForeignKey(User)
     title = models.CharField(blank=True, max_length=100)
     description = models.TextField(blank=True, max_length=250)
-    deadline = models.DateTimeField(blank=True, default=datetime.datetime.now)
+    deadline = models.DateTimeField(blank=True, default=datetime.datetime.utcnow().replace(tzinfo=utc))
     logo_image = models.FileField(upload_to=get_campaign_logo_path, blank=True, null=True)
     video_url = models.URLField(blank=True)
     api_call = models.CharField(max_length=500)
@@ -63,7 +64,7 @@ class CampaignUser(models.Model):
     campaign = models.ForeignKey(Campaign)
     user = models.ForeignKey(User)
     # bitly_url = models.CharField(max_length=100)
-    last_checked = models.DateTimeField(default=datetime.datetime.now)
+    last_checked = models.DateTimeField(default=datetime.datetime.utcnow().replace(tzinfo=utc))
     # stats = models.TextField(blank=True, max_length=400)
 
     # def save(self, *args, **kwargs):
@@ -87,10 +88,10 @@ class Action(models.Model):
     points = models.IntegerField(default=1)
     # points_to_post = models.IntegerField(default=10)
     # points_per_click = models.IntegerField(default=1)
-    start_at = models.DateTimeField(blank=True, default=datetime.datetime.now)
-    end_at = models.DateTimeField(blank=True, default=datetime.datetime.now)
+    start_at = models.DateTimeField(blank=True, default=datetime.datetime.utcnow().replace(tzinfo=utc))
+    end_at = models.DateTimeField(blank=True, default=datetime.datetime.utcnow().replace(tzinfo=utc))
     api_call = models.CharField(max_length=500)
-    last_checked = models.DateTimeField(default=datetime.datetime.now)
+    last_checked = models.DateTimeField(default=datetime.datetime.utcnow().replace(tzinfo=utc))
 
     def __unicode__(self):
         return self.campaign.title + ': ' + self.title
