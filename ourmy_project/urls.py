@@ -16,6 +16,8 @@ urlpatterns = patterns('',
     url(r'^create_campaign$', 'ourmy_app.views.create_campaign', name='create_campaign'),
     url(r'^edit_campaign/(?P<campaign_id>\d{0,6})/$', 'ourmy_app.views.create_campaign', name='edit_campaign'),
 
+    # url(r'^sharing/', include("sharing.urls", namespace="sharing")),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
