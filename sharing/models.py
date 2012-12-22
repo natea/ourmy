@@ -28,7 +28,10 @@ class SharingCampaignUser(models.Model):
 
     def save(self, *args, **kwargs):
         connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
-        result = connection.shorten(self.sharing_campaign.long_url)
+        # we need to add a unique string to the end of this or all bitly links to this campaign will be the same.
+        unique = User.objects.make_random_password()
+        url = self.sharing_campaign.long_url + '&ourmyun=' + unique
+        result = connection.shorten(url)
         self.sharable_url = result["url"]
         super(SharingCampaignUser, self).save(*args, **kwargs)      # Call the "real" save() method.
 
@@ -47,7 +50,7 @@ class SharingAction(models.Model):
     post_or_click = models.BooleanField()
 
     def __unicode__(self):
-        return self.action.campaign.title + ' ' + self.action.title + ' ' + self.social_network[1]
+        return self.action.campaign.title + ': ' + self.social_network
 
 
 class SharingUserAction(models.Model):
@@ -57,4 +60,4 @@ class SharingUserAction(models.Model):
     sharing_action = models.ForeignKey(SharingAction)
 
     def __unicode__(self):
-        return self.sharing_action + ' by ' + self.user.username
+        return self.sharing_action.action.campaign.title + ': ' + self.sharing_action.social_network + ' by ' + self.user.username
