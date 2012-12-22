@@ -22,7 +22,6 @@ def authorize_callback(request):
         # user = authenticate(username=user_profile.user.username, password=password)
         user = authenticate(username=user_profile.user.username, password='fakepassword')
         auth_login(request, user)
-    # return HttpResponseRedirect('/campaign/1')
 
     # we want to redirect the user back to the campaign they were on before.
     DEFAULT_URL = 'http://www.zoomtilt.com/'
