@@ -103,4 +103,4 @@ class UserAction(models.Model):
     # last_checked = models.DateTimeField(auto_now_add=True)  # TODO check that auto now add does what I want...
 
     def __unicode__(self):
-        return self.user.username + ' on ' + action.social_network
+        return self.user.username + ' on ' + self.action.title

@@ -22,7 +22,7 @@ from ourmy_app.forms import CampaignForm
 from django.utils.functional import LazyObject
 import sharing
 from sharing import get_points_for_user
-from sharing.models import SharingCampaign, SharingCampaignUser, SharingAction
+from sharing.models import SharingCampaign, SharingCampaignUser, SharingAction, SharingUserAction
 from annoying.functions import get_object_or_None
 
 
@@ -68,13 +68,13 @@ def create_campaign(request, campaign_id=None):
             services = SharingAction.SOCIAL_NETWORK_CHOICES
             for service in services:
                 post_action = Action(campaign=campaign, title=service[1], points=10,
-                                    api_call="get_%s_post_actions_for_user" % service[1])
+                                    api_call="sharing.get_%s_post_actions_for_user" % service[1])
                 print post_action.api_call +  post_action.campaign.title + post_action.title
                 post_action.save()
                 sharing_post_action = SharingAction(action=post_action, social_network=service, post_or_click=False)
                 sharing_post_action.save()
             click_action = Action(campaign=campaign, title="click", points=1,
-                                  api_call="get_click_actions_for_user")
+                                  api_call="sharing.get_click_actions_for_user")
             click_action.save()
             sharing_click_action = SharingAction(action=click_action, social_network=service, post_or_click=True)
             sharing_click_action.save()
@@ -97,7 +97,7 @@ def campaign(request, campaign_id):
     sharing_campaign_user = None
     profiles = None
 
-    services = [x[1] for x in SharingAction.SOCIAL_NETWORK_CHOICES]
+    services = SharingAction.SOCIAL_NETWORK_CHOICES
 
     # Leaderboard
     users = User.objects.all()
@@ -105,20 +105,22 @@ def campaign(request, campaign_id):
         user.points = 0
         # get all the actions this user has done by pinging the CampaignUser's api call
         # TODO: should we delete any user_actions that are not returned by this call?
-        campaign_user = get_object_or_None(CampaignUser, pk=user.id)
-        if campaign_user:
-            words = campaign_user.campaign.api_call.split(".")
-            print "about to call " + campaign_user.campaign.api_call
-            module = __import__(words[0])
-            funct = getattr(module, words[1])
-            list_of_actions_ids = funct(user)
-            # for each element, get or create a new UserAction.
-            for action_id in list_of_actions_ids:
-                action = get_object_or_None(Action, api_call=action_id)
-                # create any actions that don't exist
-                if action:
-                    user_action, created = UserAction.objects.get_or_create(user=user, action=action)
-                    user_action.save()
+        # import pdb; pdb.set_trace()
+        # campaign_user = get_object_or_None(CampaignUser, pk=user.id)
+        # if campaign_user:
+        words = campaign.api_call.split(".")
+        print "about to call " + campaign.api_call
+        module = __import__(words[0])
+        funct = getattr(module, words[1])
+        list_of_actions_ids = funct(campaign)
+        print list_of_actions_ids
+        # for each element, get or create a new UserAction.
+        for action_id in list_of_actions_ids:
+            action = get_object_or_None(Action, api_call=action_id, campaign=campaign)
+            # create any user actions that don't exist
+            if action:
+                user_action, created = UserAction.objects.get_or_create(user=user, action=action)
+                user_action.save()
 
         user_actions = UserAction.objects.filter(user=user)
 
@@ -154,13 +156,9 @@ def campaign(request, campaign_id):
         user = request.user
         # create a CampaignUser object - this creates the unique bitly for this user for this campaign      
         campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
-        if created: print "the campaign user was created"
         campaign_user.save()
         sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=campaign)
-        if created: print "the campaign user was created"
         sharing_campaign_user, created = SharingCampaignUser.objects.get_or_create(sharing_campaign=sharing_campaign, user=user)
-        if created: 
-            print "the campaign user was created"
         sharing_campaign_user.save()
         try:
             user_profile = request.user.get_profile()
@@ -193,23 +191,24 @@ def campaign(request, campaign_id):
 
             return_data = singly.make_request('/types/news', method='POST', request=payload)
 
-            # import pdb; pdb.set_trace()
             for service in services:
+                # import pdb; pdb.set_trace()
                 try:
                     success = return_data[service]['id']
                     print "printing success: " + success
-                    # if they have successfully posted, we create a SharingUserAction for them and store it in the database
-                    sharing_action = SharingAction.get(action__campaign=campaign, social_network=service, post_or_click=False)
-                    sharing_user_action = SharingUserAction(user=request.user, sharing_action=sharing_action)
-                    sharing_user_action.save()
-                    # we only need one click action per url, so check to see if there is one, if not create
-                    sharing_click_action = SharingAction.objects.get(action__campaign=campaign, social_network=service, post_or_click=True)
-                    SharingUserAction.objects.get_or_create(user=request.user, sharing_action=sharing_click_action)
+                    if success is not None:
+                        # if they have successfully posted, we create a SharingUserAction for them and store it in the database
+                        sharing_action = SharingAction.objects.get(action__campaign=campaign, social_network=service, post_or_click=False)
+                        sharing_user_action = SharingUserAction(user=request.user, sharing_action=sharing_action)
+                        sharing_user_action.save()
+                        # we only need one click action per url, so check to see if there is one, if not create
+                        sharing_click_action = SharingAction.objects.get(action__campaign=campaign, post_or_click=True)
+                        SharingUserAction.objects.get_or_create(user=request.user, sharing_action=sharing_click_action)
                 except:
                     pass
         except:
             print "drat - no singly profile"
-
+    services = [x[1] for x in SharingAction.SOCIAL_NETWORK_CHOICES]
 
     response = render_to_response('campaign.html',
          { 'campaign':campaign, 'user':request.user, 'services':services, 
