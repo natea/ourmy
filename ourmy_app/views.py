@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from ourmy_app.models import Campaign, Action, CampaignUser, UserAction
+from ourmy_app.models import Campaign, Action, CampaignUser, UserAction, Prize
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import get_current_site
@@ -18,7 +18,7 @@ from django.conf import settings
 import bitly_api
 
 from django import forms
-from ourmy_app.forms import CampaignForm
+from ourmy_app.forms import CampaignForm, PrizeForm
 from django.utils.functional import LazyObject
 import sharing
 from sharing import get_points_for_user
@@ -88,8 +88,36 @@ def create_campaign(request, campaign_id=None):
             form = CampaignForm(initial={'title':campaign.title, 'video_embed':campaign.video_url, 'long_url':sharing_campaign.long_url, 'post_text':sharing_campaign.post_text})
         else:
             form = CampaignForm()
-    return render_to_response("create_campaign.html", {'form':form, 'campaigns':campaigns},
+    print "about to leave create_campaign view, campaign:"
+    print campaign
+    return render_to_response("create_campaign.html", {'form':form, 'campaigns':campaigns, 'this_campaign':campaign},
         context_instance=RequestContext(request))
+
+@login_required
+def create_prize(request, prize_id=None, campaign_id=None):
+    instance = None
+    prizes_for_campaign = None
+    # we will either get a campaign_id (create) or a pitch_id (edit)
+    # if there's a campaign id, this is a new prize.  Get the campaign, create & save the prize
+    if campaign_id:
+        campaign = get_object_or_404(Campaign, pk=campaign_id)
+        # try:
+        prizes_for_campaign = Prize.objects.filter(campaign=campaign)
+        # except models.Prize.DoesNotExist:
+        instance = Prize(campaign=campaign)
+    elif prize_id:
+        instance = get_object_or_404(Prize, pk=prize_id)
+        campaign = instance.campaign
+        prizes_for_campaign = Prize.objects.filter(campaign=campaign)
+    if request.method == 'POST':
+        form = PrizeForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+    else:
+        form = PrizeForm(instance=instance)
+    return render_to_response("create_prize.html", {'form':form, 'all_prizes':prizes_for_campaign, 'campaign':campaign},
+        context_instance=RequestContext(request))
+
 
 
 def campaign(request, campaign_id):
@@ -124,12 +152,6 @@ def campaign(request, campaign_id):
 
         user_actions = UserAction.objects.filter(user=user)
 
-        # print "testing json response"
-        # url = reverse('sharing:facebook_post')
-        # response = HttpResponseRedirect(url)
-        # print response
-        # print response['points']
-
         for user_action in user_actions:
             # call the api for this action.  This returns how many of these actions this user did.
             points_call = user_action.action.api_call
@@ -138,17 +160,7 @@ def campaign(request, campaign_id):
             funct = getattr(module, words[1])
             user.points += user_action.action.points * funct(user, campaign)
 
-
-        # calculate points for each time their link was clicked
-        # TODO: make this based on which social network it is
-        # connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
-        # result = connection.clicks(campaign_user.bitly_url)
-        # user.points += result["clicks"]*user_actions[0]
-        # user.points += get_points_for_user(user)
-        # points_calls = ["sharing.get_facebook_post_points_for_user", "sharing.get_facebook_click_points_for_user", "sharing.get_twitter_post_points_for_user", "sharing.get_twitter_click_points_for_user"]
-
     sorted_users = sorted(users, key=lambda o:o.points, reverse=True)
-
  
     # Bitly sharing link
     campaign_user = None
@@ -192,7 +204,6 @@ def campaign(request, campaign_id):
             return_data = singly.make_request('/types/news', method='POST', request=payload)
 
             for service in services:
-                # import pdb; pdb.set_trace()
                 try:
                     success = return_data[service]['id']
                     print "printing success: " + success
@@ -211,8 +222,9 @@ def campaign(request, campaign_id):
     services = [x[1] for x in SharingAction.SOCIAL_NETWORK_CHOICES]
 
     response = render_to_response('campaign.html',
-         { 'campaign':campaign, 'user':request.user, 'services':services, 
-           'users':sorted_users, 'sharing_campaign_user':sharing_campaign_user, 'profiles':profiles },
+         { 'user':request.user, 'campaign':campaign, 'services':services, 
+           'users':sorted_users, 'sharing_campaign_user':sharing_campaign_user, 
+           'profiles':profiles },
          context_instance=RequestContext(request)
         )
     return response

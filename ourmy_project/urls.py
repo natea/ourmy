@@ -15,6 +15,8 @@ urlpatterns = patterns('',
     url(r'^campaign/(?P<campaign_id>\d{0,6})/$', 'ourmy_app.views.campaign', name='campaign'),
     url(r'^create_campaign$', 'ourmy_app.views.create_campaign', name='create_campaign'),
     url(r'^edit_campaign/(?P<campaign_id>\d{0,6})/$', 'ourmy_app.views.create_campaign', name='edit_campaign'),
+    url(r'^create_prize/(?P<campaign_id>\d{0,6})/$', 'ourmy_app.views.create_prize', name='create_prize'),
+    url(r'^edit_prize/(?P<prize_id>\d{0,6})/$', 'ourmy_app.views.create_prize', name='edit_prize'),
 
     # url(r'^sharing/', include("sharing.urls", namespace="sharing")),
 

@@ -54,7 +54,7 @@ class Prize(models.Model):
     points_value = models.IntegerField(default=100)
     how_many = models.IntegerField(default=1)
     place = models.IntegerField(default=1)
-    chance = models.BooleanField(default=False)
+    chance = models.NullBooleanField(default=False)
 
     def __unicode__(self):
         return self.title + ' for ' + self.campaign.title
