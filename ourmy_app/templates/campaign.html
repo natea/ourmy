@@ -12,7 +12,7 @@
 <br></br>
 <h2 class="campaign-title">Campaign rewards:</h2>
 {% for prize in campaign.prize_set.all %}
-<p><img src="{{ STATIC_URL }}img/movie.png" width="80" />{{ prize.title }}</p>
+<p><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="80" />{{ prize.title }}</p>
 {% endfor %}
 </div>	
 

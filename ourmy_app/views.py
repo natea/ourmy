@@ -111,7 +111,7 @@ def create_prize(request, prize_id=None, campaign_id=None):
         campaign = instance.campaign
         prizes_for_campaign = Prize.objects.filter(campaign=campaign)
     if request.method == 'POST':
-        form = PrizeForm(request.POST, instance=instance)
+        form = PrizeForm(request.POST, request.FILES, instance=instance)
         if form.is_valid():
             form.save()
     else:
