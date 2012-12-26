@@ -2,18 +2,21 @@ from django import forms
 from ourmy_app.models import Campaign, Prize
 
 
-class CampaignForm(forms.Form):
+class CampaignForm(forms.ModelForm):
+    class Meta:
+        model = Campaign
+        exclude = ('user','api_call')
 
-    title = forms.CharField(label="Title of your campaign", max_length=100)
-    video_embed = forms.CharField(label="Embed code from the youtube video you want to appear in your campaign", max_length=300)
-    post_text = forms.CharField(max_length=120, label="The text you want to appear in social media posts before the link:")
+    title = forms.CharField(label="Title of your campaign")
+    video_url = forms.CharField(label="Embed code from the youtube video you want to appear in your campaign")
+    post_text = forms.CharField(label="The text you want to appear in social media posts before the link:")
     long_url = forms.URLField(label="URL you want your fans to promote")
 
 class PrizeForm(forms.ModelForm):
     class Meta:
         model = Prize
 
-    video_url = forms.URLField(label="Have a viceo that shows off this prize?  Put the link right here (YouTube please):")
+    video_url = forms.URLField(label="Have a video that shows off this prize?  Put the link right here (YouTube please):")
     dollar_value = forms.DecimalField(label="The dollar value of this prize:")
     points_value = forms.IntegerField(label="What is the minimum number of points a user has to get before they might win this prize?")
     how_many = forms.IntegerField(label="How many of these prizes will you give away?")

@@ -25,7 +25,7 @@ def get_campaign_logo_path(instance, filename):
     return os.path.join('logos', "%d_%s" % (instance.user.id, filename))
 
 def get_prize_logo_path(instance, filename):
-    return os.path.join('logos', "%d_%s" % (instance.campaigng.user.id, filename))
+    return os.path.join('logos', "%d_%s" % (instance.campaign.user.id, filename))
 
 
 class Campaign(models.Model):
@@ -35,7 +35,7 @@ class Campaign(models.Model):
     deadline = models.DateTimeField(blank=True, default=datetime.datetime.utcnow().replace(tzinfo=utc))
     logo_image = models.FileField(upload_to=get_campaign_logo_path, blank=True, null=True)
     video_url = models.URLField(blank=True)
-    api_call = models.CharField(max_length=500)
+    api_call = models.CharField(max_length=500, default="sharing.get_actions_for_campaign")
 
     class Admin:
         list_display = ('',)

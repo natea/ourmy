@@ -40,26 +40,27 @@ def create_campaign(request, campaign_id=None):
     campaigns = Campaign.objects.filter(user=request.user)
     # import pdb; pdb.set_trace()
     if request.method == 'POST':
-        form = CampaignForm({'title':request.POST['title'], 
-                             'video_embed':request.POST['video_embed'],
-                             'long_url':request.POST['long_url'], 
-                             'post_text':request.POST['post_text']})
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
-            sharing_campaign = SharingCampaign.objects.get(campaign=campaign)
-        else:
-            campaign, created = Campaign.objects.get_or_create(user=request.user, title=request.POST['title'])
-            sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=campaign)
-            
+        # else:
+            # campaign, created = Campaign.objects.get_or_create(user=request.user, title=request.POST['title'])
+            # sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=campaign)
+        # form = CampaignForm({'title':request.POST['title'], 
+        #                      'video_embed':request.POST['video_embed'],
+        #                      'long_url':request.POST['long_url'], 
+        #                      'post_text':request.POST['post_text']})
+        form = CampaignForm(request.POST, request.FILES, instance=campaign)
         if form.is_valid():
-            campaign.title = request.POST['title']
-            campaign.api_call = "sharing.get_actions_for_user"
-            embed_pieces = request.POST['video_embed'].split("http://www.youtube.com/embed/")
+            form.instance.user = request.user
+            # parse the video url because we're using an embed
+            embed_pieces = request.POST['video_url'].split("http://www.youtube.com/embed/")
             if embed_pieces.count > 1:
                 id_only = embed_pieces[1].split("\"")
                 print id_only
-                campaign.video_url = "http://www.youtube.com/embed/%s" % id_only[0]
-            campaign.save()
+                form.instance.video_url = "http://www.youtube.com/embed/%s" % id_only[0]
+            form.save()
+
+            sharing_campaign = SharingCampaign.objects.get(campaign=form.instance)
             sharing_campaign.long_url = request.POST['long_url']
             sharing_campaign.post_text = request.POST['post_text']
             sharing_campaign.save()
@@ -67,13 +68,13 @@ def create_campaign(request, campaign_id=None):
             # now we create the actions and sharing actions.  One post for each service, one click.
             services = SharingAction.SOCIAL_NETWORK_CHOICES
             for service in services:
-                post_action = Action(campaign=campaign, title=service[1], points=10,
+                post_action = Action(campaign=form.instance, title=service[1], points=10,
                                     api_call="sharing.get_%s_post_actions_for_user" % service[1])
                 print post_action.api_call +  post_action.campaign.title + post_action.title
                 post_action.save()
                 sharing_post_action = SharingAction(action=post_action, social_network=service, post_or_click=False)
                 sharing_post_action.save()
-            click_action = Action(campaign=campaign, title="click", points=1,
+            click_action = Action(campaign=form.instance, title="click", points=1,
                                   api_call="sharing.get_click_actions_for_user")
             click_action.save()
             sharing_click_action = SharingAction(action=click_action, social_network=service, post_or_click=True)
