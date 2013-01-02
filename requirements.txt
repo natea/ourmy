@@ -10,6 +10,10 @@ simplejson
 https://github.com/bitly/bitly-api-python/archive/master.zip
 django-annoying==0.7.6
 pytz==2012c
+psycopg2==2.4.5
+dj-database-url==0.2.0
+gunicorn==0.14.6
+boto==2.5.2
 
 # unused
 #-e git+git://github.com/Singly/django-singly.git#egg=django-singly
