@@ -491,6 +491,9 @@ padding: 0 10px 2px 10px;
 
 /*** CAMPAIGN DASHBOARD ***/
 
+.padding{
+    padding-top: 20px;
+}
 
 .campaign-media{
     padding: 0 auto;
@@ -515,7 +518,6 @@ padding: 0 10px 2px 10px;
 }
 
 .sharing-center{
-    margin-top: -80px;
 }
 
 .control-group{
@@ -530,7 +532,7 @@ ul.networks{
 .social-button{
     float: left;
     display: block;
-    padding: 16px;
+    padding: 4px;
 }
 
 .check{
@@ -555,6 +557,15 @@ ul.networks{
     padding: 0;
     float: right;
     margin-top: -170px;
+}
+
+.helper-text{
+    float: right;
+    width: 240px;
+    padding: 10px;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 12px;
 }
 
 .badge-board

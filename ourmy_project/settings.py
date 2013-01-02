@@ -1,6 +1,7 @@
 # Django settings for ourmy project.
 
 import os
+from os import environ
 
 # Full filesystem path to the project.
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -50,6 +51,9 @@ USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
+
+# When the @login_required decorator is used, this is where django will send unregistered users
+LOGIN_URL = '/login/'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -142,9 +146,10 @@ INSTALLED_APPS = (
     'singly',
     'bootstrap_toolkit',
     'test_bootstrap',
-    'ourmy_app',
     'south',
     'debug_toolbar',
+    'ourmy_app',
+    'sharing',
 )
 
 # Bit.ly API credentials go here.
@@ -218,3 +223,30 @@ SINGLY_CLIENT_SECRET="b174c23ac692e1d0e920e92798ec34c8"
 SINGLY_REDIRECT_URI = 'http://localhost:8000/authorize/callback'
 
 AUTH_PROFILE_MODULE = "singly.SinglyProfile"
+
+if environ.get("RACK_ENV", None) == "production":
+    import dj_database_url
+    
+    DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+    INSTALLED_APPS += ("gunicorn",)
+    # from http://offbytwo.com/2012/01/18/deploying-django-to-heroku.html
+    # To make it easier to turn DEBUG on and off consider adding the following to your settings.py:
+    DEBUG = bool(os.environ.get('DJANGO_DEBUG', ''))
+    TEMPLATE_DEBUG = DEBUG
+    # Now you can turn debug on using heroku config:add DJANGO_DEBUG=true and turn it off with heroku config:remove DJANGO_DEBUG
+
+    # EMAIL_HOST = 'smtp.sendgrid.net'
+    # EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
+    # EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+    # EMAIL_PORT = 587        # 25, 587, 2525 and 465 on ssl
+    # EMAIL_USE_TLS = True  
+
+    AWS_ACCESS_KEY_ID = 'AKIAJ5HGQJW3TIME642Q'  #  os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = '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'  #  os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = 'ourmy-files'
+
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+    STATIC_URL = 'http://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
+    MEDIA_URL = 'http://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'

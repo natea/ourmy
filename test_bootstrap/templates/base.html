@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- TODO - remove everything in the test_bootstrap folder, move this base.html into our templates -->
+
 {% load bootstrap_toolkit %}
 <html lang="en">
 <head>
@@ -23,8 +25,9 @@
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-	<script src="{{ STATIC_URL}}js/jquery.zclip.js"></script>
     {% bootstrap_javascript_tag "dropdown" %}
+    {% bootstrap_javascript_tag "tooltip" %}
+    {% bootstrap_javascript_tag "popover" %}
     {% block extra_head %}{% endblock %}
 </head>
 
@@ -38,7 +41,9 @@
 			 <div class="pull-right">
                 <div class="top-nav-links">
             		<ul class="nav">
-                		<li><a href="{% url home %}" class="creator-call-to-action">Create a Campaign</a></li>
+                        {% if user.is_authenticated %}
+                    		<li><a href="{%  url create_campaign  %}" class="creator-call-to-action">Create a Campaign</a></li>
+                            {% endif %}
 				<!--
                 <li><a href="{% url test_bootstrap.views.test_form %}">Form</a></li>
                 <li class="dropdown">
@@ -77,6 +82,8 @@
         <div class="span6" style="text-align:right">
         </div>
     </footer>
+
+    <script src="{{ STATIC_URL }}js/application.js"></script>
 
 </body>
 </html>
