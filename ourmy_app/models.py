@@ -47,14 +47,6 @@ class Campaign(models.Model):
 class Prize(models.Model):
     campaign = models.ForeignKey(Campaign)
     title = models.CharField(max_length=100)
-    logo_image = models.FileField(upload_to=get_prize_logo_path, blank=True, null=True)
-    description = models.TextField(blank=True, max_length=250)  
-    value = models.DecimalField(max_digits=6, decimal_places=2)
-
-
-class CampaignUser(models.Model):
-    campaign = models.ForeignKey(Campaign)
-    title = models.CharField(max_length=100)
     description = models.TextField(blank=True, max_length=250)  
     logo_image = models.FileField(upload_to=get_prize_logo_path, blank=True, null=True)
     video_url = models.URLField(blank=True)
