@@ -21,33 +21,33 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 
 def get_campaign_logo_path(instance, filename):
-	return os.path.join('logos', "%d_%s" % (instance.user.id, filename))
+    return os.path.join('logos', "%d_%s" % (instance.user.id, filename))
 
 def get_prize_logo_path(instance, filename):
-	return os.path.join('logos', "%d_%s" % (instance.campaigng.user.id, filename))
+    return os.path.join('logos', "%d_%s" % (instance.campaigng.user.id, filename))
 
 
 class Campaign(models.Model):
-	user = models.ForeignKey(User)
-	title = models.CharField(blank=True, max_length=100)
-	description = models.TextField(blank=True, max_length=250)
-	deadline = models.DateTimeField(blank=True, default=datetime.datetime.now)
-	logo_image = models.FileField(upload_to=get_campaign_logo_path, blank=True, null=True)
+    user = models.ForeignKey(User)
+    title = models.CharField(blank=True, max_length=100)
+    description = models.TextField(blank=True, max_length=250)
+    deadline = models.DateTimeField(blank=True, default=datetime.datetime.now)
+    logo_image = models.FileField(upload_to=get_campaign_logo_path, blank=True, null=True)
     long_url = models.URLField(default="http://zoomtilt.com")
 
-	class Admin:
-		list_display = ('',)
-		search_fields = ('',)
+    class Admin:
+        list_display = ('',)
+        search_fields = ('',)
 
-	def __unicode__(self):
-		return self.title
+    def __unicode__(self):
+        return self.title
 
 class Prize(models.Model):
-	campaign = models.ForeignKey(Campaign)
-	title = models.CharField(max_length=100)
-	logo_image = models.FileField(upload_to=get_prize_logo_path, blank=True, null=True)
-	description = models.TextField(blank=True, max_length=250)	
-	value = models.DecimalField(max_digits=6, decimal_places=2)
+    campaign = models.ForeignKey(Campaign)
+    title = models.CharField(max_length=100)
+    logo_image = models.FileField(upload_to=get_prize_logo_path, blank=True, null=True)
+    description = models.TextField(blank=True, max_length=250)  
+    value = models.DecimalField(max_digits=6, decimal_places=2)
 
 
 class CampaignUser(models.Model):
@@ -64,8 +64,8 @@ class CampaignUser(models.Model):
             self.bitly_url = result["url"]
         super(CampaignUser, self).save(*args, **kwargs)      # Call the "real" save() method.
 
-	def __unicode__(self):
-		return self.title + ' for ' + self.campaign.title
+    def __unicode__(self):
+        return self.title + ' for ' + self.campaign.title
 
 class CampaignUser(models.Model):
     campaign = models.ForeignKey(Campaign)
@@ -84,20 +84,20 @@ class CampaignUser(models.Model):
 
 
 class Action(models.Model):
-	campaign = models.ForeignKey(Campaign)
-	social_network = models.CharField(max_length=100)
-	text = models.TextField(blank=True)
-	points = models.IntegerField(default=1)
-	start_on = models.DateTimeField(blank=True, default=datetime.datetime.now)
-	end_on = models.DateTimeField(blank=True, default=datetime.datetime.now)
+    campaign = models.ForeignKey(Campaign)
+    social_network = models.CharField(max_length=100)
+    text = models.TextField(blank=True)
+    points = models.IntegerField(default=1)
+    start_on = models.DateTimeField(blank=True, default=datetime.datetime.now)
+    end_on = models.DateTimeField(blank=True, default=datetime.datetime.now)
 
-	def __unicode__(self):
-		return self.campaign.title + ': ' + self.social_network
+    def __unicode__(self):
+        return self.campaign.title + ': ' + self.social_network
 
 
 class UserActions(models.Model):
-	user = models.ForeignKey(User)
-	action = models.ForeignKey(Action)
+    user = models.ForeignKey(User)
+    action = models.ForeignKey(Action)
 
-	def __unicode__(self):
-		return self.user.username + ' on ' + action.social_network
+    def __unicode__(self):
+        return self.user.username + ' on ' + action.social_network
