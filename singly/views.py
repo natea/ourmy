@@ -24,10 +24,12 @@ def authorize_callback(request):
         auth_login(request, user)
 
     # we want to redirect the user back to the campaign they were on before.
+    # TODO: change this to Ourmy
     DEFAULT_URL = 'http://www.zoomtilt.com/'
     destination = request.META.get('HTTP_REFERER', DEFAULT_URL)
     MY_BASE_URL = 'http://www.zoomtilt.com/' # trailing slash important
     LOCALLY = "http://localhost:"
+    # TODO: check this on a browser I'm not logged into facebook on -- redirecting to zoomtilt.com
     if destination.startswith(MY_BASE_URL) or destination.startswith(LOCALLY):
         return HttpResponseRedirect(destination)
     else:
