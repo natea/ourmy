@@ -72,12 +72,12 @@ def create_campaign(request, campaign_id=None):
                                     api_call="sharing.get_%s_post_actions_for_user" % service[1])
                 print post_action.api_call +  post_action.campaign.title + post_action.title
                 post_action.save()
-                sharing_post_action = SharingAction(action=post_action, social_network=service, post_or_click=False)
+                sharing_post_action = SharingAction(action=post_action, social_network=service[0], post_or_click=False)
                 sharing_post_action.save()
             click_action = Action(campaign=form.instance, title="click", points=1,
                                   api_call="sharing.get_click_actions_for_user")
             click_action.save()
-            sharing_click_action = SharingAction(action=click_action, social_network=service, post_or_click=True)
+            sharing_click_action = SharingAction(action=click_action, social_network=service[0], post_or_click=True)
             sharing_click_action.save()
             return HttpResponseRedirect("/")
         else:
@@ -127,8 +127,12 @@ def campaign(request, campaign_id):
     profiles = None
 
     services = SharingAction.SOCIAL_NETWORK_CHOICES
+    actions = SharingAction.objects.filter(action__campaign=campaign, post_or_click=False)
 
-    # Leaderboard
+
+    ###############
+    # Leaderboard #
+    ###############
     users = User.objects.all()
     for user in users:
         user.points = 0
@@ -138,11 +142,11 @@ def campaign(request, campaign_id):
         # campaign_user = get_object_or_None(CampaignUser, pk=user.id)
         # if campaign_user:
         words = campaign.api_call.split(".")
-        print "about to call " + campaign.api_call
+        # print "about to call " + campaign.api_call
         module = __import__(words[0])
         funct = getattr(module, words[1])
         list_of_actions_ids = funct(campaign)
-        print list_of_actions_ids
+        # print list_of_actions_ids
         # for each element, get or create a new UserAction.
         for action_id in list_of_actions_ids:
             action = get_object_or_None(Action, api_call=action_id, campaign=campaign)
@@ -207,7 +211,7 @@ def campaign(request, campaign_id):
             for service in services:
                 try:
                     success = return_data[service]['id']
-                    print "printing success: " + success
+                    # print "printing success: " + success
                     if success is not None:
                         # if they have successfully posted, we create a SharingUserAction for them and store it in the database
                         sharing_action = SharingAction.objects.get(action__campaign=campaign, social_network=service, post_or_click=False)
@@ -220,10 +224,10 @@ def campaign(request, campaign_id):
                     pass
         except:
             print "drat - no singly profile"
-    services = [x[1] for x in SharingAction.SOCIAL_NETWORK_CHOICES]
+    # services = [x[1] for x in SharingAction.SOCIAL_NETWORK_CHOICES]
 
     response = render_to_response('campaign.html',
-         { 'user':request.user, 'campaign':campaign, 'services':services, 
+         { 'user':request.user, 'campaign':campaign, 'actions':actions, # 'services':services, 
            'users':sorted_users, 'sharing_campaign_user':sharing_campaign_user, 
            'profiles':profiles },
          context_instance=RequestContext(request)
