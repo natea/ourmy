@@ -50,7 +50,7 @@ class SharingAction(models.Model):
     post_or_click = models.BooleanField()
 
     def __unicode__(self):
-        return self.action.campaign.title + ': ' + self.social_network
+        return self.action.campaign.title + ': ' + self.get_social_network_display()
 
 
 class SharingUserAction(models.Model):

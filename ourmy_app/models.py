@@ -44,6 +44,7 @@ class Campaign(models.Model):
     def __unicode__(self):
         return self.title
 
+
 class Prize(models.Model):
     campaign = models.ForeignKey(Campaign)
     title = models.CharField(max_length=100)
@@ -63,15 +64,7 @@ class Prize(models.Model):
 class CampaignUser(models.Model):
     campaign = models.ForeignKey(Campaign)
     user = models.ForeignKey(User)
-    # bitly_url = models.CharField(max_length=100)
     last_checked = models.DateTimeField(default=datetime.datetime.utcnow().replace(tzinfo=utc))
-    # stats = models.TextField(blank=True, max_length=400)
-
-    # def save(self, *args, **kwargs):
-    #     connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
-    #     result = connection.shorten(self.campaign.long_url)
-    #     self.bitly_url = result["url"]
-    #     super(CampaignUser, self).save(*args, **kwargs)      # Call the "real" save() method.
 
     def __unicode__(self):
         return self.campaign.title + ', ' + self.user.last_name
@@ -80,14 +73,11 @@ class CampaignUser(models.Model):
 
 class Action(models.Model):
     campaign = models.ForeignKey(Campaign)
-    # social_network = models.CharField(max_length=100)
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     logo_image = models.FileField(upload_to=get_prize_logo_path, blank=True, null=True)
     video_url = models.URLField(blank=True)
     points = models.IntegerField(default=1)
-    # points_to_post = models.IntegerField(default=10)
-    # points_per_click = models.IntegerField(default=1)
     start_at = models.DateTimeField(blank=True, default=datetime.datetime.utcnow().replace(tzinfo=utc))
     end_at = models.DateTimeField(blank=True, default=datetime.datetime.utcnow().replace(tzinfo=utc))
     api_call = models.CharField(max_length=500)

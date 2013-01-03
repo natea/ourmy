@@ -24,9 +24,9 @@ def get_actions_for_campaign(campaign):
 	# this should return a list of api calls that will return points values for the various user actions.
 	# return ["get_facebook_post_points_for_user", "get_facebook_click_points_for_user", "get_twitter_post_points_for_user", "get_twitter_click_points_for_user"]
 	sharing_actions = SharingAction.objects.filter(action__campaign=campaign)
-	print campaign
-	print sharing_actions
-	print [x.action.api_call for x in sharing_actions]
+	# print campaign
+	# print sharing_actions
+	# print [x.action.api_call for x in sharing_actions]
 	return [x.action.api_call for x in sharing_actions]
 
 def get_facebook_post_actions_for_user(user, campaign):
@@ -36,8 +36,8 @@ def get_facebook_post_actions_for_user(user, campaign):
 								sharing_action__social_network=services[0], 
 								sharing_action__action__campaign=campaign,
 								sharing_action__post_or_click=False)
-	print "called get_facebook_post_points_for_user, returning "
-	print len(sharing_user_actions)
+	# print "called get_facebook_post_points_for_user, returning "
+	# print len(sharing_user_actions)
 	return len(sharing_user_actions)
 
 def get_click_actions_for_user(user, campaign, *args, **kwargs):
@@ -52,7 +52,7 @@ def get_click_actions_for_user(user, campaign, *args, **kwargs):
 			if sharable_url:
 				connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
 				bitly_hash = sharable_url.split('/')[-1]
-				print connection.clicks(bitly_hash)
+				# print connection.clicks(bitly_hash)
 				clicks = connection.clicks(bitly_hash)[0]['global_clicks']
 				# TODO: add the Facebook referrers
 				# https://github.com/bitly/bitly-api-python/blob/master/bitly_api/bitly_api.py#L107
@@ -66,6 +66,6 @@ def get_twitter_post_actions_for_user(user, campaign):
 								sharing_action__social_network=services[0], 
 								sharing_action__action__campaign=campaign,
 								sharing_action__post_or_click=True)
-	print "called get_twitter_post_points_for_user, returning "
-	print len(sharing_user_actions)
+	# print "called get_twitter_post_points_for_user, returning "
+	# print len(sharing_user_actions)
 	return len(sharing_user_actions)
