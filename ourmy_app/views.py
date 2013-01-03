@@ -53,44 +53,45 @@ def create_campaign(request, campaign_id=None):
         if form.is_valid():
             form.instance.user = request.user
             # parse the video url because we're using an embed
-            embed_pieces = request.POST['video_url'].split("http://www.youtube.com/embed/")
+            embed_pieces = request.POST['video_url'].split("http://www.youtube.com/watch?v=")
             if embed_pieces.count > 1:
-                id_only = embed_pieces[1].split("\"")
-                print id_only
+                id_only = embed_pieces[1].split("&")
+                # print id_only
                 form.instance.video_url = "http://www.youtube.com/embed/%s" % id_only[0]
             form.save()
 
-            sharing_campaign = SharingCampaign.objects.get(campaign=form.instance)
+            sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=form.instance)
             sharing_campaign.long_url = request.POST['long_url']
             sharing_campaign.post_text = request.POST['post_text']
             sharing_campaign.save()
-            print "should have saved a campaign and sharing_campaign"
+            # print "should have saved a campaign and sharing_campaign"
             # now we create the actions and sharing actions.  One post for each service, one click.
             services = SharingAction.SOCIAL_NETWORK_CHOICES
             for service in services:
-                post_action = Action(campaign=form.instance, title=service[1], points=10,
+                post_action, created = Action.objects.get_or_create(campaign=form.instance, title=service[1], points=10,
                                     api_call="sharing.get_%s_post_actions_for_user" % service[1])
-                print post_action.api_call +  post_action.campaign.title + post_action.title
+                # print post_action.api_call +  post_action.campaign.title + post_action.title
                 post_action.save()
-                sharing_post_action = SharingAction(action=post_action, social_network=service[0], post_or_click=False)
+                sharing_post_action, created = SharingAction.objects.get_or_create(action=post_action, social_network=service[0], post_or_click=False)
                 sharing_post_action.save()
-            click_action = Action(campaign=form.instance, title="click", points=1,
+            click_action, created = Action.objects.get_or_create(campaign=form.instance, title="click", points=1,
                                   api_call="sharing.get_click_actions_for_user")
             click_action.save()
-            sharing_click_action = SharingAction(action=click_action, social_network=service[0], post_or_click=True)
+            sharing_click_action, created = SharingAction.objects.get_or_create(action=click_action[0], social_network=service[0], post_or_click=True)
             sharing_click_action.save()
             return HttpResponseRedirect("/")
         else:
+            print "printing form errors:"
             print form.errors
     else:
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
             sharing_campaign = SharingCampaign.objects.get(campaign=campaign)
-            form = CampaignForm(initial={'title':campaign.title, 'video_embed':campaign.video_url, 'long_url':sharing_campaign.long_url, 'post_text':sharing_campaign.post_text})
+            form = CampaignForm(instance=campaign, initial={'long_url':sharing_campaign.long_url, 'post_text':sharing_campaign.post_text})
         else:
             form = CampaignForm()
-    print "about to leave create_campaign view, campaign:"
-    print campaign
+    # print "about to leave create_campaign view, campaign:"
+    # print campaign
     return render_to_response("create_campaign.html", {'form':form, 'campaigns':campaigns, 'this_campaign':campaign},
         context_instance=RequestContext(request))
 
@@ -98,22 +99,26 @@ def create_campaign(request, campaign_id=None):
 def create_prize(request, prize_id=None, campaign_id=None):
     instance = None
     prizes_for_campaign = None
+    campaign = None
     # we will either get a campaign_id (create) or a pitch_id (edit)
     # if there's a campaign id, this is a new prize.  Get the campaign, create & save the prize
     if campaign_id:
         campaign = get_object_or_404(Campaign, pk=campaign_id)
-        # try:
         prizes_for_campaign = Prize.objects.filter(campaign=campaign)
-        # except models.Prize.DoesNotExist:
         instance = Prize(campaign=campaign)
     elif prize_id:
         instance = get_object_or_404(Prize, pk=prize_id)
         campaign = instance.campaign
         prizes_for_campaign = Prize.objects.filter(campaign=campaign)
     if request.method == 'POST':
+        instance = get_object_or_None(Prize, campaign=campaign, title=request.POST['title'])
+        if instance is None:
+            instance = Prize(campaign=campaign)
         form = PrizeForm(request.POST, request.FILES, instance=instance)
         if form.is_valid():
             form.save()
+        instance = Prize(campaign=campaign)
+        form = PrizeForm(instance=instance)
     else:
         form = PrizeForm(instance=instance)
     return render_to_response("create_prize.html", {'form':form, 'all_prizes':prizes_for_campaign, 'campaign':campaign},
