@@ -29,6 +29,16 @@ from annoying.functions import get_object_or_None
 def index(request):
     # TODO: check that these are current campaigns
     current_campaign_list = Campaign.objects.all()
+    if len(current_campaign_list) == 0:
+        if request.user.is_authenticated():
+            user = request.user
+            campaign = Campaign(title="deleteme", user=user)
+            campaign.save()
+            action = Action(campaign=campaign, title="facebook", api_call="sharing.get_facebook_post_actions_for_user")
+            action.save()
+            sharing_action = SharingAction(action=action, social_network='FB', post_or_click=False)
+            sharing_action.save()
+            current_campaign_list = Campaign.objects.all()
     return render_to_response('index.html', 
         {'campaign_list':current_campaign_list},
         context_instance=RequestContext(request))
@@ -77,7 +87,7 @@ def create_campaign(request, campaign_id=None):
             click_action, created = Action.objects.get_or_create(campaign=form.instance, title="click", points=1,
                                   api_call="sharing.get_click_actions_for_user")
             click_action.save()
-            sharing_click_action, created = SharingAction.objects.get_or_create(action=click_action[0], social_network=service[0], post_or_click=True)
+            sharing_click_action, created = SharingAction.objects.get_or_create(action=click_action, social_network=service[0], post_or_click=True)
             sharing_click_action.save()
             return HttpResponseRedirect("/")
         else:
