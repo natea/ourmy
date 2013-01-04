@@ -24,9 +24,11 @@ or
     </form>
 </div>
 
+{% if is_saved %}
 <div>
   Reward your friends!
   <a class="btn btn-large" href="{% url create_prize campaign_id=this_campaign.id %}">Create Prizes</a>
 
 </div>
+{% endif %}
 {% endblock content %}

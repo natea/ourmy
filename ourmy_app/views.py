@@ -38,10 +38,12 @@ def create_campaign(request, campaign_id=None):
     campaign=None
     campaigns = []
     campaigns = Campaign.objects.filter(user=request.user)
-    # import pdb; pdb.set_trace()
+    is_saved = False
+
     if request.method == 'POST':
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
+            is_saved = True
         # else:
             # campaign, created = Campaign.objects.get_or_create(user=request.user, title=request.POST['title'])
             # sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=campaign)
@@ -79,20 +81,23 @@ def create_campaign(request, campaign_id=None):
             click_action.save()
             sharing_click_action, created = SharingAction.objects.get_or_create(action=click_action, social_network=service, post_or_click=True)
             sharing_click_action.save()
-            return HttpResponseRedirect("/")
+            # return HttpResponseRedirect("/")
+            url = reverse('edit_campaign', kwargs={'campaign_id':form.instance.id})
+            return HttpResponseRedirect(url)
         else:
             print "printing form errors:"
             print form.errors
     else:
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
+            is_saved = True
             sharing_campaign = SharingCampaign.objects.get(campaign=campaign)
             form = CampaignForm(instance=campaign, initial={'long_url':sharing_campaign.long_url, 'post_text':sharing_campaign.post_text})
         else:
             form = CampaignForm()
     # print "about to leave create_campaign view, campaign:"
     # print campaign
-    return render_to_response("create_campaign.html", {'form':form, 'campaigns':campaigns, 'this_campaign':campaign},
+    return render_to_response("create_campaign.html", {'form':form, 'campaigns':campaigns, 'this_campaign':campaign, 'is_saved':is_saved},
         context_instance=RequestContext(request))
 
 @login_required
