@@ -10,7 +10,7 @@ class SharingCampaign(models.Model):
     """ A one-to-one model of the Campaign that contains extra information only available in Sharing"""
     campaign = models.ForeignKey(Campaign, unique=True)
     post_text = models.CharField(max_length=120, help_text='The text you want to appear in social media posts before the link.', default="Check this out and spread the word!")
-    long_url = models.URLField(default="http://zoomtilt.com")
+    long_url = models.URLField(default="http://www.youtube.com/user/CrewTide/featured?great")
 
     def __unicode__(self):
         return self.campaign.title + ' ' + self.long_url
@@ -30,7 +30,11 @@ class SharingCampaignUser(models.Model):
         connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
         # we need to add a unique string to the end of this or all bitly links to this campaign will be the same.
         unique = User.objects.make_random_password()
-        url = self.sharing_campaign.long_url + '&ourmyun=' + unique
+        if 'youtube.com' in self.sharing_campaign.long_url:
+            url = self.sharing_campaign.long_url + '&ourmyun=' + unique
+        else:
+            url = self.sharing_campaign.long_url
+        # TODO: this does not work for non-youtube urls!
         result = connection.shorten(url)
         self.sharable_url = result["url"]
         super(SharingCampaignUser, self).save(*args, **kwargs)      # Call the "real" save() method.
@@ -50,7 +54,7 @@ class SharingAction(models.Model):
     post_or_click = models.BooleanField()
 
     def __unicode__(self):
-        return self.action.campaign.title + ': ' + self.social_network
+        return self.action.campaign.title + ': ' + self.get_social_network_display()
 
 
 class SharingUserAction(models.Model):
