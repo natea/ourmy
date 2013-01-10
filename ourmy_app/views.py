@@ -58,12 +58,12 @@ def create_campaign(request, campaign_id=None):
         form = CampaignForm(request.POST, request.FILES, instance=campaign)
         if form.is_valid():
             form.instance.user = request.user
-            # parse the video url because we're using an embed
-            embed_pieces = request.POST['video_url'].split("http://www.youtube.com/watch?v=")
-            if embed_pieces.count > 1:
-                id_only = embed_pieces[1].split("&")
-                # print id_only
-                form.instance.video_url = "http://www.youtube.com/embed/%s" % id_only[0]
+            # # parse the video url because we're using an embed
+            # embed_pieces = request.POST['video_url'].split("http://www.youtube.com/watch?v=")
+            # if embed_pieces.count > 1:
+            #     id_only = embed_pieces[1].split("&")
+            #     # print id_only
+            #     form.instance.video_url = id_only[0]
             form.save()
 
             sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=form.instance)
@@ -244,8 +244,16 @@ def campaign(request, campaign_id):
             # print "drat - no singly profile"
             pass
 
+    
+    # parse the video url because we're using an embed
+    youtube_id = None
+    embed_pieces = campaign.video_url.split("http://www.youtube.com/watch?v=")
+    if embed_pieces.count > 1:
+        id_only = embed_pieces[1].split("&")
+        youtube_id = id_only[0]
+    
     response = render_to_response('campaign.html',
-         { 'user':request.user, 'campaign':campaign, 'actions':actions, 
+         { 'user':request.user, 'campaign':campaign, 'youtube_id':youtube_id, 'actions':actions, 
            'users':sorted_users, 'sharing_campaign_user':sharing_campaign_user, 
            'profiles':profiles, 'posted_to':posted_to },
          context_instance=RequestContext(request)
