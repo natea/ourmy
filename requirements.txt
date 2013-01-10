@@ -12,6 +12,7 @@ django-annoying==0.7.6
 pytz==2012c
 dj-database-url==0.2.0
 gunicorn==0.14.6
+django-storages==1.1.4
 boto==2.5.2
 
 # unused
