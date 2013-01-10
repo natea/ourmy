@@ -32,6 +32,9 @@
 {% csrf_token %}
   <fieldset>
     <h2 class="campaign-title">Sharing dashboard</h2>
+    {% if posted_to %}
+	    <p>Thanks for posting to {{ posted_to }}!  You can post to more networks for more points.</p>
+    {% endif %}
 	<p>My networks:</p>
 	    <ul class="networks">
 	    {% for action in actions %}

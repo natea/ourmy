@@ -138,6 +138,7 @@ def campaign(request, campaign_id):
     campaign = get_object_or_404(Campaign, pk=campaign_id)
     sharing_campaign_user = None
     profiles = None
+    posted_to = None
 
     services = SharingAction.SOCIAL_NETWORK_CHOICES
     actions = SharingAction.objects.filter(action__campaign=campaign, post_or_click=False)
@@ -214,7 +215,7 @@ def campaign(request, campaign_id):
             # get the list of social networks the user posted to from the checkboxes
             social_networks_list = request.POST.getlist('social-networks')
             social_networks_string = ",".join(social_networks_list)
-            # print social_networks_string
+            posted_to = social_networks_string
 
             body = request.POST['body']
             url = request.POST['url']
@@ -246,7 +247,7 @@ def campaign(request, campaign_id):
     response = render_to_response('campaign.html',
          { 'user':request.user, 'campaign':campaign, 'actions':actions, 
            'users':sorted_users, 'sharing_campaign_user':sharing_campaign_user, 
-           'profiles':profiles },
+           'profiles':profiles, 'posted_to':posted_to },
          context_instance=RequestContext(request)
         )
     return response
