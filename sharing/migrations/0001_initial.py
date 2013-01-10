@@ -12,7 +12,8 @@ class Migration(SchemaMigration):
         db.create_table('sharing_sharingcampaign', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('campaign', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ourmy_app.Campaign'], unique=True)),
-            ('long_url', self.gf('django.db.models.fields.URLField')(default='http://zoomtilt.com', max_length=200)),
+            ('post_text', self.gf('django.db.models.fields.CharField')(default='Check this out and spread the word!', max_length=120)),
+            ('long_url', self.gf('django.db.models.fields.URLField')(default='http://www.youtube.com/user/CrewTide/featured?great', max_length=200)),
         ))
         db.send_create_signal('sharing', ['SharingCampaign'])
 
@@ -25,13 +26,20 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('sharing', ['SharingCampaignUser'])
 
+        # Adding model 'SharingAction'
+        db.create_table('sharing_sharingaction', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('action', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ourmy_app.Action'], unique=True)),
+            ('social_network', self.gf('django.db.models.fields.CharField')(default='FB', max_length=2)),
+            ('post_or_click', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal('sharing', ['SharingAction'])
+
         # Adding model 'SharingUserAction'
         db.create_table('sharing_sharinguseraction', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user_action', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ourmy_app.UserAction'])),
-            ('social_network', self.gf('django.db.models.fields.CharField')(default='FB', max_length=2)),
-            ('post_or_clicked', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('last_checked', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('sharing_action', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['sharing.SharingAction'])),
         ))
         db.send_create_signal('sharing', ['SharingUserAction'])
 
@@ -42,6 +50,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'SharingCampaignUser'
         db.delete_table('sharing_sharingcampaignuser')
+
+        # Deleting model 'SharingAction'
+        db.delete_table('sharing_sharingaction')
 
         # Deleting model 'SharingUserAction'
         db.delete_table('sharing_sharinguseraction')
@@ -89,18 +100,19 @@ class Migration(SchemaMigration):
             'api_call': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'campaign': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['ourmy_app.Campaign']"}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'end_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'blank': 'True'}),
+            'end_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 1, 10, 0, 0)', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_checked': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'last_checked': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 1, 10, 0, 0)'}),
             'logo_image': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'points': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
-            'start_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'blank': 'True'}),
+            'start_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 1, 10, 0, 0)', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'video_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'})
         },
         'ourmy_app.campaign': {
             'Meta': {'object_name': 'Campaign'},
-            'deadline': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'blank': 'True'}),
+            'api_call': ('django.db.models.fields.CharField', [], {'default': "'sharing.get_actions_for_campaign'", 'max_length': '500'}),
+            'deadline': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 1, 10, 0, 0)', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'max_length': '250', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'logo_image': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
@@ -108,17 +120,19 @@ class Migration(SchemaMigration):
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'video_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'})
         },
-        'ourmy_app.useraction': {
-            'Meta': {'object_name': 'UserAction'},
-            'action': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['ourmy_app.Action']"}),
+        'sharing.sharingaction': {
+            'Meta': {'object_name': 'SharingAction'},
+            'action': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['ourmy_app.Action']", 'unique': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+            'post_or_click': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'social_network': ('django.db.models.fields.CharField', [], {'default': "'FB'", 'max_length': '2'})
         },
         'sharing.sharingcampaign': {
             'Meta': {'object_name': 'SharingCampaign'},
             'campaign': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['ourmy_app.Campaign']", 'unique': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'long_url': ('django.db.models.fields.URLField', [], {'default': "'http://zoomtilt.com'", 'max_length': '200'})
+            'long_url': ('django.db.models.fields.URLField', [], {'default': "'http://www.youtube.com/user/CrewTide/featured?great'", 'max_length': '200'}),
+            'post_text': ('django.db.models.fields.CharField', [], {'default': "'Check this out and spread the word!'", 'max_length': '120'})
         },
         'sharing.sharingcampaignuser': {
             'Meta': {'object_name': 'SharingCampaignUser'},
@@ -130,10 +144,8 @@ class Migration(SchemaMigration):
         'sharing.sharinguseraction': {
             'Meta': {'object_name': 'SharingUserAction'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_checked': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'post_or_clicked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'social_network': ('django.db.models.fields.CharField', [], {'default': "'FB'", 'max_length': '2'}),
-            'user_action': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['ourmy_app.UserAction']"})
+            'sharing_action': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sharing.SharingAction']"}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         }
     }
 
