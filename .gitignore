@@ -40,3 +40,5 @@ nosetests.xml
 *.DS_Store
 
 ourmy_project/media/*
+
+ourmy_project/static/

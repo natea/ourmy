@@ -6,8 +6,12 @@ from managers import UserProfileManager
 class SinglyProfile(models.Model):
     access_token = models.CharField(max_length=260, null=True, blank=True)
     singly_id = models.CharField(max_length=260, null=True, blank=True)
+    # each social network has its own profile in profiles
     profiles = models.TextField(null=True, blank=True)
+    # data that singly has that is unique to the user but same for diff social networks
+    # profile = models.TextField(null=True, blank=True)
     user = models.ForeignKey(User, related_name='profile')
+    # thumbnail_url = models.URLField(max_length=260)
 
     objects = UserProfileManager()
 
