@@ -54,13 +54,7 @@ def create_campaign(request, campaign_id=None):
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
             is_saved = True
-        # else:
-            # campaign, created = Campaign.objects.get_or_create(user=request.user, title=request.POST['title'])
-            # sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=campaign)
-        # form = CampaignForm({'title':request.POST['title'], 
-        #                      'video_embed':request.POST['video_embed'],
-        #                      'long_url':request.POST['long_url'], 
-        #                      'post_text':request.POST['post_text']})
+
         form = CampaignForm(request.POST, request.FILES, instance=campaign)
         if form.is_valid():
             form.instance.user = request.user
@@ -76,7 +70,6 @@ def create_campaign(request, campaign_id=None):
             sharing_campaign.long_url = request.POST['long_url']
             sharing_campaign.post_text = request.POST['post_text']
             sharing_campaign.save()
-            # print "should have saved a campaign and sharing_campaign"
             # now we create the actions and sharing actions.  One post for each service, one click.
             services = SharingAction.SOCIAL_NETWORK_CHOICES
             for service in services:
@@ -204,12 +197,13 @@ def campaign(request, campaign_id):
         except:
             pass
 
-    ######
-    ## if they post to social networks:
-    #####
+    ##################
+    # if they post to social networks:
+    ##################
     # TODO: clean up the Sharing module and this stuff -- sharing should not keep accessing ourmy_app models
     if request.method == 'POST':
         singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
+        # import pdb; pdb.set_trace()
         try:
             user_profile = request.user.get_profile()
             try:
@@ -217,24 +211,27 @@ def campaign(request, campaign_id):
             except:
                 pass
 
+            # get the list of social networks the user posted to from the checkboxes
+            social_networks_list = request.POST.getlist('social-networks')
+            social_networks_string = ",".join(social_networks_list)
+            # print social_networks_string
+
             body = request.POST['body']
             url = request.POST['url']
-
             payload = {'access_token' : access_token, 
-                       'services': 'facebook,twitter', 
+                       'services': social_networks_string, 
                        'body': body, 
                        'url': url
                        }
-
             return_data = singly.make_request('/types/news', method='POST', request=payload)
 
-            for service in services:
+            for social_network in social_networks_list:
                 try:
                     success = return_data[service]['id']
                     # print "printing success: " + success
                     if success is not None:
                         # if they have successfully posted, we create a SharingUserAction for them and store it in the database
-                        sharing_action = SharingAction.objects.get(action__campaign=campaign, social_network=service, post_or_click=False)
+                        sharing_action = SharingAction.objects.get(action__campaign=campaign, social_network=social_networks, post_or_click=False)
                         sharing_user_action = SharingUserAction(user=request.user, sharing_action=sharing_action)
                         sharing_user_action.save()
                         # we only need one click action per url, so check to see if there is one, if not create
@@ -243,11 +240,11 @@ def campaign(request, campaign_id):
                 except:
                     pass
         except:
-            print "drat - no singly profile"
-    # services = [x[1] for x in SharingAction.SOCIAL_NETWORK_CHOICES]
+            # print "drat - no singly profile"
+            pass
 
     response = render_to_response('campaign.html',
-         { 'user':request.user, 'campaign':campaign, 'actions':actions, # 'services':services, 
+         { 'user':request.user, 'campaign':campaign, 'actions':actions, 
            'users':sorted_users, 'sharing_campaign_user':sharing_campaign_user, 
            'profiles':profiles },
          context_instance=RequestContext(request)
