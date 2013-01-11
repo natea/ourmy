@@ -250,3 +250,5 @@ if environ.get("RACK_ENV", None) == "production":
 
     STATIC_URL = 'http://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
     MEDIA_URL = 'http://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
+
+    SINGLY_REDIRECT_URI = 'http://ourmy.herokuapp.com/authorize/callback'
