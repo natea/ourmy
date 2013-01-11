@@ -20,7 +20,7 @@
 	<div class="banner-header"><h1>Scoreboard</h1></div>
 	<ul class="rankings">
 		{% for user in users %}
-		<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ STATIC_URL }}img/beiber.png"></img></li>
+		<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ user.get_profile.thumbnail_url }}"></img></li>
 		{% endfor %}
 	</ul>
 </div>

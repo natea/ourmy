@@ -9,9 +9,9 @@ class SinglyProfile(models.Model):
     # each social network has its own profile in profiles
     profiles = models.TextField(null=True, blank=True)
     # data that singly has that is unique to the user but same for diff social networks
-    # profile = models.TextField(null=True, blank=True)
+    profile = models.TextField(null=True, blank=True)
     user = models.ForeignKey(User, related_name='profile')
-    # thumbnail_url = models.URLField(max_length=260)
+    thumbnail_url = models.URLField(max_length=260, blank=True, default='')
 
     objects = UserProfileManager()
 
