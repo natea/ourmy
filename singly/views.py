@@ -27,7 +27,7 @@ def authorize_callback(request):
     # TODO: change this to Ourmy
     DEFAULT_URL = 'http://www.zoomtilt.com/'
     destination = request.META.get('HTTP_REFERER', DEFAULT_URL)
-    MY_BASE_URL = 'http://www.zoomtilt.com/' # trailing slash important
+    MY_BASE_URL = 'http://ourmy.herokuapp.com/' # trailing slash important
     LOCALLY = "http://localhost:"
     # TODO: check this on a browser I'm not logged into facebook on -- redirecting to zoomtilt.com
     if destination.startswith(MY_BASE_URL) or destination.startswith(LOCALLY):
