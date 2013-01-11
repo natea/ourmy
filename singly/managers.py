@@ -53,6 +53,16 @@ class UserProfileManager(models.Manager):
             thumbnail_url = profile['thumbnail_url']
 
         try:
+            user = User.objects.get(username=handle)
+        except ObjectDoesNotExist:
+            # Made-up password address included due to convention
+            user = User.objects.create_user(handle, email, 'fakepassword')
+            
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+
+        try:
             user_profile = self.get(singly_id=singly_id)
             user_profile.profiles = profiles
             user_profile.profile = profile
@@ -65,16 +75,6 @@ class UserProfileManager(models.Manager):
                 profiles=profiles,
                 user=user
             )
-
-        try:
-            user = User.objects.get(username=handle)
-        except ObjectDoesNotExist:
-            # Made-up password address included due to convention
-            user = User.objects.create_user(handle, email, 'fakepassword')
-            
-        user.first_name = first_name
-        user.last_name = last_name
-        user.save()
 
         user_profile.user = user
         user_profile.save()
