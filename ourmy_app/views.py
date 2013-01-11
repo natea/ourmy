@@ -247,10 +247,11 @@ def campaign(request, campaign_id):
     
     # parse the video url because we're using an embed
     youtube_id = None
-    embed_pieces = campaign.video_url.split("http://www.youtube.com/watch?v=")
-    if embed_pieces.count > 1:
-        id_only = embed_pieces[1].split("&")
-        youtube_id = id_only[0]
+    if len(campaign.video_url) > 3:
+        embed_pieces = campaign.video_url.split("http://www.youtube.com/watch?v=")
+        if embed_pieces.count > 1:
+            id_only = embed_pieces[1].split("&")
+            youtube_id = id_only[0]
     
     response = render_to_response('campaign.html',
          { 'user':request.user, 'campaign':campaign, 'youtube_id':youtube_id, 'actions':actions, 

@@ -353,9 +353,9 @@ border-top: 1px solid #0a6beb;
       filter: alpha(opacity=95);
       margin-left: 20px;
       padding-right: 0;
-    -webkit-border-radius: 10px;
-      -moz-border-radius: 10px;
-      border-radius: 10px;
+    -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
       *margin-left: .3em;
 }
 
