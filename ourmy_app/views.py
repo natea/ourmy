@@ -152,7 +152,6 @@ def campaign(request, campaign_id):
         user.points = 0
         # get all the actions this user has done by pinging the CampaignUser's api call
         # TODO: should we delete any user_actions that are not returned by this call?
-        # import pdb; pdb.set_trace()
         # campaign_user = get_object_or_None(CampaignUser, pk=user.id)
         # if campaign_user:
         words = campaign.api_call.split(".")
@@ -204,7 +203,7 @@ def campaign(request, campaign_id):
     # TODO: clean up the Sharing module and this stuff -- sharing should not keep accessing ourmy_app models
     if request.method == 'POST':
         singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
-        # import pdb; pdb.set_trace()
+
         try:
             user_profile = request.user.get_profile()
             try:
