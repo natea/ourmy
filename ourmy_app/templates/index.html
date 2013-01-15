@@ -18,13 +18,16 @@
 	<div class="container campaign">
 	<div class="profile-pic"><img src="{{ MEDIA_URL }}{{ campaign.logo_image }}" /></div>
 	<div class="campaign-text">
-	<h2 class="campaign-title">{{ campaign.title }} <span class="creator small-creator">&nbsp;by {{campaign.user.first_name}}&nbsp;{{campaign.user.last_name}}</span></h2>
+	<h2 class="campaign-title">{{ campaign.title }} <span class="creator small-creator">&nbsp;by {{campaign.user.first_name}}&nbsp;{{campaign.user.last_name}}</span></h2>		
 	<p class="campaign-description">{{ campaign.description }}</p>
 		<div class="promote-button"><a href="{% url campaign campaign_id=campaign.id %}" class="btn btn-large promo-button-layout">SUPPORT THIS PROJECT</a></div>
 	</div>
+		<a href="https://twitter.com/share" class="twitter-share-button" data-text="Win rewards for spreading the word about amazing creative projects" data-via="0urmy" data-related="ZoomTilt" data-hashtags="creativearmy">Tweet</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	<p class="prizes-title">Support this project for a chance to win:</p>
 	{{ campaign.prizes }}
 	{% for prize in campaign.prize_set.all %}
-	<p><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="120" height="100%"/> You could win {{ prize.title }}, worth ${{ prize.dollar_value }}!</p>
+	<p class="prize-listing"><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="120" height="100%"/> {{ prize.title }}, worth ${{ prize.dollar_value }}!</p>
 	{% endfor %}
 	</div>
 

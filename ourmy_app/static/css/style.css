@@ -5,11 +5,11 @@
 #wrapper {min-height: 100%;}
 
 #main {overflow:auto;
-	padding-bottom: 150px;}  /* must be same height as the footer */
+	padding-bottom: 80px;}  /* must be same height as the footer */
 
 .sticky-bottom {position: relative;
-	margin-top: -150px; /* negative value of footer height */
-	height: 150px;
+	margin-top: -80px; /* negative value of footer height */
+	height: 80px;
 	clear:both;}
 
 body:before {
@@ -418,7 +418,21 @@ float: left;
     border: 1px solid #34bff3;
     width: 40px;
     height: 40px;
+    -webkit-border-radius: 4px;
+         -moz-border-radius: 4px;
+         border-radius: 4px;
+         -webkit-box-shadow: 0 4px 4px -2px #404040;
+          -moz-box-shadow: 0 4px 4px -2px #404040;
+          box-shadow: 0 4px 4px -2px #404040;
 }
+
+.twitter-share-button{clear: right; float: right; padding-right: 70px;}
+
+.prize-container{height: auto; width: auto;}
+
+.prizes-title, .prize-listing{padding-left: 145px;font-size: 12px;}
+
+.prize-listing{width: 420px !important; display: block; float: left;}
 
 /***  SCOREBOARD ***/
 
@@ -836,12 +850,32 @@ font-size: 12px;
 color: #404040;
 }
 
-
-footer
-{
-
+footer{
+    margin-top: 20px;
+    padding-top: 20px;
+    height: 80px;
+    background:#222 !important;
 }
 
+footer a{
+    color: #fff;
+    font-weight: normal !important;
+    text-shadow: none !important;
+}
+
+footer a:hover;{
+    color: #cdcdcd;
+    font-weight: normal !important;
+    text-shadow: none !important;
+}
+
+#social{float: right; margin-top: -25px;}
+
+#social .twitter-follow-button{padding: 4px;}
+
+#social .g-plusone{padding-left: 4px !important; margin-top: 8px !important;}
+
+.copy-bottom{padding-top: 10px; font-size: 12px; color: #fff;}
 
 @media (max-width: 1280px) {
 
