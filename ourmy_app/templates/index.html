@@ -20,13 +20,12 @@
 	<div class="campaign-text">
 	<h2 class="campaign-title">{{ campaign.title }} <span class="creator small-creator">&nbsp;by {{campaign.user.first_name}}&nbsp;{{campaign.user.last_name}}</span></h2>
 	<p class="campaign-description">{{ campaign.description }}</p>
-	<p>{{ campaign.user.first_name }} {{ campaign.user.last_name }}</p>
+		<div class="promote-button"><a href="{% url campaign campaign_id=campaign.id %}" class="btn btn-large promo-button-layout">SUPPORT THIS PROJECT</a></div>
 	</div>
 	{{ campaign.prizes }}
 	{% for prize in campaign.prize_set.all %}
 	<p><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="120" height="100%"/> You could win {{ prize.title }}, worth ${{ prize.dollar_value }}!</p>
 	{% endfor %}
-	<div class="promote-button"><a href="{% url campaign campaign_id=campaign.id %}" class="btn btn-large promo-button-layout">SUPPORT THIS PROJECT</a></div>
 	</div>
 
 {% endfor %}
