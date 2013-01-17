@@ -5,10 +5,11 @@ from ourmy_app.models import Campaign, Prize
 class CampaignForm(forms.ModelForm):
     class Meta:
         model = Campaign
-        exclude = ('user','api_call')
+        exclude = ('user','api_call', 'video_url') # change ZT001: remove this temporarily until we can promtoe non-video urls
 
     title = forms.CharField(label="Title of your campaign")
-    video_url = forms.CharField(label="Url of the youtube video you want to appear in your campaign")
+    # ZT001:  remove this temporarily until we can promote non-video urls
+    # video_url = forms.CharField(label="Url of the youtube video you want to appear in your campaign")
     post_text = forms.CharField(label="The text you want to appear in social media posts before the link:")
     long_url = forms.URLField(label="URL you want your fans to promote")
 

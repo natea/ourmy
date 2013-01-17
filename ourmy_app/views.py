@@ -58,12 +58,8 @@ def create_campaign(request, campaign_id=None):
         form = CampaignForm(request.POST, request.FILES, instance=campaign)
         if form.is_valid():
             form.instance.user = request.user
-            # # parse the video url because we're using an embed
-            # embed_pieces = request.POST['video_url'].split("http://www.youtube.com/watch?v=")
-            # if embed_pieces.count > 1:
-            #     id_only = embed_pieces[1].split("&")
-            #     # print id_only
-            #     form.instance.video_url = id_only[0]
+            # ZT001:  this is temporary -- when we can promote non-video urls we'll put it back into the form.
+            form.instance.video_url = request.POST['long_url']
             form.save()
 
             sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=form.instance)
@@ -75,7 +71,6 @@ def create_campaign(request, campaign_id=None):
             for service in services:
                 post_action, created = Action.objects.get_or_create(campaign=form.instance, title=service[1], points=10,
                                     api_call="sharing.get_%s_post_actions_for_user" % service[1])
-                # print post_action.api_call +  post_action.campaign.title + post_action.title
                 post_action.save()
                 sharing_post_action, created = SharingAction.objects.get_or_create(action=post_action, social_network=service[0], post_or_click=False)
                 sharing_post_action.save()
@@ -98,8 +93,7 @@ def create_campaign(request, campaign_id=None):
             form = CampaignForm(instance=campaign, initial={'long_url':sharing_campaign.long_url, 'post_text':sharing_campaign.post_text})
         else:
             form = CampaignForm()
-    # print "about to leave create_campaign view, campaign:"
-    # print campaign
+
     return render_to_response("create_campaign.html", {'form':form, 'campaigns':campaigns, 'this_campaign':campaign, 'is_saved':is_saved},
         context_instance=RequestContext(request))
 
@@ -247,7 +241,10 @@ def campaign(request, campaign_id):
     # parse the video url because we're using an embed
     youtube_id = None
     if len(campaign.video_url) > 3:
-        embed_pieces = campaign.video_url.split("http://www.youtube.com/watch?v=")
+        if "http://www.youtube.com/watch?v=" in campaign.video_url:
+            embed_pieces = campaign.video_url.split("http://www.youtube.com/watch?v=")
+        elif "https://www.youtube.com/watch?v=" in campaign.video_url:
+            embed_pieces = campaign.video_url.split("https://www.youtube.com/watch?v=")
         if embed_pieces.count > 1:
             id_only = embed_pieces[1].split("&")
             youtube_id = id_only[0]
