@@ -41,6 +41,9 @@ class Campaign(models.Model):
         list_display = ('',)
         search_fields = ('',)
 
+    def is_past():
+        return self.deadline <= datetime.datetime.now
+
     def __unicode__(self):
         return self.title
 
@@ -65,6 +68,7 @@ class CampaignUser(models.Model):
     campaign = models.ForeignKey(Campaign)
     user = models.ForeignKey(User)
     last_checked = models.DateTimeField(default=datetime.datetime.utcnow().replace(tzinfo=utc))
+    points_at_deadline = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.campaign.title + ', ' + self.user.last_name

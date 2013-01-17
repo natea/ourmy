@@ -19,8 +19,12 @@
 <div class="leaderboard">
 	<div class="banner-header"><h1>Scoreboard</h1></div>
 	<ul class="rankings">
-		{% for user in users %}
-		<li class="gamer"><span class="calloutpoint-score"><h2>{{ user.points }}</h2></span><span class="player">{{ user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ user.get_profile.thumbnail_url }}"></img></li>
+		{% for campaign_user in campaign_users %}
+			{% if campaign.is_past %}
+				<li class="gamer"><span class="calloutpoint-score"><h2>{{ campaign_user.points_at_deadline }}</h2></span><span class="player">{{ campaign_user.user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ user.get_profile.thumbnail_url }}"></img></li>
+			{% else %}
+				<li class="gamer"><span class="calloutpoint-score"><h2>{{ campaign_user.points }}</h2></span><span class="player">{{ campaign_user.user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ user.get_profile.thumbnail_url }}"></img></li>
+			{% endif %}
 		{% endfor %}
 	</ul>
 </div>

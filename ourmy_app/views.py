@@ -141,28 +141,24 @@ def campaign(request, campaign_id):
     ###############
     # Leaderboard #
     ###############
-    users = User.objects.all()
-    for user in users:
-        user.points = 0
-        # get all the actions this user has done by pinging the CampaignUser's api call
+    campaign_users = CampaignUser.objects.filter(campaign=campaign)
+    for campaign_user in campaign_users:
+        campaign_user.points = 0
+        # get all the actions this user has done by pinging the api call
         # TODO: should we delete any user_actions that are not returned by this call?
-        # campaign_user = get_object_or_None(CampaignUser, pk=user.id)
-        # if campaign_user:
         words = campaign.api_call.split(".")
-        # print "about to call " + campaign.api_call
         module = __import__(words[0])
         funct = getattr(module, words[1])
         list_of_actions_ids = funct(campaign)
-        # print list_of_actions_ids
         # for each element, get or create a new UserAction.
         for action_id in list_of_actions_ids:
             action = get_object_or_None(Action, api_call=action_id, campaign=campaign)
             # create any user actions that don't exist
             if action:
-                user_action, created = UserAction.objects.get_or_create(user=user, action=action)
+                user_action, created = UserAction.objects.get_or_create(user=campaign_user.user, action=action)
                 user_action.save()
 
-        user_actions = UserAction.objects.filter(user=user)
+        user_actions = UserAction.objects.filter(user=campaign_user.user)
 
         for user_action in user_actions:
             # call the api for this action.  This returns how many of these actions this user did.
@@ -170,19 +166,22 @@ def campaign(request, campaign_id):
             words = points_call.split(".")
             module = __import__(words[0])
             funct = getattr(module, words[1])
-            user.points += user_action.action.points * funct(user, campaign)
+            campaign_user.points += user_action.action.points * funct(campaign_user.user, campaign)
+            # if the deadline has passed and the campaign user does not have a points_at_deadline, save this point value
+            if campaign.is_past and campaign_user.points_at_deadline == 0:
+                campaign_user.points_at_deadline = campaign_user.points
 
-    sorted_users = sorted(users, key=lambda o:o.points, reverse=True)
+    sorted_campaign_users = sorted(campaign_users, key=lambda o:o.points, reverse=True)
  
     # Bitly sharing link
-    campaign_user = None
+    this_campaign_user = None
     if request.user.is_authenticated():
         user = request.user
         # create a CampaignUser object - this creates the unique bitly for this user for this campaign      
-        campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
-        campaign_user.save()
+        this_campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
+        this_campaign_user.save()
         sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=campaign)
-        sharing_campaign_user, created = SharingCampaignUser.objects.get_or_create(sharing_campaign=sharing_campaign, user=user)
+        sharing_campaign_user, created = SharingCampaignUser.objects.get_or_create(sharing_campaign=sharing_campaign, user=this_campaign_user.user)
         sharing_campaign_user.save()
         try:
             user_profile = request.user.get_profile()
@@ -196,46 +195,49 @@ def campaign(request, campaign_id):
     ##################
     # TODO: clean up the Sharing module and this stuff -- sharing should not keep accessing ourmy_app models
     if request.method == 'POST':
-        singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
 
-        try:
-            user_profile = request.user.get_profile()
-            try:
-                access_token = user_profile.access_token
-            except:
-                pass
+        # get the list of social networks the user posted to from the checkboxes
+        social_networks_list = request.POST.getlist('social-networks')
+        posted_to = social_networks_string        
+        body = request.POST['body']
+        url = request.POST['url']
+        sharing.post_to_social_networks(user=request.user, social_networks_list=social_networks_list, body=body, url=url, campaign=campaign)
 
-            # get the list of social networks the user posted to from the checkboxes
-            social_networks_list = request.POST.getlist('social-networks')
-            social_networks_string = ",".join(social_networks_list)
-            posted_to = social_networks_string
+        # singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
 
-            body = request.POST['body']
-            url = request.POST['url']
-            payload = {'access_token' : access_token, 
-                       'services': social_networks_string, 
-                       'body': body, 
-                       'url': url
-                       }
-            return_data = singly.make_request('/types/news', method='POST', request=payload)
+        # try:
+        #     user_profile = request.user.get_profile()
+        #     try:
+        #         access_token = user_profile.access_token
+        #     except:
+        #         pass
 
-            for social_network in social_networks_list:
-                try:
-                    success = return_data[service]['id']
-                    # print "printing success: " + success
-                    if success is not None:
-                        # if they have successfully posted, we create a SharingUserAction for them and store it in the database
-                        sharing_action = SharingAction.objects.get(action__campaign=campaign, social_network=social_networks, post_or_click=False)
-                        sharing_user_action = SharingUserAction(user=request.user, sharing_action=sharing_action)
-                        sharing_user_action.save()
-                        # we only need one click action per url, so check to see if there is one, if not create
-                        sharing_click_action = SharingAction.objects.get(action__campaign=campaign, post_or_click=True)
-                        SharingUserAction.objects.get_or_create(user=request.user, sharing_action=sharing_click_action)
-                except:
-                    pass
-        except:
-            # print "drat - no singly profile"
-            pass
+
+
+
+        #     payload = {'access_token' : access_token, 
+        #                'services': social_networks_string, 
+        #                'body': body, 
+        #                'url': url
+        #                }
+        #     return_data = singly.make_request('/types/news', method='POST', request=payload)
+
+        #     for social_network in social_networks_list:
+        #         try:
+        #             success = return_data[social_network]['id']
+        #             if success is not None:
+        #                 # if they have successfully posted, we create a SharingUserAction for them and store it in the database
+        #                 sharing_action = SharingAction.objects.get(action__campaign=campaign, social_network=social_networks, post_or_click=False)
+        #                 sharing_user_action = SharingUserAction(user=request.user, sharing_action=sharing_action)
+        #                 sharing_user_action.save()
+        #                 # we only need one click action per url, so check to see if there is one, if not create
+        #                 sharing_click_action = SharingAction.objects.get(action__campaign=campaign, post_or_click=True)
+        #                 SharingUserAction.objects.get_or_create(user=request.user, sharing_action=sharing_click_action)
+        #         except:
+        #             pass
+        # except:
+        #     # print "drat - no singly profile"
+        #     pass
 
     
     # parse the video url because we're using an embed
@@ -251,7 +253,7 @@ def campaign(request, campaign_id):
     
     return render_to_response('campaign.html',
          { 'user':request.user, 'campaign':campaign, 'youtube_id':youtube_id, 'actions':actions, 
-           'users':sorted_users, 'sharing_campaign_user':sharing_campaign_user, 
+           'campaign_users':sorted_campaign_users, 'sharing_campaign_user':sharing_campaign_user, 
            'profiles':profiles, 'posted_to':posted_to },
          context_instance=RequestContext(request)
         )

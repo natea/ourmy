@@ -6,6 +6,7 @@ from django.conf import settings
 from models import SharingCampaign, SharingUserAction, SharingCampaignUser, SharingAction
 from ourmy_app.models import CampaignUser
 from annoying.functions import get_object_or_None
+from singly.singly import Singly
 
 
 def get_points_for_user(user, *args, **kwargs):
@@ -69,3 +70,46 @@ def get_twitter_post_actions_for_user(user, campaign):
 	# print "called get_twitter_post_points_for_user, returning "
 	# print len(sharing_user_actions)
 	return len(sharing_user_actions)
+
+
+def post_to_social_networks(user, social_networks_list, body, url, campaign):
+    ##################
+    # if they post to social networks:
+    ##################
+    # TODO: clean up the Sharing module and this stuff -- sharing should not keep accessing ourmy_app models
+    singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
+
+    try:
+        user_profile = user.get_profile()
+        try:
+            access_token = user_profile.access_token
+        except:
+            pass
+
+        # get the list of social networks the user posted to from the checkboxes
+        social_networks_string = ",".join(social_networks_list)
+
+        payload = {'access_token' : access_token, 
+                   'services': social_networks_string, 
+                   'body': body, 
+                   'url': url
+                   }
+        return_data = singly.make_request('/types/news', method='POST', request=payload)
+        print return_data
+
+        for social_network in social_networks_list:
+            try:
+                success = return_data[social_network]['id']
+                if success is not None:
+                    # if they have successfully posted, we create a SharingUserAction for them and store it in the database
+                    sharing_action = SharingAction.objects.get(action__campaign=campaign, social_network=social_networks, post_or_click=False)
+                    sharing_user_action = SharingUserAction(user=user, sharing_action=sharing_action)
+                    sharing_user_action.save()
+                    # we only need one click action per url, so check to see if there is one, if not create
+                    sharing_click_action = SharingAction.objects.get(action__campaign=campaign, post_or_click=True)
+                    SharingUserAction.objects.get_or_create(user=user, sharing_action=sharing_click_action)
+            except:
+                pass
+    except:
+        # print "drat - no singly profile"
+        pass
