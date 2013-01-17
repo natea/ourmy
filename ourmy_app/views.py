@@ -198,46 +198,10 @@ def campaign(request, campaign_id):
 
         # get the list of social networks the user posted to from the checkboxes
         social_networks_list = request.POST.getlist('social-networks')
-        posted_to = social_networks_string        
+        posted_to = ",".join(social_networks_list)        
         body = request.POST['body']
         url = request.POST['url']
         sharing.post_to_social_networks(user=request.user, social_networks_list=social_networks_list, body=body, url=url, campaign=campaign)
-
-        # singly = Singly(SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET)
-
-        # try:
-        #     user_profile = request.user.get_profile()
-        #     try:
-        #         access_token = user_profile.access_token
-        #     except:
-        #         pass
-
-
-
-
-        #     payload = {'access_token' : access_token, 
-        #                'services': social_networks_string, 
-        #                'body': body, 
-        #                'url': url
-        #                }
-        #     return_data = singly.make_request('/types/news', method='POST', request=payload)
-
-        #     for social_network in social_networks_list:
-        #         try:
-        #             success = return_data[social_network]['id']
-        #             if success is not None:
-        #                 # if they have successfully posted, we create a SharingUserAction for them and store it in the database
-        #                 sharing_action = SharingAction.objects.get(action__campaign=campaign, social_network=social_networks, post_or_click=False)
-        #                 sharing_user_action = SharingUserAction(user=request.user, sharing_action=sharing_action)
-        #                 sharing_user_action.save()
-        #                 # we only need one click action per url, so check to see if there is one, if not create
-        #                 sharing_click_action = SharingAction.objects.get(action__campaign=campaign, post_or_click=True)
-        #                 SharingUserAction.objects.get_or_create(user=request.user, sharing_action=sharing_click_action)
-        #         except:
-        #             pass
-        # except:
-        #     # print "drat - no singly profile"
-        #     pass
 
     
     # parse the video url because we're using an embed
