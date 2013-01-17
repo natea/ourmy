@@ -18,7 +18,7 @@ or
       <fieldset>
       {{ form }}
       <div class="actions">
-        <input type="submit" class="btn primary" value="LAUNCH MY CAMPAIGN">
+        <input type="submit" class="btn primary btn-offset-top" value="CREATE CAMPAIGN">
       </div>
       </fieldset>
     </form>
@@ -26,9 +26,8 @@ or
 
 {% if is_saved %}
 <div>
-  Reward your friends!
-  <a class="btn btn-large" href="{% url create_prize campaign_id=this_campaign.id %}">Create Prizes</a>
-
+<a class="btn primary" href="{% url create_prize campaign_id=this_campaign.id %}">CREATE PRIZES</a>
+&nbsp;&nbsp;Create prizes to reward your most loyal friends and fans!
 </div>
 {% endif %}
 {% endblock content %}
