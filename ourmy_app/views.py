@@ -27,9 +27,9 @@ from annoying.functions import get_object_or_None
 
 
 def index(request):
-    # TODO: check that these are current campaigns
-    current_campaign_list = Campaign.objects.all()
-    if len(current_campaign_list) == 0:
+    current_campaign_list = Campaign.objects.filter(deadline__gt=datetime.datetime.now)
+    # this is only a first-time setup thing (because we have no login)
+    if len(Campaign.objects.all()) == 0:
         if request.user.is_authenticated():
             user = request.user
             campaign = Campaign(title="deleteme", user=user)
@@ -38,7 +38,7 @@ def index(request):
             action.save()
             sharing_action = SharingAction(action=action, social_network='FB', post_or_click=False)
             sharing_action.save()
-            current_campaign_list = Campaign.objects.all()
+            current_campaign_list = Campaign.objects.filter(deadline__gt=datetime.datetime.now)
     return render_to_response('index.html', 
         {'campaign_list':current_campaign_list},
         context_instance=RequestContext(request))
@@ -131,8 +131,8 @@ def create_prize(request, prize_id=None, campaign_id=None):
 def campaign(request, campaign_id):
     campaign = get_object_or_404(Campaign, pk=campaign_id)
     sharing_campaign_user = None
-    profiles = None
-    posted_to = None
+    profiles = None         # profiles is a list of the social networks this user is logged in to.
+    posted_to = None        # has the user just posted?  We thank them if so.
 
     services = SharingAction.SOCIAL_NETWORK_CHOICES
     actions = SharingAction.objects.filter(action__campaign=campaign, post_or_click=False)
