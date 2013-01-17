@@ -249,13 +249,12 @@ def campaign(request, campaign_id):
             id_only = embed_pieces[1].split("&")
             youtube_id = id_only[0]
     
-    response = render_to_response('campaign.html',
+    return render_to_response('campaign.html',
          { 'user':request.user, 'campaign':campaign, 'youtube_id':youtube_id, 'actions':actions, 
            'users':sorted_users, 'sharing_campaign_user':sharing_campaign_user, 
            'profiles':profiles, 'posted_to':posted_to },
          context_instance=RequestContext(request)
         )
-    return response
 
 
 def connect(request, template='connect.html'):
@@ -273,10 +272,7 @@ def connect(request, template='connect.html'):
         user_profile = request.user.get_profile()
         # We replace single quotes with double quotes b/c of python's strict json requirements
         profiles = simplejson.loads(user_profile.profiles.replace("'", '"'))
-    response = render_to_response(
-            template, locals(), context_instance=RequestContext(request)
-        )
-    return response
+    return render_to_response(template, locals(), context_instance=RequestContext(request))
 
 def login(request):
     services = [
@@ -293,6 +289,4 @@ def login(request):
         user_profile = request.user.get_profile()
         # We replace single quotes with double quotes b/c of python's strict json requirements
         profiles = simplejson.loads(user_profile.profiles.replace("'", '"'))
-    response = render_to_response('login.html', locals(), context_instance=RequestContext(request)
-        )
-    return response
+    return render_to_response('login.html', locals(), context_instance=RequestContext(request))
