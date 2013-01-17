@@ -4,7 +4,7 @@
 
 <div class="span5">
 
-<a class="btn btn-primary" href="{% url edit_campaign campaign_id=campaign.id %}">< Back to {{ campaign.title }}</a>
+<a class="btn btn-primary" href="{% url edit_campaign campaign_id=campaign.id %}">< BACK TO CAMPAIGN SETUP</a>
   <h2 class="campaign-title">Create your Prize!<br />
   or 
     <select ONCHANGE="location = this.options[this.selectedIndex].value;">
@@ -21,7 +21,7 @@
         <fieldset>
         {{ form }}
         <div class="actions">
-          <input type="submit" class="btn primary" value="Save">
+          <input type="submit" class="btn primary btn-large" value="SAVE PRIZE">
         </div>
         </fieldset>
       </form>
@@ -29,7 +29,7 @@
 </div>
 
 <div class="span5">
-  <h2 class="campaign-title">Prizes so far:</h2>
+  <h2 class="campaign-title span5-right-title">Prizes so far:</h2>
   {% for prize in all_prizes %}
     <h4>{{ prize.title }}</h4>
     <p>{{ prize.description }}</p>
