@@ -32,9 +32,9 @@ text-decoration: none;
 
 iframe
 {
--webkit-border-radius: 4px;
--moz-border-radius: 4px;
-border-radius: 4px;
+-webkit-box-shadow: 0 4px 4px -2px #404040;
+-moz-box-shadow: 0 4px 4px -2px #404040;
+box-shadow: 0 4px 4px -2px #404040;
 }
 
 h1{
@@ -73,12 +73,17 @@ text-align: center;
 -moz-border-radius: 4px 4px 0 0; -webkit-border-radius: 4px 4px 0 0; border-radius: 4px 4px 0 0; 
 -webkit-box-shadow: 0 1px 0 #FFF inset; -moz-box-shadow: 0 1px 0 #FFF inset; 
 box-shadow: 0 1px 0 #FFF inset;
-background: #34bff3 !important;
+background-color:#0a6beb;
 letter-spacing: 1px;
 }
 
 ul{
 list-style: none;
+}
+
+.span5{
+    height: auto;
+    width: 430px;
 }
 
 /*** NAVBAR ***/
@@ -129,17 +134,14 @@ height: 55px;
 .navbar .nav > li > a{
     color: #fff;
     letter-spacing: 1px;
-    text-shadow: 0 1px 1px #222;
+    text-shadow: none;
     font-weight: 500;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .navbar .nav > li > a:active, .navbar .nav > li > a:hover{
-    color: #222;
-    opacity: 0.35;
-    filter: alpha(opacity=35);
+    color: #34bff3;
     font-weight: 500;
-    text-shadow: 0 1px 1px #FFF;
     letter-spacing: 1px !important;
 }
 
@@ -251,31 +253,36 @@ box-shadow: 0 4px 4px -2px #404040;
 
 .post-button
 {
-margin-right: 30px;
+margin-right: 26px;
+margin-top: 10px;
 padding: 12px 46px 12px 46px;
 font-size: 22px;
 letter-spacing: 1px;
-border-top: 1px solid #404040;
 text-shadow: 0 1px 0 #222;
-  background:#FF6103;
-	background:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #FF7722), color-stop(100%, #FF6103));
-	background:-webkit-linear-gradient(#FF7722,#FF6103);
-	background:-moz-linear-gradient(#FF7722,#FF6103);
-	background:-o-linear-gradient(#FF7722,#FF6103);
-	background:-ms-linear-gradient(#FF7722,#FF6103);
-	background:linear-gradient(#FF7722,#FF6103);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF7722', endColorstr='#FF6103', GradientType=0);
+background-color:#34bff3;
+background:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #34bff3), color-stop(100%, #0a6beb));
+background:-webkit-linear-gradient(#34bff3,#0a6beb);
+background:-moz-linear-gradient(#34bff3,#0a6beb);
+background:-o-linear-gradient(#34bff3,#0a6beb);
+background:-ms-linear-gradient(#34bff3,#0a6beb);
+background:linear-gradient(#34bff3,#0a6beb);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#34bff3', endColorstr='#0a6beb', GradientType=0);
+filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+border-top: 1px solid #34bff3;
+border-bottom: 1px solid #0a6beb;
+border-left: 1px solid #0a6beb;
+border-right: 1px solid #0a6beb;
 }
 
 .post-button:hover, .post-button:active, .friends-button:hover, .friends-button:active
 {
-  background: -webkit-gradient(linear, left top, left bottom, from(#FF6103), to(#EE4000));
-  background: -webkit-linear-gradient(top, #FF6103, #EE4000);
-  background: -moz-linear-gradient(top, #FF6103,#EE4000);
-  background: -ms-linear-gradient(top, #FF6103, #EE4000);
-  background: -o-linear-gradient(top, #FF6103, #EE4000);
-  background-image: -ms-linear-gradient(top, #FF6103 0%, #EE4000 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF6103', endColorstr='#EE4000', GradientType=0);
+      	background:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #34bff3), color-stop(100%, #074aa2));
+      	background:-webkit-linear-gradient(#34bff3,#074aa2);
+      	background:-moz-linear-gradient(#34bff3,#074aa2);
+      	background:-o-linear-gradient(#34bff3,#074aa2);
+      	background:-ms-linear-gradient(#34bff3,#074aa2);
+      	background:linear-gradient(#34bff3,#074aa2);
+      	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#34bff3', endColorstr='#074aa2', GradientType=0);
 }
 
 .btn-invite
@@ -404,7 +411,12 @@ float: left;
     padding-top: 20px;
     padding-bottom: 0;
     border-bottom: 1px solid #dfdfdf;
-    width: 500px;
+    width: 420px;
+}
+
+.span5-right-title{
+    float: right;
+    margin-top: 78px !important;
 }
 
 .campaign p{
@@ -435,6 +447,20 @@ float: left;
 .prize-listing{width: 420px !important; display: block; float: left;}
 
 /***  SCOREBOARD ***/
+
+/*** CAMPAIGN PAGE  ***/
+
+input, textarea{
+    width: 400px; 
+}
+
+label{
+    font-weight: bold;
+}
+
+.btn-offset-top{
+    margin-top: 15px 0 0 0 !important;
+}
 
 .leaderboard
 {
@@ -490,15 +516,8 @@ border: solid 2px #FFF;
     color: #FFF;
     text-shadow: 0 1px 0 #222;
     text-align: center;
-    background:#FF6600;
+    background:#0a6beb;
     border: 2px solid #FFF;
-    background: -webkit-gradient(linear, left top, left bottom, from(#FF7722), to(#FF6600));
-  background: -webkit-linear-gradient(top, #FF7722, #FF6600);
-  background: -moz-linear-gradient(top, #FF7722, #FF6600);
-  background: -ms-linear-gradient(top, #FF7722, #FF6600);
-  background: -o-linear-gradient(top, #FF7722, #FF6600);
-  background-image: -ms-linear-gradient(top, #FF7722 0%, #FF6600 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF7722', endColorstr='#FF6600', GradientType=0);
     padding:0px 4px 4px 4px;
     width: 24px;
     height: 24px;
@@ -566,6 +585,12 @@ padding: 0 10px 2px 10px;
 ul.networks{
     margin: 0 auto;
     padding: 0;
+    padding-left: 6px;
+}
+
+ul.networks li{
+    display: block;
+    float: left;
 }
 
 .social-button{
@@ -850,6 +875,8 @@ font-size: 12px;
 color: #404040;
 }
 
+/*** FOOTER ***/
+
 footer{
     margin-top: 20px;
     padding-top: 20px;
@@ -857,16 +884,19 @@ footer{
     background:#222 !important;
 }
 
-footer a{
+footer .nav-links a{
     color: #fff;
     font-weight: normal !important;
     text-shadow: none !important;
 }
 
-footer a:hover;{
-    color: #cdcdcd;
+footer .nav-links a:hover;{
+    color: ##34bff3 !important;
     font-weight: normal !important;
     text-shadow: none !important;
+    text-decoration: none !important;
+    opacity: 1.0;
+    filter: alpha(opacity=100);
 }
 
 #social{float: right; margin-top: -25px;}
