@@ -37,7 +37,13 @@
 		<p class="prizes-title">Support this project for a chance to win:</p>
 		{{ campaign.prizes }}
 		{% for prize in campaign.prize_set.all %}
-			<p class="prize-listing"><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="120" height="100%"/> {{ prize.title }}, worth ${{ prize.dollar_value }}!</p>
+			<p class="prize-listing">
+			{% if prize.logo_image %}
+				<img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="120" height="100%" /> 
+			{% else %}
+				<img src="{{ STATIC_URL }}img/ourmy_default_prize_badge.png" width="80" height="100%" />
+			{% endif %} 
+				{{ prize.title }}, worth ${{ prize.dollar_value }}!</p>
 		{% endfor %}
 	</div>
 
