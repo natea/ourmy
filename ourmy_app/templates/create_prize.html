@@ -5,7 +5,7 @@
 <div class="span5">
 
 <a class="btn btn-primary" href="{% url edit_campaign campaign_id=campaign.id %}">< BACK TO CAMPAIGN SETUP</a>
-  <h2 class="campaign-title">Create your Prize!<br />
+  <h2 class="campaign-title">Create your Prize for {{ campaign.title }}<br />
   or 
     <select ONCHANGE="location = this.options[this.selectedIndex].value;">
       <option>Edit a different prize</option>

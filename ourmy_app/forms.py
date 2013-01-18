@@ -16,6 +16,7 @@ class CampaignForm(forms.ModelForm):
 class PrizeForm(forms.ModelForm):
     class Meta:
         model = Prize
+        exclude = ('campaign')
 
     video_url = forms.URLField(label="Have a video that shows off this prize?  Put the link right here (Note: Currently we can only accept YouTube URLs in this field):", required=False)
     dollar_value = forms.DecimalField(label="The dollar value of this prize (Number only. We'll add the $ sign):")
