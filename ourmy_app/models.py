@@ -27,12 +27,15 @@ def get_campaign_logo_path(instance, filename):
 def get_prize_logo_path(instance, filename):
     return os.path.join('logos', "%d_%s" % (instance.campaign.user.id, filename))
 
+def tomorrow():
+    return datetime.datetime.now().replace(tzinfo=utc) + datetime.timedelta(days=1)
+
 
 class Campaign(models.Model):
     user = models.ForeignKey(User)
     title = models.CharField(blank=True, max_length=100)
     description = models.TextField(blank=True, max_length=250)
-    deadline = models.DateTimeField(blank=True, default=datetime.datetime.utcnow().replace(tzinfo=utc))
+    deadline = models.DateTimeField(blank=True, default=tomorrow())
     logo_image = models.FileField(upload_to=get_campaign_logo_path, blank=True, null=True)
     video_url = models.URLField(blank=True)
     api_call = models.CharField(max_length=500, default="sharing.get_actions_for_campaign")
@@ -41,8 +44,20 @@ class Campaign(models.Model):
         list_display = ('',)
         search_fields = ('',)
 
-    def is_past():
-        return self.deadline <= datetime.datetime.now
+    def is_past(self):
+        return self.deadline <= datetime.datetime.now().replace(tzinfo=utc)
+
+    def days_till_deadline(self):
+        delta = self.deadline - datetime.datetime.now().replace(tzinfo=utc)
+        return delta.days
+
+    def hours_till_deadline(self):
+        delta = self.deadline - datetime.datetime.now().replace(tzinfo=utc)
+        return delta.seconds/60/60
+
+    def minutes_till_deadline(self):
+        delta = self.deadline - datetime.datetime.now().replace(tzinfo=utc)
+        return delta.seconds/60
 
     def __unicode__(self):
         return self.title

@@ -6,7 +6,10 @@ from django.contrib.auth.models import User
 
 
 def authenticate_redirect(request, service):
-    url = SinglyHelper.get_authorize_url(service)
+    if request.user.is_authenticated():
+        url = SinglyHelper.get_authorize_url(service, request.user.get_profile().access_token)
+    else:
+        url = SinglyHelper.get_authorize_url(service)
     return HttpResponseRedirect(url)
 
 
@@ -34,5 +37,3 @@ def authorize_callback(request):
         return HttpResponseRedirect(destination)
     else:
         return HttpResponseRedirect('/')
-
-

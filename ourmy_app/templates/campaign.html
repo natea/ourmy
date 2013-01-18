@@ -2,18 +2,30 @@
 
 {% block content %}
 
+{% load ourmy_app_extras %}
+
 <div class="campaign-media">
 	<iframe width="280" height="210" src="http://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allowfullscreen></iframe>
 </div>	
 
 <div class="campaign-dashboard">
-<h2 class="campaign-title">{{ campaign.title }}<span class="creator">&nbsp; by {{campaign.user.first_name}}&nbsp;{{campaign.user.last_name}}</span></h2> 
-<p>{{ campaign.description }}</p>
-<br></br>
-<h2 class="campaign-title">Campaign rewards</h2>
-{% for prize in campaign.prize_set.all %}
-<div class="single-prize"><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="80" /><p class="prize-title-tag">{{ prize.title }}</p></div>
-{% endfor %}
+	<h2 class="campaign-title">{{ campaign.title }}<span class="creator">&nbsp; by {{campaign.user.first_name}}&nbsp;{{campaign.user.last_name}}</span></h2> 
+	<p>{{ campaign.description }}</p>
+	<br></br>
+	<h2 class="campaign-title">Campaign rewards</h2>
+	{% for prize in campaign.prize_set.all %}
+		<div class="single-prize">
+			<div>
+				{% if this_users_points < prize.points_value %}
+				Only {{ prize.points_value|subtract:this_users_points }} more points for the chance to win:
+				{% else %} You already have enough points for:
+				{% endif %}
+			</div>
+			<div><b>{{ prize.title }}</b></div>
+			<img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="80" /> 
+			<div>{{ prize.description }}</div>
+		</div>
+	{% endfor %}
 </div>	
 
 <div class="leaderboard">

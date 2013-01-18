@@ -11,7 +11,7 @@ class CampaignForm(forms.ModelForm):
     # ZT001:  remove this temporarily until we can promote non-video urls
     # video_url = forms.CharField(label="Url of the youtube video you want to appear in your campaign")
     post_text = forms.CharField(label="The text you want to appear in social media posts before the link:")
-    #long_url = forms.URLField(label="URL you want your fans to promote")
+    long_url = forms.URLField(label="URL you want your fans to promote")
 
 class PrizeForm(forms.ModelForm):
     class Meta:
