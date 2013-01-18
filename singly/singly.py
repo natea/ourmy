@@ -49,7 +49,7 @@ class Singly(object):
 class SinglyHelper(object):
 
     @classmethod
-    def get_authorize_url(cls, service, redirect_uri=None):
+    def get_authorize_url(cls, service, token=None):
         url = '%s/oauth/authenticate?client_id=%s&redirect_uri=%s&service=%s' % (
             Singly.api_base, SINGLY_CLIENT_ID, SINGLY_REDIRECT_URI, service
         )
