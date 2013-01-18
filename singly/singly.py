@@ -50,10 +50,11 @@ class SinglyHelper(object):
 
     @classmethod
     def get_authorize_url(cls, service, redirect_uri=None):
-
-        url = '%s/oauth/authorize?client_id=%s&redirect_uri=%s&service=%s' % (
+        url = '%s/oauth/authenticate?client_id=%s&redirect_uri=%s&service=%s' % (
             Singly.api_base, SINGLY_CLIENT_ID, SINGLY_REDIRECT_URI, service
         )
+        if token:
+            url += '&access_token=%s' % (token)
         return url
 
     @classmethod

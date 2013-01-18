@@ -34,8 +34,9 @@ class UserProfileManager(models.Manager):
         endpoint = '/profiles'
         request = {'auth': 'true'}
         profiles = Singly(access_token=access_token).make_request(endpoint, request=request)
-        # singly_id = profiles['id']
+        singly_id = profiles['id']
 
+#-------
         endpoint = '/profile'
         profile = Singly(access_token=access_token).make_request(endpoint, request=request)
 
@@ -67,16 +68,17 @@ class UserProfileManager(models.Manager):
             user_profile.profiles = profiles
             user_profile.profile = profile
             user_profile.thumbnail_url = thumbnail_url
+            user_profile.user = user
 
         except ObjectDoesNotExist:
             user_profile = self.model(
                 access_token=access_token,
                 singly_id=singly_id,
                 profiles=profiles,
-                user=user
+                user=user,
+                profile=profile,
+                thumbnail_url=thumbnail_url
             )
-
-        user_profile.user = user
         user_profile.save()
 
         return user_profile
