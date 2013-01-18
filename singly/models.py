@@ -21,4 +21,4 @@ class SinglyProfile(models.Model):
         db_table = 'user_profile'
 
     def __unicode__(self):
-        return self.user.first_name + ' ' + self.user.last_name + ' ' + self.singly_id + ' ' + self.handle
+        return self.user.first_name + ' ' + self.user.last_name + ' ' + self.singly_id
