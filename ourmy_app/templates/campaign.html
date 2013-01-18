@@ -12,7 +12,7 @@
 <br></br>
 <h2 class="campaign-title">Campaign rewards</h2>
 {% for prize in campaign.prize_set.all %}
-<p><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="80" />{{ prize.title }}</p>
+<div class="single-prize"><img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="80" /><p class="prize-title-tag">{{ prize.title }}</p></div>
 {% endfor %}
 </div>	
 
@@ -57,7 +57,7 @@
 	    {% if profiles|length == 0 %}
 			<p class="helper-text">Click on the social icons to the left to connect your accounts.  The more accounts you connect, the more points you earn!</p>
 		{% else %}
-			<p class="helper-text">Check off each social network you want to post to and the same message will go to them all.  To use different messages, check only one and click Share, then check another, change the message, and click Share again.</p>
+			<p class="helper-text">Check off each social network you want to post to. The same message goes to each network you select.  To use different messages, check only one and click SHARE, then check another, change the message, and click SHARE again.</p>
 		{% endif %}
 
 	    </ul>
