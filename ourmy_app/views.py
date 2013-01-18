@@ -34,10 +34,14 @@ def index(request):
             user = request.user
             campaign = Campaign(title="deleteme", user=user)
             campaign.save()
-            action = Action(campaign=campaign, title="facebook", api_call="sharing.get_facebook_post_actions_for_user")
-            action.save()
-            sharing_action = SharingAction(action=action, social_network='FB', post_or_click=False)
-            sharing_action.save()
+            fb_action = Action(campaign=campaign, title="facebook", api_call="sharing.get_facebook_post_actions_for_user")
+            fb_action.save()
+            tw_action = Action(campaign=campaign, title="twitter", api_call="sharing.get_twitter_post_actions_for_user")
+            tw_action.save()
+            fb_sharing_action = SharingAction(action=fb_action, social_network='FB', post_or_click=False)
+            fb_sharing_action.save()
+            tw_sharing_action = SharingAction(action=tw_action, social_network='TW', post_or_click=False)
+            tw_sharing_action.save()
             current_campaign_list = Campaign.objects.filter(deadline__gt=datetime.datetime.now)
     return render_to_response('index.html', 
         {'campaign_list':current_campaign_list},
@@ -133,6 +137,7 @@ def campaign(request, campaign_id):
     sharing_campaign_user = None
     profiles = None         # profiles is a list of the social networks this user is logged in to.
     posted_to = None        # has the user just posted?  We thank them if so.
+    this_users_points = 0   # we use this to calculate how many points they need to win certain prizes
 
     services = SharingAction.SOCIAL_NETWORK_CHOICES
     actions = SharingAction.objects.filter(action__campaign=campaign, post_or_click=False)
@@ -142,6 +147,7 @@ def campaign(request, campaign_id):
     # Leaderboard #
     ###############
     campaign_users = CampaignUser.objects.filter(campaign=campaign)
+    # import pdb; pdb.set_trace()
     for campaign_user in campaign_users:
         campaign_user.points = 0
         # get all the actions this user has done by pinging the api call
@@ -171,8 +177,11 @@ def campaign(request, campaign_id):
             if campaign.is_past and campaign_user.points_at_deadline == 0:
                 campaign_user.points_at_deadline = campaign_user.points
 
+        if campaign_user.user == request.user:
+            this_users_points = campaign_user.points
+
     sorted_campaign_users = sorted(campaign_users, key=lambda o:o.points, reverse=True)
- 
+    # import pdb; pdb.set_trace()
     # Bitly sharing link
     this_campaign_user = None
     if request.user.is_authenticated():
@@ -194,13 +203,14 @@ def campaign(request, campaign_id):
     # if they post to social networks:
     ##################
     # TODO: clean up the Sharing module and this stuff -- sharing should not keep accessing ourmy_app models
-    if request.method == 'POST':
+    if request.method == 'POST': 
 
         # get the list of social networks the user posted to from the checkboxes
         social_networks_list = request.POST.getlist('social-networks')
         posted_to = ",".join(social_networks_list)        
         body = request.POST['body']
         url = request.POST['url']
+        # posting happens in the sharing module
         sharing.post_to_social_networks(user=request.user, social_networks_list=social_networks_list, body=body, url=url, campaign=campaign)
 
     
@@ -218,7 +228,7 @@ def campaign(request, campaign_id):
     return render_to_response('campaign.html',
          { 'user':request.user, 'campaign':campaign, 'youtube_id':youtube_id, 'actions':actions, 
            'campaign_users':sorted_campaign_users, 'sharing_campaign_user':sharing_campaign_user, 
-           'profiles':profiles, 'posted_to':posted_to },
+           'profiles':profiles, 'posted_to':posted_to, 'this_users_points':this_users_points },
          context_instance=RequestContext(request)
         )
 
