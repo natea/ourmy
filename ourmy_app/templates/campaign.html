@@ -21,8 +21,9 @@
 				{% else %} You already have enough points for:
 				{% endif %}
 			</div>
+			<div><b>{{ prize.title }}</b></div>
 			<img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="80" /> 
-			<div>{{ prize.title }} </div>
+			<div>{{ prize.description }}</div>
 		</div>
 	{% endfor %}
 </div>	
