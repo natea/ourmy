@@ -22,7 +22,11 @@
 				{% endif %}
 			</div>
 			<div><b>{{ prize.title }}</b></div>
+			{% if prize.logo_image %}
 			<img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="80" /> 
+			{% else %}
+			<img src="{{ STATIC_URL }}img/ourmy_default_prize_badge.png" width="80" />
+			{% endif %}
 			<div>{{ prize.description }}</div>
 		</div>
 	{% endfor %}

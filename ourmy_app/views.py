@@ -106,6 +106,7 @@ def create_prize(request, prize_id=None, campaign_id=None):
     instance = None
     prizes_for_campaign = None
     campaign = None
+    is_saved = False
     # we will either get a campaign_id (create) or a pitch_id (edit)
     # if there's a campaign id, this is a new prize.  Get the campaign, create & save the prize
     if campaign_id:
@@ -116,6 +117,7 @@ def create_prize(request, prize_id=None, campaign_id=None):
         instance = get_object_or_404(Prize, pk=prize_id)
         campaign = instance.campaign
         prizes_for_campaign = Prize.objects.filter(campaign=campaign)
+        is_saved = True
     if request.method == 'POST':
         instance = get_object_or_None(Prize, campaign=campaign, title=request.POST['title'])
         if instance is None:
@@ -127,7 +129,7 @@ def create_prize(request, prize_id=None, campaign_id=None):
         form = PrizeForm(instance=instance)
     else:
         form = PrizeForm(instance=instance)
-    return render_to_response("create_prize.html", {'form':form, 'all_prizes':prizes_for_campaign, 'campaign':campaign},
+    return render_to_response("create_prize.html", {'form':form, 'all_prizes':prizes_for_campaign, 'campaign':campaign, 'is_saved':is_saved},
         context_instance=RequestContext(request))
 
 
@@ -141,7 +143,6 @@ def campaign(request, campaign_id):
 
     services = SharingAction.SOCIAL_NETWORK_CHOICES
     actions = SharingAction.objects.filter(action__campaign=campaign, post_or_click=False)
-
 
     ###############
     # Leaderboard #
