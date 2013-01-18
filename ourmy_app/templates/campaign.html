@@ -17,11 +17,11 @@
 		<div class="single-prize">
 			<div>
 				{% if this_users_points < prize.points_value %}
-				Only {{ prize.points_value|subtract:this_users_points }} more points for the chance to win:
+				<div class="prize-cta"><p>Collect {{ prize.points_value|subtract:this_users_points }} more points to win:</p></div>
 				{% else %} You already have enough points for:
 				{% endif %}
 			</div>
-			<div><b>{{ prize.title }}</b></div>
+			<div class="campaign-prize-title"><p>{{ prize.title }}</p></div>
 			{% if prize.logo_image %}
 			<img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="80" /> 
 			{% else %}
@@ -73,7 +73,7 @@
 	    {% if profiles|length == 0 %}
 			<p class="helper-text">Click on the social icons to the left to connect your accounts.  The more accounts you connect, the more points you earn!</p>
 		{% else %}
-			<p class="helper-text">Check off each social network you want to post to. The same message goes to each network you select.  To use different messages, check only one and click SHARE, then check another, change the message, and click SHARE again.</p>
+			<p class="helper-text">Check the box of each social network you want to post to. The same message goes to each network you select.  To use different messages, check only one and click SHARE, then check another, change the message, and click SHARE again.</p>
 		{% endif %}
 
 	    </ul>
