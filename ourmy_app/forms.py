@@ -18,8 +18,8 @@ class PrizeForm(forms.ModelForm):
         model = Prize
         exclude = ('campaign')
 
-    video_url = forms.URLField(label="Have a video that shows off this prize?  Put the link right here (Note: Currently we can only accept YouTube URLs in this field):", required=False)
-    dollar_value = forms.DecimalField(label="The dollar value of this prize (Number only. We'll add the $ sign):")
+    video_url = forms.URLField(label="Have a video that shows off this prize?  Put the link right here (Note: Currently only accept YouTube URLs in this field):", required=False)
+    dollar_value = forms.DecimalField(label="The dollar value of this prize (We'll add the $ sign):")
     points_value = forms.IntegerField(label="What is the minimum number of points a user has to get before they are eligible to win this prize?")
     how_many = forms.IntegerField(label="How many of these prizes will you give away?")
     place = forms.IntegerField(label="If this prize goes only to the first place winner (above the points value), put 1.  Second place, put 2, etc.")
