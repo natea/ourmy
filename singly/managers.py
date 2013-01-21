@@ -71,7 +71,7 @@ class UserProfileManager(models.Manager):
                 thumbnail_url = profile['thumbnail_url']
 
         try:
-            username = GenerateUsername
+            username = GenerateUsername()
             user = User.objects.get(username=username)
         except ObjectDoesNotExist:
 
