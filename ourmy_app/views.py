@@ -148,7 +148,6 @@ def campaign(request, campaign_id):
     # Leaderboard #
     ###############
     campaign_users = CampaignUser.objects.filter(campaign=campaign)
-    # import pdb; pdb.set_trace()
     for campaign_user in campaign_users:
         campaign_user.points = 0
         # get all the actions this user has done by pinging the api call
@@ -182,7 +181,7 @@ def campaign(request, campaign_id):
             this_users_points = campaign_user.points
 
     sorted_campaign_users = sorted(campaign_users, key=lambda o:o.points, reverse=True)
-    # import pdb; pdb.set_trace()
+    
     # Bitly sharing link
     this_campaign_user = None
     if request.user.is_authenticated():

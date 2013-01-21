@@ -57,7 +57,6 @@ class UserProfileManager(models.Manager):
             if profile['thumbnail_url'] != '':
                 thumbnail_url = profile['thumbnail_url']
 
-        import pdb; pdb.set_trace()
         try:
             user = User.objects.get(username=singly_id)
         except ObjectDoesNotExist:
