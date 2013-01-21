@@ -1,7 +1,20 @@
+import random
+
 from django.db import models
 from singly import *
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+
+def GenerateUsername():
+    i = 0
+    MAX = 1000000
+    while(i < MAX):
+        username = str(random.randint(0,MAX))
+        try:
+            User.objects.get(username=username)
+        except User.DoesNotExist:
+            return username
+    raise Exception('All random username are taken')
 
 
 class UserProfileManager(models.Manager):
@@ -58,11 +71,12 @@ class UserProfileManager(models.Manager):
                 thumbnail_url = profile['thumbnail_url']
 
         try:
-            user = User.objects.get(username=singly_id)
+            username = GenerateUsername
+            user = User.objects.get(username=username)
         except ObjectDoesNotExist:
 
             # Made-up password address included due to convention
-            user = User.objects.create_user(singly_id, email, 'fakepassword')
+            user = User.objects.create_user(username, email, 'fakepassword')
             
         if name:
             user.first_name = first_name
