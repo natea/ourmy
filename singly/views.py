@@ -16,8 +16,7 @@ def authenticate_redirect(request, service):
 def authorize_callback(request):
     code = request.GET.get('code')
     content = SinglyHelper.get_access_token(code)
-    user_profile = SinglyProfile.objects.get_or_create_user(
-            content['account'], content['access_token'])
+    user_profile = SinglyProfile.objects.get_or_create_user(content['account'], content['access_token'])
     if not request.user.is_authenticated():
         # ideally, we would be using a randomized password.  Not sure why this isn't working
         # password = User.objects.make_random_password()
