@@ -14,6 +14,10 @@
 
 <div class="clearfix"></div>
 
+<div class="row">
+	<h2 class="page-title">New Campaigns</h2>
+</div>
+
 {% for campaign in campaign_list %}
 	<div class="container campaign">
 		<div class="profile-pic"><img src="{{ MEDIA_URL }}{{ campaign.logo_image }}" />
@@ -35,17 +39,19 @@
 		<a href="https://twitter.com/share" class="twitter-share-button" data-text="Win rewards for spreading the word about amazing creative projects" data-via="0urmy" data-related="ZoomTilt" data-hashtags="creativearmy">Tweet</a>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 		<p class="prizes-title">Support this project for a chance to win:</p>
+		<div class="prize-placement">
 		{{ campaign.prizes }}
 		{% for prize in campaign.prize_set.all %}
-			<p class="prize-listing">
+			<div class="prize-listing">
 			{% if prize.logo_image %}
 				<img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="120" height="100%" /> 
 			{% else %}
 				<img src="{{ STATIC_URL }}img/ourmy_default_prize_badge.png" width="80" height="100%" />
 			{% endif %} 
-				{{ prize.title }}, worth ${{ prize.dollar_value }}!</p>
+				<div class="prize-tag">{{ prize.title }}, worth ${{ prize.dollar_value }}!</div></div>
 		{% endfor %}
-	</div>
+		</div>
+		</div>
 
 {% endfor %}
 

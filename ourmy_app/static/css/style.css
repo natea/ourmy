@@ -55,6 +55,41 @@ font-size: 14px;
 margin-top: -4px;
 }
 
+h2.page-title{
+    position: relative;
+    overflow: hidden;
+    margin: 2% auto;
+    text-align: center;
+    line-height: 32px;
+    font-size: 24px;
+    -webkit-font-smoothing: antialiased;
+    text-transform: uppercase;
+    text-shadow: 0 1px 1px rgba(68,67,67,0.42);
+    -webkit-margin-before: 0.83em;
+    -webkit-margin-after: 0.83em;
+    -webkit-margin-start: 20px;
+    -webkit-margin-end: 5px;
+}
+
+h2.page-title::before{
+    left: -0.5em;
+    margin-left: -50%;
+}
+
+h2.page-title::before, h2.page-title::after{
+    content: "";
+    position: relative;
+    display: inline-block;
+    width: 50%;
+    border-top: 1px solid rgba(50,50,50,0.2);
+    vertical-align: middle;
+}
+
+h2.page-title::after{
+    left: 0.5em;
+    margin-right: -50%;
+}
+
 h3
 {
 
@@ -260,7 +295,7 @@ box-shadow: 0 4px 4px -2px #404040;
 .post-button
 {
 margin-right: 26px;
-margin-top: 10px;
+margin-top: 16px;
 padding: 12px 46px 12px 46px;
 font-size: 22px;
 letter-spacing: 1px;
@@ -320,8 +355,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#34bff3', endC
     float: right;
     width: 240px;
     height: 70px;
-    padding-left: 50px;
-    margin-top: -40px;
+    padding-left: 150px;
+    margin-top: -50px;
 }
 
 .promo-button-layout{
@@ -425,11 +460,11 @@ box-shadow: 0 4px 4px -2px #404040;
 .campaign p{
     clear: left;
     float: left;
-    width: 500px;
+    width: 360px;
 }
 
 
-.campaign p img{
+.campaign .prize-listing img{
     border: 1px solid #34bff3;
     width: 40px;
     height: 40px;
@@ -441,14 +476,60 @@ box-shadow: 0 4px 4px -2px #404040;
           box-shadow: 0 4px 4px -2px #404040;
 }
 
-.twitter-share-button{clear: right; float: right; padding-right: 70px;}
+.twitter-share-button{clear: right; float: right; padding-right: 105px;}
 
 .prize-container{height: auto; width: auto;}
 
-.prizes-title, .prize-listing{margin-left: 145px;font-size: 12px;}
+.prizes-title{margin-left: 138px;clear: both;}
 
-.prize-listing{width: 360px !important; display: block; float: left;}
+.prize-placement{position: relative; margin-left: 140px; width: 420px;}
 
+.prizes-title, .prize-listing{font-size: 12px; padding: 6px 10px 6px 6px;}
+
+.prize-listing{display: block; float: left;}
+
+.prize-listing:hover .prize-tag{    
+    opacity: 1;
+    visibility: visible;
+}
+
+.prize-listing .prize-tag{
+    display: block;
+    position: absolute;
+    left: -34%;
+    width: 100px;
+    top: 150px;
+    /*white-space: nowrap;*/
+    visibility: hidden;
+    text-align: center;
+    line-height: 14px;
+    opacity: 0;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    border: 1px solid #34bff3;
+    padding: 8px 10px 8px 10px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    pointer-events: none;
+    font-size: 11px;
+    -webkit-transition: opacity 250ms ease,visibility 0s linear;
+    -webkit-transition-delay: 0s,500ms;
+    -moz-transition: opacity 250ms ease 0s,visibility 0s linear 500ms;
+    -o-transition: opacity 250ms ease 0s,visibility 0s linear 500ms;
+    transition: opacity 250ms ease 0s,visibility 0s linear 500ms;
+    z-index: 10;
+}
+
+.prize-listing .prize-tag::after{
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    margin-left: -4px;
+    content: "";
+    border: 5px solid rgba(255,255,255,0);
+    border-top-color: rgba(0,0,0,0.8);
+}
 .prize-cta p{text-align: center !important; font-size: 12px; font-weight: bold; color: #ff0000; line-height: 14px;}
 
 .prize-cta-else p{text-align: center !important; font-size: 12px; font-weight: bold; color: #0a6beb; line-height: 14px;}
@@ -638,9 +719,9 @@ ul.networks li{
 
 .helper-text{
     float: right;
-    width: 240px;
-    padding: 10px;
+    width: 200px !important;
     margin-top: 10px;
+    padding: 10px;
     text-align: center;
     font-size: 11px;
     line-height: 16px;
@@ -797,6 +878,10 @@ box-shadow: 0 4px 4px -2px #bbb;
 float: right;
 padding: 20px;
 margin: 0px auto;
+}
+
+.social-button{
+    text-align: center;
 }
 
 .social-row-top
