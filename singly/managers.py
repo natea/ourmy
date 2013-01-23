@@ -1,3 +1,8 @@
+"""
+Based on Singly django example:
+https://github.com/Singly/python_django_skeleton/tree/master/singly
+"""
+
 import random
 
 from django.db import models
@@ -53,11 +58,6 @@ class UserProfileManager(models.Manager):
         endpoint = '/profile'
         profile = Singly(access_token=access_token).make_request(endpoint, request=request)
 
-        handle = singly_id
-        if 'handle' in profile:
-            if profile['handle'] != '':
-                handle = profile['handle']
-
         email = ''
         if 'email' in profile:
             email = profile['email']
@@ -71,27 +71,21 @@ class UserProfileManager(models.Manager):
                 thumbnail_url = profile['thumbnail_url']
 
         try:
-            username = GenerateUsername()
-            user = User.objects.get(username=username)
-        except ObjectDoesNotExist:
+            # get the user if it already exists
+            user = User.objects.get(profile__singly_id=singly_id)
 
+        except ObjectDoesNotExist:
+            # if there is no user yet, create one
             # Made-up password address included due to convention
+            username = GenerateUsername()
             user = User.objects.create_user(username, email, 'fakepassword')
             
-        if name:
-            user.first_name = first_name
-            user.last_name = last_name
-        user.save()
+            if name:
+                user.first_name = first_name
+                user.last_name = last_name
+            user.save()
 
-        try:
-            user_profile = self.get(singly_id=singly_id)
-            user_profile.handle = handle
-            user_profile.profiles = profiles
-            user_profile.profile = profile
-            user_profile.thumbnail_url = thumbnail_url
-            user_profile.user = user
-
-        except ObjectDoesNotExist:
+            # create a user profile
             user_profile = self.model(
                 access_token=access_token,
                 singly_id=singly_id,
@@ -101,6 +95,14 @@ class UserProfileManager(models.Manager):
                 profile=profile,
                 thumbnail_url=thumbnail_url
             )
-        user_profile.save()
+            user_profile.save()
+
+        # update the user profile information in case anything has changed
+        user_profile = self.get(singly_id=singly_id)
+        user_profile.handle = handle
+        user_profile.profiles = profiles
+        user_profile.profile = profile
+        user_profile.thumbnail_url = thumbnail_url
+        user_profile.user = user
 
         return user_profile
