@@ -38,7 +38,7 @@ from annoying.decorators import ajax_request
 
 # @ajax_request
 def get_facebook_post_points_for_user(reqeust):  #, user, *args, **kwargs):
-	print "called get_facebook_post_points_for_user"
+	# print "called get_facebook_post_points_for_user"
 	points = random.randrange(1,100)
 	points = 34
 	return {'points':points, 'something':"hi there"}

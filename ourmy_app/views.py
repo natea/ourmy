@@ -87,8 +87,9 @@ def create_campaign(request, campaign_id=None):
             url = reverse('edit_campaign', kwargs={'campaign_id':form.instance.id})
             return HttpResponseRedirect(url)
         else:
-            print "printing form errors:"
-            print form.errors
+            # print "printing form errors:"
+            # print form.errors
+            pass
     else:
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)

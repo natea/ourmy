@@ -72,9 +72,9 @@
 	<ul class="rankings">
 		{% for campaign_user in campaign_users %}
 			{% if campaign.is_past %}
-				<li class="gamer"><span class="calloutpoint-score"><h2>{{ campaign_user.points_at_deadline }}</h2></span><span class="player">{{ campaign_user.user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ user.get_profile.thumbnail_url }}"></img></li>
+				<li class="gamer"><span class="calloutpoint-score"><h2>{{ campaign_user.points_at_deadline }}</h2></span><span class="player">{{ campaign_user.user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ campaign_user.get_profile.thumbnail_url }}"></img></li>
 			{% else %}
-				<li class="gamer"><span class="calloutpoint-score"><h2>{{ campaign_user.points }}</h2></span><span class="player">{{ campaign_user.user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ user.get_profile.thumbnail_url }}"></img></li>
+				<li class="gamer"><span class="calloutpoint-score"><h2>{{ campaign_user.points }}</h2></span><span class="player">{{ campaign_user.user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ campaign_user.get_profile.thumbnail_url }}"></img></li>
 			{% endif %}
 		{% endfor %}
 	</ul>
