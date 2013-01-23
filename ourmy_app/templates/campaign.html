@@ -8,54 +8,15 @@
 	<iframe width="280" height="210" src="http://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allowfullscreen></iframe>
 </div>	
 
-<div class="campaign-dashboard">
-	<h2 class="campaign-title">{{ campaign.title }}<span class="creator">&nbsp; by {{campaign.user.first_name}}&nbsp;{{campaign.user.last_name}}</span></h2> 
-	<p>{{ campaign.description }}</p>
-	<br></br>
-	<h2 class="campaign-title">Campaign rewards</h2>
-	{% for prize in campaign.prize_set.all %}
-		<div class="single-prize">
-			<div>
-				{% if this_users_points < prize.points_value %}
-				<div class="prize-cta"><p>Collect {{ prize.points_value|subtract:this_users_points }} more points to win!</p></div>
-				{% else %} <div class="prize-cta-else"><p>You're in the running for this prize!</p></div>
-				{% endif %}
-			</div>
-			<div class="campaign-prize-title"><p>{{ prize.title }}</p></div>
-			{% if prize.logo_image %}
-			<img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="80" /> 
-			{% else %}
-			<img src="{{ STATIC_URL }}img/ourmy_default_prize_badge.png" width="80" />
-			{% endif %}
-			<div class="prize-description"><p>{{ prize.description }}</p></div>
-		</div>
-	{% endfor %}
-</div>	
-
-<div class="leaderboard">
-	<div class="banner-header"><h1>Campaign Scoreboard</h1></div>
-	<ul class="rankings">
-		{% for campaign_user in campaign_users %}
-			{% if campaign.is_past %}
-				<li class="gamer"><span class="calloutpoint-score"><h2>{{ campaign_user.points_at_deadline }}</h2></span><span class="player">{{ campaign_user.user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ user.get_profile.thumbnail_url }}"></img></li>
-			{% else %}
-				<li class="gamer"><span class="calloutpoint-score"><h2>{{ campaign_user.points }}</h2></span><span class="player">{{ campaign_user.user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ user.get_profile.thumbnail_url }}"></img></li>
-			{% endif %}
-		{% endfor %}
-	</ul>
-</div>
-
-<br></br>
-
 <div class="sharing-center">
 <form class="form-vertical" action="" method="post">
 {% csrf_token %}
   <fieldset>
-    <h2 class="campaign-title">Sharing dashboard</h2>
+    <h2 class="campaign-title">Sharing tools</h2>
     {% if posted_to %}
-	    <p>Thanks for posting to {{ posted_to }}!  You can post to more networks for more points.</p>
+	    <p>Thanks for posting to {{ posted_to }}!  Post again to collect even more points.</p>
     {% endif %}
-	<p>My networks:</p>
+	<p>Share this campaign to win unique rewards and support the creator:</p>
 	    <ul class="networks">
 	    {% for action in actions %}
 	        <li>
@@ -71,14 +32,12 @@
 	    {% endfor %}
 
 	    {% if profiles|length == 0 %}
-			<p class="helper-text">Click on the social icons to the left to connect your accounts.  The more accounts you connect, the more points you earn!</p>
+			<div class="helper-text">Click on the social icons to the left to connect your accounts.  The more accounts you connect, the more points you can earn!</div>
 		{% else %}
-			<p class="helper-text">Check the box of each social network you want to post to. The same message goes to each network you select.  To use different messages, check only one and click SHARE, then check another, change the message, and click SHARE again.</p>
+			<div class="helper-text">Check the box of each social network you want to post to. The same message goes to each network you select.  To use different messages, check only one and click SHARE, then check another, change the message, and click SHARE again.</div>
 		{% endif %}
 
 	    </ul>
-		
-	<div class="clearfix"></div>
     <div class="control-group">
       <label class="control-label" for="textarea">My message:</label>
       <div class="controls">
@@ -108,6 +67,49 @@
   </fieldset>
 </form>
 </div>
+
+<div class="leaderboard">
+	<div class="banner-header"><h1>Campaign Scoreboard</h1></div>
+	<ul class="rankings">
+		{% for campaign_user in campaign_users %}
+			{% if campaign.is_past %}
+				<li class="gamer"><span class="calloutpoint-score"><h2>{{ campaign_user.points_at_deadline }}</h2></span><span class="player">{{ campaign_user.user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ user.get_profile.thumbnail_url }}"></img></li>
+			{% else %}
+				<li class="gamer"><span class="calloutpoint-score"><h2>{{ campaign_user.points }}</h2></span><span class="player">{{ campaign_user.user.first_name }}</span><img class="profile-pic-scoreboard" src="{{ user.get_profile.thumbnail_url }}"></img></li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+</div>
+
+<div class="campaign-dashboard">
+	<h2 class="campaign-title">Campaign rewards</h2>
+	{% for prize in campaign.prize_set.all %}
+		<div class="single-prize">
+			<div>
+				{% if this_users_points < prize.points_value %}
+				<div class="prize-cta"><p>Collect {{ prize.points_value|subtract:this_users_points }} more points to win!</p></div>
+				{% else %} <div class="prize-cta-else"><p>You're in the running for this prize!</p></div>
+				{% endif %}
+			</div>
+			<div class="campaign-prize-title"><p>{{ prize.title }}</p></div>
+			{% if prize.logo_image %}
+			<img src="{{ MEDIA_URL }}{{ prize.logo_image }}" width="80" /> 
+			{% else %}
+			<img src="{{ STATIC_URL }}img/ourmy_default_prize_badge.png" width="80" />
+			{% endif %}
+			<div class="prize-description"><p>{{ prize.description }}</p></div>
+		</div>
+	{% endfor %}
+	<div class="clearfix"></div>
+	<div class="campaign-description">
+	<h2 class="campaign-title">{{ campaign.title }}<span class="creator">&nbsp; by {{campaign.user.first_name}}&nbsp;{{campaign.user.last_name}}</span></h2> 
+	<p>{{ campaign.description }}</p>
+	</div>
+</div>	
+
+<br></br>
+
+
 
 {% for action in campaign.actions %}
 	<p>{{ action.social_network }}</p>
