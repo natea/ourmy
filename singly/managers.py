@@ -58,6 +58,10 @@ class UserProfileManager(models.Manager):
         endpoint = '/profile'
         profile = Singly(access_token=access_token).make_request(endpoint, request=request)
 
+        handle = ''
+        if profile['handle'] != '':
+            handle = profile['handle']
+
         email = ''
         if 'email' in profile:
             email = profile['email']
@@ -66,6 +70,7 @@ class UserProfileManager(models.Manager):
             first_name = profile['name'].split(' ')[0]
             last_name = profile['name'].split(' ')[-1]    
         
+        thumbnail_url = ''
         if 'thumbnail_url' in profile:
             if profile['thumbnail_url'] != '':
                 thumbnail_url = profile['thumbnail_url']
