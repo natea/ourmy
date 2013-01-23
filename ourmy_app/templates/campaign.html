@@ -25,7 +25,6 @@
 					<!-- <span class="check">&#10003; -->
 					</span><a class="social-button" href="/authenticate/{{ action.get_social_network_display }}"><img src="{{ STATIC_URL }}img/{{action.get_social_network_display}}-on.png" title="{{ action.get_social_network_display }}" width="80"/><br />{{action.action.points}} points</a>
 				{% else %}	
-					<input type="checkbox" value="{{action.get_social_network_display}}" name="social-networks">
 					<a class="social-button" href="/authenticate/{{ action.get_social_network_display }}"><img src="{{ STATIC_URL }}img/{{action.get_social_network_display}}-off.png" title="{{ action.get_social_network_display }}" width="80"/></a>
                 {% endif %}
 	        </li>
