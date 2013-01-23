@@ -164,6 +164,7 @@ def campaign(request, campaign_id):
     # Leaderboard #
     ###############
     campaign_users = CampaignUser.objects.filter(campaign=campaign)
+
     for campaign_user in campaign_users:
         campaign_user.points = 0
         # get all the actions this user has done by pinging the api call
@@ -194,9 +195,15 @@ def campaign(request, campaign_id):
                 campaign_user.points_at_deadline = campaign_user.points
 
         if campaign_user.user == request.user:
+            this_campaign_user = campaign_user
             this_users_points = campaign_user.points
 
-    sorted_campaign_users = sorted(campaign_users, key=lambda o:o.points, reverse=True)
+    # sort these by number of points, then only include the top ten.
+    sorted_campaign_users = sorted(campaign_users, key=lambda o:o.points, reverse=True)[:10]
+    # if the logged in user is not in the top ten, append them as the eleventh.
+
+    if this_campaign_user not in sorted_campaign_users:
+        sorted_campaign_users.append(request.user.campaign_user)
     
     # Bitly sharing link
     this_campaign_user = None
