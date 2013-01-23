@@ -102,12 +102,13 @@ class UserProfileManager(models.Manager):
             )
             user_profile.save()
 
-        # update the user profile information in case anything has changed
-        user_profile = self.get(singly_id=singly_id)
+        # update the user_profile information in case anything has changed
+        user_profile = user.get_profile()
         user_profile.handle = handle
         user_profile.profiles = profiles
         user_profile.profile = profile
         user_profile.thumbnail_url = thumbnail_url
         user_profile.user = user
+        user_profile.save()
 
         return user_profile
