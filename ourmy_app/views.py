@@ -89,6 +89,7 @@ def create_campaign(request, campaign_id=None):
         else:
             # print "printing form errors:"
             # print form.errors
+            pass
     else:
         if campaign_id is not None:
             campaign = get_object_or_404(Campaign, pk=campaign_id)
