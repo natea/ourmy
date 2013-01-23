@@ -31,10 +31,10 @@
 	        </li>
 	    {% endfor %}
 
-	    {% if profiles|length == 0 %}
-			<div class="helper-text">Click on the social icons to the left to connect your accounts.  The more accounts you connect, the more points you can earn!</div>
-		{% else %}
+	    {% if profiles %}
 			<div class="helper-text">Check the box of each social network you want to post to. The same message goes to each network you select.  To use different messages, check only one and click SHARE, then check another, change the message, and click SHARE again.</div>
+		{% else %}
+			<div class="helper-text">Click on the social icons to the left to connect your accounts.  The more accounts you connect, the more points you can earn!</div>
 		{% endif %}
 
 	    </ul>
