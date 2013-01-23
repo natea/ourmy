@@ -224,6 +224,11 @@ def campaign(request, campaign_id):
         if embed_pieces.count > 1:
             id_only = embed_pieces[1].split("&")
             youtube_id = id_only[0]
+
+    # we need to limit non-logged-in users to facebook only; if not users could create duplicate Singly accounts
+    # and thus duplicate users, messing up our points system.  Singly says they plan to deal with this at some point.
+    if not request.user.is_authenticated():
+        actions = actions[:1]
     
     return render_to_response('campaign.html',
          { 'user':request.user, 'campaign':campaign, 'youtube_id':youtube_id, 'actions':actions, 
