@@ -23,9 +23,9 @@
                 {% if action.get_social_network_display in profiles %}
                     <input type="checkbox" value="{{action.get_social_network_display}}" name="social-networks">
 					<!-- <span class="check">&#10003; -->
-					</span><a class="social-button" href="/authenticate/{{ action.get_social_network_display }}"><img src="{{ STATIC_URL }}img/{{action.get_social_network_display}}-on.png" title="{{ action.get_social_network_display }}" width="80"/><br />{{action.action.points}} points</a>
+					</span><a class="social-button" href="/authenticate/{{ action.get_social_network_display }}"><img src="{{ STATIC_URL }}img/{{ action.get_social_network_display }}-on.png" title="{{ action.get_social_network_display }}" width="80"/><br />{{ action.action.points }} point{{ action.action.points|pluralize }}</a>
 				{% else %}	
-					<a class="social-button" href="/authenticate/{{ action.get_social_network_display }}"><img src="{{ STATIC_URL }}img/{{action.get_social_network_display}}-off.png" title="{{ action.get_social_network_display }}" width="80"/></a>
+					<a class="social-button" href="/authenticate/{{ action.get_social_network_display }}"><img src="{{ STATIC_URL }}img/{{ action.get_social_network_display }}-off.png" title="{{ action.get_social_network_display }}" width="80"/></a>
                 {% endif %}
 	        </li>
 	    {% endfor %}
