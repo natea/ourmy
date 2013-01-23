@@ -145,6 +145,21 @@ def campaign(request, campaign_id):
     services = SharingAction.SOCIAL_NETWORK_CHOICES
     actions = SharingAction.objects.filter(action__campaign=campaign, post_or_click=False)
 
+    ##################
+    # if they post to social networks:
+    ##################
+    # TODO: clean up the Sharing module and this stuff -- sharing should not keep accessing ourmy_app models
+    if request.method == 'POST': 
+
+        # get the list of social networks the user posted to from the checkboxes
+        social_networks_list = request.POST.getlist('social-networks')
+        posted_to = ",".join(social_networks_list)        
+        body = request.POST['body']
+        url = request.POST['url']
+        # posting happens in the sharing module
+        sharing.post_to_social_networks(user=request.user, social_networks_list=social_networks_list, body=body, url=url, campaign=campaign)
+
+
     ###############
     # Leaderboard #
     ###############
@@ -200,21 +215,7 @@ def campaign(request, campaign_id):
         except:
             pass
 
-    ##################
-    # if they post to social networks:
-    ##################
-    # TODO: clean up the Sharing module and this stuff -- sharing should not keep accessing ourmy_app models
-    if request.method == 'POST': 
 
-        # get the list of social networks the user posted to from the checkboxes
-        social_networks_list = request.POST.getlist('social-networks')
-        posted_to = ",".join(social_networks_list)        
-        body = request.POST['body']
-        url = request.POST['url']
-        # posting happens in the sharing module
-        sharing.post_to_social_networks(user=request.user, social_networks_list=social_networks_list, body=body, url=url, campaign=campaign)
-
-    
     # parse the video url because we're using an embed
     youtube_id = None
     if len(campaign.video_url) > 3:
