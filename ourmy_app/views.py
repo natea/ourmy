@@ -205,7 +205,8 @@ def campaign(request, campaign_id):
     this_campaign_user = None
     if request.user.is_authenticated():
         user = request.user
-        # create a CampaignUser object - this creates the unique bitly for this user for this campaign      
+        # get or create a CampaignUser object and a SharingCampaignUser object.
+        # Creating a new SharingCampaignUser creates the unique bitly.
         this_campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
         this_campaign_user.save()
         sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=campaign)

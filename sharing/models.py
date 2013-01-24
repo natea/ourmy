@@ -27,16 +27,18 @@ class SharingCampaignUser(models.Model):
         return self.sharing_campaign.campaign.title + ' ' + self.user.last_name
 
     def save(self, *args, **kwargs):
-        connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
-        # we need to add a unique string to the end of this or all bitly links to this campaign will be the same.
-        unique = User.objects.make_random_password()
-        if 'youtube.com' in self.sharing_campaign.long_url:
-            url = self.sharing_campaign.long_url + '&ourmyun=' + unique
-        else:
-            url = self.sharing_campaign.long_url
-        # TODO: this does not work for non-youtube urls!
-        result = connection.shorten(url)
-        self.sharable_url = result["url"]
+        # only create a new bitly on new SharingCampaignUser objects.
+        if not self.pk:
+            connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
+            # we need to add a unique string to the end of this or all bitly links to this campaign will be the same.
+            unique = User.objects.make_random_password()
+            if 'youtube.com' in self.sharing_campaign.long_url:
+                url = self.sharing_campaign.long_url + '&ourmyun=' + unique
+            else:
+                url = self.sharing_campaign.long_url
+            # TODO: this does not work for non-youtube urls!
+            result = connection.shorten(url)
+            self.sharable_url = result["url"]
         super(SharingCampaignUser, self).save(*args, **kwargs)      # Call the "real" save() method.
 
 
