@@ -53,8 +53,13 @@ class SharingAction(models.Model):
     social_network = models.CharField(max_length=2, choices=SOCIAL_NETWORK_CHOICES, default=FACEBOOK)
     post_or_click = models.BooleanField()
 
+    def is_post_or_click(self):
+        if self.post_or_click:
+            return "click"
+        return "post"
+
     def __unicode__(self):
-        return self.action.campaign.title + ': ' + self.get_social_network_display()
+        return self.action.campaign.title + ': ' + self.get_social_network_display() + ', ' + self.is_post_or_click()
 
 
 class SharingUserAction(models.Model):
