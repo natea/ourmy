@@ -53,7 +53,7 @@ class SharingAction(models.Model):
         (TWITTER, 'twitter'),
     )
 
-    action = models.ForeignKey(Action, unique=True)
+    action = models.ForeignKey(Action)
     social_network = models.CharField(max_length=2, choices=SOCIAL_NETWORK_CHOICES, default=FACEBOOK)
     post_or_click = models.BooleanField()
 

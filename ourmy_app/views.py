@@ -33,6 +33,8 @@ def index(request):
             user = request.user
             campaign = Campaign(title="deleteme", user=user)
             campaign.save()
+            sharing_campaign = SharingCampaign(campaign=campaign)
+            sharing_campaign.save()
             fb_action = Action(campaign=campaign, title="facebook", api_call="sharing.get_facebook_post_actions_for_user")
             fb_action.save()
             tw_action = Action(campaign=campaign, title="twitter", api_call="sharing.get_twitter_post_actions_for_user")
@@ -76,6 +78,7 @@ def create_campaign(request, campaign_id=None):
             sharing_campaign.long_url = request.POST['long_url']
             sharing_campaign.post_text = request.POST['post_text']
             sharing_campaign.save()
+            
             # now we create the actions and sharing actions.  One post for each service, one click.
             services = SharingAction.SOCIAL_NETWORK_CHOICES
             for service in services:
@@ -84,7 +87,7 @@ def create_campaign(request, campaign_id=None):
                 post_action.save()
                 sharing_post_action, created = SharingAction.objects.get_or_create(action=post_action, social_network=service[0], post_or_click=False)
                 sharing_post_action.save()
-            click_action, created = Action.objects.get_or_create(campaign=form.instance, title="click", points=1,
+            click_action, created = Action.objects.get_or_create(campaign=form.instance, title="click",
                                   api_call="sharing.get_click_actions_for_user")
             click_action.save()
             sharing_click_action, created = SharingAction.objects.get_or_create(action=click_action, social_network=service[0], post_or_click=True)
