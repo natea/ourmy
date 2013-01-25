@@ -1,8 +1,10 @@
 import bitly_api
+import datetime
 
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.utils.timezone import utc
 from ourmy_app.models import Campaign, CampaignUser, Action
 
 
@@ -62,6 +64,7 @@ class SharingUserAction(models.Model):
         We create a 'click' SharingUserAction when there is a new bitly url."""
     user = models.ForeignKey(User)
     sharing_action = models.ForeignKey(SharingAction)
+    created_at = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now().replace(tzinfo=utc))
 
     def __unicode__(self):
         return self.sharing_action.action.campaign.title + ': ' + self.sharing_action.social_network + ' by ' + self.user.username
