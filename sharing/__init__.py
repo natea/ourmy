@@ -10,18 +10,6 @@ from singly.singly import Singly
 from ourmy_project.settings import SINGLY_CLIENT_ID, SINGLY_CLIENT_SECRET, SINGLY_REDIRECT_URI
 
 
-def get_points_for_user(user, *args, **kwargs):
-    return random.randrange(1,100)
-    # points = 0
-
-    # # count all VSUserAction posts of same social network, return 1.  
-    # for sn in SharingUserAction.SOCIAL_NETWORKS:
-    #   post_user_actions = SharingUserAction.objects.filter(user_action.user=user, social_network=sn, post_or_clicked=0)
-    #   points += post_user_actions.count
-    # # For each VSUserAction that is a click, return the bitly count.
-    # for sn in SharingUserAction.SOCIAL_NETWORKS:
-    #   click_user_actions = SharingUserAction.objects.filter(user_action.user=user, social_network=sn, post_or_clicked=1)
-
 def get_actions_for_campaign(campaign):
     # this should return a list of api calls that will return points values for the various user actions.
     # return ["get_facebook_post_points_for_user", "get_facebook_click_points_for_user", "get_twitter_post_points_for_user", "get_twitter_click_points_for_user"]

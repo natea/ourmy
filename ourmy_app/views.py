@@ -21,7 +21,6 @@ from django import forms
 from ourmy_app.forms import CampaignForm, PrizeForm
 from django.utils.functional import LazyObject
 import sharing
-from sharing import get_points_for_user
 from sharing.models import SharingCampaign, SharingCampaignUser, SharingAction, SharingUserAction
 from annoying.functions import get_object_or_None
 
