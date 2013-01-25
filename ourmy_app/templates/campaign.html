@@ -86,7 +86,7 @@
 		<div class="single-prize">
 			<div>
 				{% if this_users_points < prize.points_value %}
-				<div class="prize-cta"><p>Collect {{ prize.points_value|subtract:this_users_points }} more points to win!</p></div>
+				<div class="prize-cta"><p>Collect {{ prize.points_value|subtract:this_users_points }} more points to be entered to win!</p></div>
 				{% else %} <div class="prize-cta-else"><p>You're in the running for this prize!</p></div>
 				{% endif %}
 			</div>
