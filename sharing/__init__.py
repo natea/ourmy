@@ -33,6 +33,7 @@ def get_facebook_post_actions_for_user(user, campaign):
 def get_click_actions_for_user(user, campaign, *args, **kwargs):
     sharing_campaign = get_object_or_None(SharingCampaign, campaign=campaign)
     clicks = 0
+    # print "in click actions."
     if sharing_campaign:
         sharing_campaign_user = get_object_or_None(SharingCampaignUser, user=user, sharing_campaign=sharing_campaign)
         
@@ -42,12 +43,14 @@ def get_click_actions_for_user(user, campaign, *args, **kwargs):
             if sharable_url:
                 connection = bitly_api.Connection(settings.BITLY_LOGIN, settings.BITLY_API_KEY)
                 bitly_hash = sharable_url.split('/')[-1]
+                # print "inside click actions, connection.clicks: "
                 # print connection.clicks(bitly_hash)
                 clicks = connection.clicks(bitly_hash)[0]['global_clicks']
                 # TODO: add the Facebook referrers
                 # https://github.com/bitly/bitly-api-python/blob/master/bitly_api/bitly_api.py#L107
 
-    # add the number of posts
+    # TEMP
+    # return 
     return clicks
 
 def get_twitter_post_actions_for_user(user, campaign):

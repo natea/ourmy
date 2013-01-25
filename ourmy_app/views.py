@@ -37,10 +37,14 @@ def index(request):
             fb_action.save()
             tw_action = Action(campaign=campaign, title="twitter", api_call="sharing.get_twitter_post_actions_for_user")
             tw_action.save()
+            click_action = Action(campaign=campaign, title="click", api_call="sharing.get_click_actions_for_user")
+            click_action.save()
             fb_sharing_action = SharingAction(action=fb_action, social_network='FB', post_or_click=False)
             fb_sharing_action.save()
             tw_sharing_action = SharingAction(action=tw_action, social_network='TW', post_or_click=False)
             tw_sharing_action.save()
+            click_sharing_action = SharingAction(action=click_action, social_network='FB', post_or_click=True)
+            click_sharing_action.save()
             current_campaign_list = Campaign.objects.filter(deadline__gt=datetime.datetime.now)
     return render_to_response('index.html', 
         {'campaign_list':current_campaign_list},
@@ -194,21 +198,14 @@ def campaign(request, campaign_id):
                 campaign_user.points_at_deadline = campaign_user.points
 
         if campaign_user.user == request.user:
-            this_campaign_user = campaign_user
             this_users_points = campaign_user.points
-
-    # sort these by number of points, then only include the top ten.
-    sorted_campaign_users = sorted(campaign_users, key=lambda o:o.points, reverse=True)[:10]
-    # if the logged in user is not in the top ten, append them as the eleventh.
-
-    if this_campaign_user not in sorted_campaign_users:
-        sorted_campaign_users.append(request.user.campaign_user)
     
     # Bitly sharing link
     this_campaign_user = None
     if request.user.is_authenticated():
         user = request.user
-        # create a CampaignUser object - this creates the unique bitly for this user for this campaign      
+        # get or create a CampaignUser object and a SharingCampaignUser object.
+        # Creating a new SharingCampaignUser creates the unique bitly.
         this_campaign_user, created = CampaignUser.objects.get_or_create(user=user, campaign=campaign)
         this_campaign_user.save()
         sharing_campaign, created = SharingCampaign.objects.get_or_create(campaign=campaign)
@@ -221,6 +218,11 @@ def campaign(request, campaign_id):
         except:
             pass
 
+    # sort the leaderboard campaign_users by number of points, then only include the top ten.
+    sorted_campaign_users = sorted(campaign_users, key=lambda o:o.points, reverse=True)[:10]
+    # if the logged in user is not in the top ten, append them as the eleventh.
+    if this_campaign_user is not None and this_campaign_user not in sorted_campaign_users:
+        sorted_campaign_users.append(this_campaign_user)
 
     # parse the video url because we're using an embed
     youtube_id = None
