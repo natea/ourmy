@@ -41,9 +41,9 @@
 			 <div class="pull-right">
                 <div class="top-nav-links">
             		<ul class="nav">
-                        {% if user.is_authenticated %}
+                        {% if user.is_staff %}
                     		<li><a href="{%  url create_campaign  %}" class="creator-call-to-action">LAUNCH A CAMPAIGN</a></li>
-                            {% endif %}
+                        {% endif %}
 				<!--
                 <li><a href="{% url test_bootstrap.views.test_form %}">Form</a></li>
                 <li class="dropdown">

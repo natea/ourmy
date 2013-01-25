@@ -46,6 +46,7 @@ def index(request):
             click_sharing_action = SharingAction(action=click_action, social_network='FB', post_or_click=True)
             click_sharing_action.save()
             current_campaign_list = Campaign.objects.filter(deadline__gt=datetime.datetime.now)
+
     return render_to_response('index.html', 
         {'campaign_list':current_campaign_list},
         context_instance=RequestContext(request))
@@ -55,6 +56,8 @@ def create_campaign(request, campaign_id=None):
     campaign=None
     campaigns = []
     campaigns = Campaign.objects.filter(user=request.user)
+    if campaigns == []:
+        return HttpResponseRedirect(reverse('index'))
     is_saved = False
 
     if request.method == 'POST':

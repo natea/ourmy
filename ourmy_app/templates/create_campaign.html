@@ -11,7 +11,9 @@
         <option value="{% url edit_campaign campaign_id=campaign.id %}">{{ campaign.title }}</option>
       {% endfor %}
       {% if is_saved %}
+        {% if request.user.is_staff %}
           <option value="{% url create_campaign %}">Add a new campaign</option>
+        {% endif %}
       {% endif %}
     </select><h2>
   {% endif %}
