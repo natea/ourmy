@@ -508,10 +508,9 @@ box-shadow: 0 4px 4px -2px #404040;
 
 .prize-listing .prize-tag{
     display: block;
-    position: absolute;
     left: 2%;
+    position: absolute;
     width: 200px;
-    top: 250px;
     /*white-space: nowrap;*/
     visibility: hidden;
     text-align: center;
